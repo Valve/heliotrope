@@ -1,0 +1,35 @@
+[root]
+name = "heliotrope"
+version = "0.0.1"
+dependencies = [
+ "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http#4c1bce81f74e3fdfc0d9d7a6f2f70588a4469ce8)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url#678bb4d52638b1cfdab78ef8e521566c9240fb1a)",
+]
+
+[[package]]
+name = "encoding"
+version = "0.1.0"
+source = "git+https://github.com/lifthrasiir/rust-encoding#b82ad2104b2d079620bd227fb9328b2ff8c20ca9"
+
+[[package]]
+name = "http"
+version = "0.1.0-pre"
+source = "git+https://github.com/chris-morgan/rust-http#4c1bce81f74e3fdfc0d9d7a6f2f70588a4469ce8"
+dependencies = [
+ "openssl 0.0.0 (git+https://github.com/sfackler/rust-openssl.git#39343df472b4b0c99055d371f42beceeef527bd6)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url#678bb4d52638b1cfdab78ef8e521566c9240fb1a)",
+]
+
+[[package]]
+name = "openssl"
+version = "0.0.0"
+source = "git+https://github.com/sfackler/rust-openssl.git#39343df472b4b0c99055d371f42beceeef527bd6"
+
+[[package]]
+name = "url"
+version = "0.1.0"
+source = "git+https://github.com/servo/rust-url#678bb4d52638b1cfdab78ef8e521566c9240fb1a"
+dependencies = [
+ "encoding 0.1.0 (git+https://github.com/lifthrasiir/rust-encoding#b82ad2104b2d079620bd227fb9328b2ff8c20ca9)",
+]
+
