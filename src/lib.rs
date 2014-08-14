@@ -13,8 +13,10 @@ extern crate url;
 extern crate http;
 extern crate debug;
 
+use std::io::IoResult;
 use url::{Url, UrlParser};
 use serialize::{json, Encodable, Encoder, Decodable, Decoder};
+use http_utils::HttpResponse;
 
 mod http_utils;
 
@@ -77,42 +79,33 @@ impl Solr {
 
   pub fn add(&self, document: &Document) -> SolrResult {
     let raw_json = json::encode(&document);
-    match http_utils::post_json(&self.update_url, raw_json.as_slice()) {
-      Ok(http_response) => {
-        match http_response.code {
-          200 => {
-            let response: SolrResponse = json::decode(http_response.body_str().unwrap()).unwrap();
-            Ok(response)
-          },
-          _ => {
-            let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
-            Err(error)
-          }
-        }
-      },
-      Err(err) => {
-        Err(SolrError{status: 0, time: 0, message: err.desc.to_string()})
-      }
-    }
+    let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
+    handle_http_result(http_result)
   }
 
   pub fn commit(&self) -> SolrResult {
-    match http_utils::post(&self.commit_url) {
-      Ok(http_response) => {
-        match http_response.code {
-          200 => {
-            let response: SolrResponse = json::decode(http_response.body_str().unwrap()).unwrap();
-            Ok(response)
-          },
-          _ => {
-            let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
-            Err(error)
-          }
+    let http_result = http_utils::post(&self.commit_url);
+    handle_http_result(http_result)
+  }
+
+}
+
+fn handle_http_result(result: IoResult<HttpResponse>) -> SolrResult {
+  match result {
+    Ok(http_response) => {
+      match http_response.code {
+        200 => {
+          let response: SolrResponse = json::decode(http_response.body_str().unwrap()).unwrap();
+          Ok(response)
+        },
+        _ => {
+          let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
+          Err(error)
         }
-      },
-      Err(err) => {
-        Err(SolrError{status: 0, time: 0, message: err.desc.to_string()})
       }
+    },
+    Err(err) => {
+      Err(SolrError{status: 0, time: 0, message: err.desc.to_string()})
     }
   }
 }
