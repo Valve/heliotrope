@@ -18,7 +18,7 @@ use serialize::{json, Encodable, Encoder, Decodable, Decoder};
 
 mod http_utils;
 
-pub type SolrResult<'a> = Result<SolrResponse, SolrError<'a>>;
+pub type SolrResult = Result<SolrResponse, SolrError>;
 
 pub struct Document<'a>{
   fields: Vec<(&'a str, &'a str)>
@@ -117,14 +117,14 @@ impl Solr {
   }
 }
 
-struct SolrError<'a> {
-  status: int,
-  time: int,
-  message: String
+pub struct SolrError {
+  pub status: int,
+  pub time: int,
+  pub message: String
 }
 
-impl<'a, D: Decoder<E>, E> Decodable<D, E> for SolrError<'a> {
-  fn decode(d: &mut D) -> Result<SolrError<'a>, E> {
+impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
+  fn decode(d: &mut D) -> Result<SolrError, E> {
     d.read_struct("root", 0, |d| {
       d.read_struct_field("error", 0, |d| {
         Ok(SolrError{
@@ -137,9 +137,9 @@ impl<'a, D: Decoder<E>, E> Decodable<D, E> for SolrError<'a> {
   }
 }
 
-struct SolrResponse {
-  status: int,
-  time: int
+pub struct SolrResponse {
+  pub status: int,
+  pub time: int
 }
 
 impl<D: Decoder<E>, E> Decodable<D, E> for SolrResponse {
