@@ -11,11 +11,14 @@
 extern crate serialize;
 extern crate url;
 extern crate http;
+extern crate debug;
 
 use url::{Url, UrlParser};
-use serialize::{json, Encodable, Encoder};
-use http::client::RequestWriter;
-use http::method::Post;
+use serialize::{json, Encodable, Encoder, Decodable, Decoder};
+
+mod http_utils;
+
+pub type SolrResult<'a> = Result<SolrResponse, SolrError<'a>>;
 
 pub struct Document<'a>{
   fields: Vec<(&'a str, &'a str)>
@@ -49,64 +52,105 @@ impl<'a, E, S: Encoder<E>> Encodable<S, E> for Document<'a> {
   }
 }
 
-pub struct HttpServer {
-  pub url: Url
+pub struct Solr {
+  pub base_url: Url,
+  update_url: Url,
+  commit_url: Url
 }
 
-impl HttpServer {
-  pub fn new(url: Url) -> HttpServer {
-    HttpServer {url: url}
+impl Solr {
+
+  fn build_update_url(url: &Url) -> Url{
+    let mut url_parser = UrlParser::new();
+    url_parser.base_url(url).parse("./update").unwrap()
   }
 
-  pub fn add(&self, document: &Document) {
+  fn build_commit_url(url: &Url) -> Url {
+    let mut url_parser = UrlParser::new();
+    url_parser.base_url(url).parse("./update?commit=true").unwrap()
+  }
+  pub fn new(url: &Url) -> Solr {
+    Solr {base_url: url.clone(),
+      update_url: Solr::build_update_url(url),
+      commit_url: Solr::build_commit_url(url)}
+  }
+
+  pub fn add(&self, document: &Document) -> SolrResult {
     let raw_json = json::encode(&document);
-    let mut req: RequestWriter = RequestWriter::new(Post, update_url(&self.url)).unwrap();
-    req.headers.insert_raw("Content-Type".to_string(), b"application/json");
-    req.headers.content_length = Some(raw_json.len());
-    req.write(raw_json.into_bytes().as_slice());
-    let mut resp = match req.read_response(){
-      Ok(resp) => resp,
-      Err(_req) => fail!("No response available")
-    };
-
-    println!("Response status: {}", resp.status);
-
-    let body = match resp.read_to_end(){
-      Ok(body) => body,
-      Err(err) => fail!("Error reading response: {}", err)
-    };
+    match http_utils::post_json(&self.update_url, raw_json.as_slice()) {
+      Ok(http_response) => {
+        match http_response.code {
+          200 => {
+            let response: SolrResponse = json::decode(http_response.body_str().unwrap()).unwrap();
+            Ok(response)
+          },
+          _ => {
+            let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
+            Err(error)
+          }
+        }
+      },
+      Err(err) => {
+        Err(SolrError{status: 0, time: 0, message: err.desc.to_string()})
+      }
+    }
   }
 
-  pub fn add_many(&self, documents: &[Document]) {
-  }
-
-
-  pub fn commit(&self) {
-    let url = commit_url(&update_url(&self.url));
-    let mut req: RequestWriter = RequestWriter::new(Post, url).unwrap();
-    req.headers.insert_raw("Content-Type".to_string(), b"application/json");
-    // post commit to the server
-    let mut resp = match req.read_response(){
-      Ok(resp) => resp,
-      Err(_req) => fail!("No response available")
-    };
-
-    println!("Response status: {}", resp.status);
-
-    let body = match resp.read_to_end(){
-      Ok(body) => body,
-      Err(err) => fail!("Error reading response: {}", err)
-    };
+  pub fn commit(&self) -> SolrResult {
+    match http_utils::post(&self.commit_url) {
+      Ok(http_response) => {
+        match http_response.code {
+          200 => {
+            let response: SolrResponse = json::decode(http_response.body_str().unwrap()).unwrap();
+            Ok(response)
+          },
+          _ => {
+            let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
+            Err(error)
+          }
+        }
+      },
+      Err(err) => {
+        Err(SolrError{status: 0, time: 0, message: err.desc.to_string()})
+      }
+    }
   }
 }
 
-fn update_url(url: &Url) -> Url{
-  let mut url_parser = UrlParser::new();
-  url_parser.base_url(url).parse("./update").unwrap()
+struct SolrError<'a> {
+  status: int,
+  time: int,
+  message: String
 }
 
-fn commit_url(url: &Url) -> Url {
-  let mut url_parser = UrlParser::new();
-  url_parser.base_url(url).parse("./update?commit=true").unwrap()
+impl<'a, D: Decoder<E>, E> Decodable<D, E> for SolrError<'a> {
+  fn decode(d: &mut D) -> Result<SolrError<'a>, E> {
+    d.read_struct("root", 0, |d| {
+      d.read_struct_field("error", 0, |d| {
+        Ok(SolrError{
+          message: try!(d.read_struct_field("msg", 0, |d| Decodable::decode(d))),
+          status: try!(d.read_struct_field("code", 1, |d| Decodable::decode(d))),
+          // TODO: implement time parsing from request header
+          time: 0})
+      })
+    })
+  }
 }
 
+struct SolrResponse {
+  status: int,
+  time: int
+}
+
+impl<D: Decoder<E>, E> Decodable<D, E> for SolrResponse {
+  fn decode(d: &mut D) -> Result<SolrResponse, E> {
+    d.read_struct("root", 0, |d| {
+      d.read_struct_field("responseHeader", 0, |d| {
+        Ok(SolrResponse{
+          status: try!(d.read_struct_field("status", 0, |d| Decodable::decode(d))),
+          time: try!(d.read_struct_field("QTime", 1, |d| Decodable::decode(d)))
+        })
+      })
+    })
+  }
+}
