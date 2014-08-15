@@ -71,6 +71,7 @@ impl Solr {
     let mut url_parser = UrlParser::new();
     url_parser.base_url(url).parse("./update?commit=true").unwrap()
   }
+
   pub fn new(url: &Url) -> Solr {
     Solr {base_url: url.clone(),
       update_url: Solr::build_update_url(url),
@@ -82,6 +83,13 @@ impl Solr {
     let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
     handle_http_result(http_result)
   }
+
+  pub fn add_and_commit(&self, document: &Document) -> SolrResult {
+    let raw_json = json::encode(&document);
+    let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
+    handle_http_result(http_result)
+  }
+
 
   pub fn commit(&self) -> SolrResult {
     let http_result = http_utils::post(&self.commit_url);
