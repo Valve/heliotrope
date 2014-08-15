@@ -1,10 +1,9 @@
-Heliotrope
-==========
+Heliotrope - SOLR client for Rust programming language.
+=======================================================
 
-## SOLR client for Rust programming language.
+## Usage
 
-### Usage
-
+### Indexing
 
 #### Adding new document to solr
 
@@ -51,11 +50,38 @@ fn main(){
 }
 ```
 
+#### Adding multiple document at once
+
+```rust
+fn main(){
+  let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
+  let solr = Solr::new(url);
+  let mut document1 = Document::new();
+  document1.add_field("id", "101");
+  document1.add_field("type", "Book");
+  document1.add_field("title", "The Great Gatsby");
+  document1.add_field("body", "In my younger and more vulnerable years..");
+
+  let mut document2 = Document::new();
+  document2.add_field("title", "Moby Dick");
+  document2.add_field("body", "Call me Ishmael");
+
+  match solr.add_many_and_commit(vec!(&document1, &document2)) {
+    Ok(solr_response) => println!("{:?}", solr_response),
+    Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
+  }
+}
+```
+
 `Solr#add` and `Solr#commit` return `SolrResult` which is of type
 `IoResult<SolrResponse>`.
 `SolrResponse` contains `time` and `status` fields.
 
-## Licence
+### Querying
+
+Work in progress..
+
+### Licence
 
 This code is MITlicenced:
 

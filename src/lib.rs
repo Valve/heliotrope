@@ -39,20 +39,17 @@ impl<'a> Document<'a> {
 
 impl<'a, E, S: Encoder<E>> Encodable<S, E> for Document<'a> {
   fn encode(&self, s: &mut S) -> Result<(), E> {
-    s.emit_seq(self.fields.len(), |e| {
-      e.emit_map(self.fields.len(), |e| {
-        let mut i = 0;
-        for &(ref k, ref v) in self.fields.iter() {
-          try!(e.emit_map_elt_key(i, |e| k.encode(e)));
-          try!(e.emit_map_elt_val(i, |e| v.encode(e)));
-          i += 1;
-        }
-        Ok(())
-      });
-    Ok(())
+    let mut i = 0u;
+    s.emit_struct("Document", self.fields.len(), |e| {
+      for &(ref k, ref v) in self.fields.iter() {
+        try!(e.emit_struct_field(*k, i, |e| v.encode(e)));
+        i = i + 1;
+      }
+      Ok(())
     })
   }
 }
+
 
 pub struct Solr {
   pub base_url: Url,
@@ -79,17 +76,25 @@ impl Solr {
   }
 
   pub fn add(&self, document: &Document) -> SolrResult {
-    let raw_json = json::encode(&document);
+    self.add_many([document])
+  }
+
+  pub fn add_and_commit(&self, document: &Document) -> SolrResult {
+    self.add_many_and_commit([document])
+  }
+
+  pub fn add_many(&self, documents: &[&Document]) -> SolrResult {
+    let raw_json = json::encode(&documents);
     let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
     handle_http_result(http_result)
   }
 
-  pub fn add_and_commit(&self, document: &Document) -> SolrResult {
-    let raw_json = json::encode(&document);
+  pub fn add_many_and_commit(&self, documents: &[&Document]) -> SolrResult {
+    let raw_json = json::encode(&documents);
+    println!("{}", raw_json);
     let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
     handle_http_result(http_result)
   }
-
 
   pub fn commit(&self) -> SolrResult {
     let http_result = http_utils::post(&self.commit_url);
