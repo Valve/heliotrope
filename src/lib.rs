@@ -7,6 +7,7 @@
 // except according to those terms.
 
 #![crate_name="heliotrope"]
+//#![warn(unstable)]
 
 extern crate serialize;
 extern crate url;
@@ -22,14 +23,14 @@ mod http_utils;
 
 pub type SolrResult = Result<SolrResponse, SolrError>;
 
-pub struct Document<'a>{
+pub struct SolrDocument<'a>{
   fields: Vec<(&'a str, &'a str)>
 }
 
-impl<'a> Document<'a> {
-  pub fn new() -> Document<'a> {
+impl<'a> SolrDocument<'a> {
+  pub fn new() -> SolrDocument<'a> {
     let fields: Vec<(&'a str, &'a str)> = Vec::with_capacity(10);
-    Document{fields: fields}
+    SolrDocument{fields: fields}
   }
 
   pub fn add_field(&mut self, name: &'a str, value: &'a str) {
@@ -37,10 +38,10 @@ impl<'a> Document<'a> {
   }
 }
 
-impl<'a, E, S: Encoder<E>> Encodable<S, E> for Document<'a> {
+impl<'a, E, S: Encoder<E>> Encodable<S, E> for SolrDocument<'a> {
   fn encode(&self, s: &mut S) -> Result<(), E> {
     let mut i = 0u;
-    s.emit_struct("Document", self.fields.len(), |e| {
+    s.emit_struct("SolrDocument", self.fields.len(), |e| {
       for &(ref k, ref v) in self.fields.iter() {
         try!(e.emit_struct_field(*k, i, |e| v.encode(e)));
         i = i + 1;
@@ -75,21 +76,21 @@ impl Solr {
       commit_url: Solr::build_commit_url(url)}
   }
 
-  pub fn add(&self, document: &Document) -> SolrResult {
+  pub fn add(&self, document: &SolrDocument) -> SolrResult {
     self.add_many([document])
   }
 
-  pub fn add_and_commit(&self, document: &Document) -> SolrResult {
+  pub fn add_and_commit(&self, document: &SolrDocument) -> SolrResult {
     self.add_many_and_commit([document])
   }
 
-  pub fn add_many(&self, documents: &[&Document]) -> SolrResult {
+  pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrResult {
     let raw_json = json::encode(&documents);
     let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
     handle_http_result(http_result)
   }
 
-  pub fn add_many_and_commit(&self, documents: &[&Document]) -> SolrResult {
+  pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrResult {
     let raw_json = json::encode(&documents);
     println!("{}", raw_json);
     let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
