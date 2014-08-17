@@ -24,7 +24,7 @@ mod http_utils;
 pub type SolrResult = Result<SolrResponse, SolrError>;
 
 pub struct SolrDocument<'a>{
-  fields: Vec<(&'a str, &'a str)>
+  pub fields: Vec<(&'a str, &'a str)>
 }
 
 impl<'a> SolrDocument<'a> {

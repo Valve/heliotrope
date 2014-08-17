@@ -29,3 +29,11 @@ fn document_with_three_field_to_json(){
   let json = json::encode(&document);
   assert_eq!(json.as_slice(), r#"{"name":"Kvothe","hobby":"Lute","friend":"Denna"}"#);
 }
+
+#[test]
+fn adding_a_field_really_adds_it(){
+  let mut document = SolrDocument::new();
+  document.add_field("name", "Kvothe");
+  assert_eq!(document.fields.len(), 1);
+}
+
