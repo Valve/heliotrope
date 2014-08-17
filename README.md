@@ -1,5 +1,9 @@
-Heliotrope - SOLR client for Rust programming language.
-=======================================================
+<p align="center">
+<h2>Heliotrope</h2>
+<h3>SOLR client for Rust programming language</h3>
+<br/>
+<a href="https://travis-ci.org/Valve/heliotrope"><img src="http://img.shields.io/travis/Valve/heliotrope/master.svg?style=flat" /></a>
+</p>
 
 ## Usage
 
@@ -10,12 +14,12 @@ Heliotrope - SOLR client for Rust programming language.
 ```rust
 extern crate heliotrope;
 
-use heliotrope::{Solr, Document};
+use heliotrope::{Solr, SolrDocument};
 
 fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
-  let mut document = Document::new();
+  let mut document = SolrDocument::new();
   document.add_field("id", "100");
   document.add_field("type", "Book");
   document.add_field("title", "How to train your dragon");
@@ -38,7 +42,7 @@ fn main(){
 fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
-  let mut document = Document::new();
+  let mut document = SolrDocument::new();
   document.add_field("id", "101");
   document.add_field("type", "Book");
   document.add_field("title", "The Great Gatsby");
@@ -56,13 +60,13 @@ fn main(){
 fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
-  let mut document1 = Document::new();
+  let mut document1 = SolrDocument::new();
   document1.add_field("id", "101");
   document1.add_field("type", "Book");
   document1.add_field("title", "The Great Gatsby");
   document1.add_field("body", "In my younger and more vulnerable years..");
 
-  let mut document2 = Document::new();
+  let mut document2 = SolrDocument::new();
   document2.add_field("title", "Moby Dick");
   document2.add_field("body", "Call me Ishmael");
 
@@ -92,6 +96,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
