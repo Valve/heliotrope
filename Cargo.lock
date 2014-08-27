@@ -2,34 +2,34 @@
 name = "heliotrope"
 version = "0.0.1"
 dependencies = [
- "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http#16d3999e37aa0e0ae8550d6fba224ef2717337c7)",
- "url 0.1.0 (git+https://github.com/servo/rust-url#ec468b202a67ed8e17119bf871d897f68f7d858a)",
+ "http 0.1.0-pre (git+https://github.com/chris-morgan/rust-http#b7f2fe742c01cb19a7d2873d9b96e005fcdc648c)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url#23fb9ec22cca9d643ad2cce9894a947c005b7fe2)",
 ]
 
 [[package]]
 name = "encoding"
 version = "0.1.0"
-source = "git+https://github.com/lifthrasiir/rust-encoding#b82ad2104b2d079620bd227fb9328b2ff8c20ca9"
+source = "git+https://github.com/lifthrasiir/rust-encoding#7e7950ddbd46428a439db3e2594fa78f0972ef2e"
 
 [[package]]
 name = "http"
 version = "0.1.0-pre"
-source = "git+https://github.com/chris-morgan/rust-http#16d3999e37aa0e0ae8550d6fba224ef2717337c7"
+source = "git+https://github.com/chris-morgan/rust-http#b7f2fe742c01cb19a7d2873d9b96e005fcdc648c"
 dependencies = [
- "openssl 0.0.0 (git+https://github.com/sfackler/rust-openssl.git#182ec4a6e77a53381e8b5e161f5d9c8fb3d965ff)",
- "url 0.1.0 (git+https://github.com/servo/rust-url#ec468b202a67ed8e17119bf871d897f68f7d858a)",
+ "openssl 0.0.0 (git+https://github.com/sfackler/rust-openssl.git#07f12370d3644673e8811f93485cddccead22590)",
+ "url 0.1.0 (git+https://github.com/servo/rust-url#23fb9ec22cca9d643ad2cce9894a947c005b7fe2)",
 ]
 
 [[package]]
 name = "openssl"
 version = "0.0.0"
-source = "git+https://github.com/sfackler/rust-openssl.git#182ec4a6e77a53381e8b5e161f5d9c8fb3d965ff"
+source = "git+https://github.com/sfackler/rust-openssl.git#07f12370d3644673e8811f93485cddccead22590"
 
 [[package]]
 name = "url"
 version = "0.1.0"
-source = "git+https://github.com/servo/rust-url#ec468b202a67ed8e17119bf871d897f68f7d858a"
+source = "git+https://github.com/servo/rust-url#23fb9ec22cca9d643ad2cce9894a947c005b7fe2"
 dependencies = [
- "encoding 0.1.0 (git+https://github.com/lifthrasiir/rust-encoding#b82ad2104b2d079620bd227fb9328b2ff8c20ca9)",
+ "encoding 0.1.0 (git+https://github.com/lifthrasiir/rust-encoding#7e7950ddbd46428a439db3e2594fa78f0972ef2e)",
 ]
 

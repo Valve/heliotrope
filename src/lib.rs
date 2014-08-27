@@ -54,6 +54,7 @@ impl<'a, E, S: Encoder<E>> Encodable<S, E> for SolrDocument<'a> {
 
 pub struct Solr {
   pub base_url: Url,
+  select_url: Url,
   update_url: Url,
   commit_url: Url
 }
@@ -65,6 +66,11 @@ impl Solr {
     url_parser.base_url(url).parse("./update").unwrap()
   }
 
+  fn build_select_url(url: &Url) -> Url {
+    let mut url_parser = UrlParser::new();
+    url_parser.base_url(url).parse("./select").unwrap()
+  }
+
   fn build_commit_url(url: &Url) -> Url {
     let mut url_parser = UrlParser::new();
     url_parser.base_url(url).parse("./update?commit=true").unwrap()
@@ -72,6 +78,7 @@ impl Solr {
 
   pub fn new(url: &Url) -> Solr {
     Solr {base_url: url.clone(),
+      select_url: Solr::build_select_url(url),
       update_url: Solr::build_update_url(url),
       commit_url: Solr::build_commit_url(url)}
   }
@@ -102,6 +109,12 @@ impl Solr {
     handle_http_result(http_result)
   }
 
+  pub fn query(&self, query: &SolrQuery) -> SolrResult {
+    let mut query_url = self.select_url.clone();
+    query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(k,v)| (k,v)));
+    let http_result = http_utils::get(&query_url);
+    handle_http_result(http_result)
+  }
 }
 
 fn handle_http_result(result: IoResult<HttpResponse>) -> SolrResult {
@@ -135,8 +148,8 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
     d.read_struct("root", 0, |d| {
       d.read_struct_field("error", 0, |d| {
         Ok(SolrError{
-          message: try!(d.read_struct_field("msg", 0, |d| Decodable::decode(d))),
-          status: try!(d.read_struct_field("code", 1, |d| Decodable::decode(d))),
+          message: try!(d.read_struct_field("msg", 0, Decodable::decode)),
+          status: try!(d.read_struct_field("code", 1, Decodable::decode)),
           // TODO: implement time parsing from request header
           time: 0})
       })
@@ -154,10 +167,25 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrResponse {
     d.read_struct("root", 0, |d| {
       d.read_struct_field("responseHeader", 0, |d| {
         Ok(SolrResponse{
-          status: try!(d.read_struct_field("status", 0, |d| Decodable::decode(d))),
-          time: try!(d.read_struct_field("QTime", 1, |d| Decodable::decode(d)))
+          status: try!(d.read_struct_field("status", 0, Decodable::decode)),
+          time: try!(d.read_struct_field("QTime", 1, Decodable::decode))
         })
       })
     })
   }
 }
+
+pub struct SolrQuery {
+  query: String
+}
+
+impl SolrQuery {
+  pub fn new(query: &str) -> SolrQuery {
+    SolrQuery{query: query.to_string()}
+  }
+
+  pub fn to_pairs(&self) -> Vec<(&str, &str)> {
+    vec!(("q", self.query.as_slice()), ("wt", "json"))
+  }
+}
+
