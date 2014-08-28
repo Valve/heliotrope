@@ -14,16 +14,16 @@
 ```rust
 extern crate heliotrope;
 
-use heliotrope::{Solr, SolrDocument};
+use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
 
 fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
   let mut document = SolrDocument::new();
-  document.add_field("id", "100");
-  document.add_field("type", "Book");
-  document.add_field("title", "How to train your dragon");
-  document.add_field("body", "Vala Morgulis");
+  document.add_field("id", SolrI64(1);
+  document.add_field("type", SolrString("Book"));
+  document.add_field("title", SolrString("How to train your dragon"));
+  document.add_field("body", SolrString("Vala Morgulis"));
   match solr.add(&document) {
     Ok(solr_response) => println!("{:?}", solr_response),
     Err(solr_error) => println!("{:?}", solr_error)
@@ -43,10 +43,10 @@ fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
   let mut document = SolrDocument::new();
-  document.add_field("id", "101");
-  document.add_field("type", "Book");
-  document.add_field("title", "The Great Gatsby");
-  document.add_field("body", "In my younger and more vulnerable years..");
+  document.add_field("id", SolrI64(2));
+  document.add_field("type", SolrString("Book"));
+  document.add_field("title", SolrString("The Great Gatsby"));
+  document.add_field("body", SolrString("In my younger and more vulnerable years.."));
   match solr.add_and_commit(&document) {
     Ok(solr_response) => println!("{:?}", solr_response),
     Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
@@ -57,33 +57,52 @@ fn main(){
 #### Adding multiple document at once
 
 ```rust
-fn main(){
-  let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
-  let solr = Solr::new(url);
-  let mut document1 = SolrDocument::new();
-  document1.add_field("id", "101");
-  document1.add_field("type", "Book");
-  document1.add_field("title", "The Great Gatsby");
-  document1.add_field("body", "In my younger and more vulnerable years..");
+let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
+let solr = Solr::new(url);
+let mut document1 = SolrDocument::new();
+document1.add_field("id", SolrI64(3));
+document1.add_field("type", SolrString("Book"));
+document1.add_field("title", SolrString("The Great Gatsby"));
+document1.add_field("body", SolrString("In my younger and more vulnerable years.."));
 
-  let mut document2 = SolrDocument::new();
-  document2.add_field("title", "Moby Dick");
-  document2.add_field("body", "Call me Ishmael");
+let mut document2 = SolrDocument::new();
+document1.add_field("id", SolrI64(4));
+document1.add_field("type", SolrString("Book"));
+document2.add_field("title", SolrString("Moby Dick"));
+document2.add_field("body", SolrString("Call me Ishmael"));
 
-  match solr.add_many_and_commit(vec!(&document1, &document2)) {
-    Ok(solr_response) => println!("{:?}", solr_response),
-    Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
-  }
+match solr.add_many_and_commit(vec!(&document1, &document2)) {
+  Ok(solr_response) => println!("{:?}", solr_response),
+  Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
 }
 ```
 
-`Solr#add` and `Solr#commit` return `SolrResult` which is of type
-`IoResult<SolrResponse>`.
-`SolrResponse` contains `time` and `status` fields.
+`Solr#add` and `Solr#commit` return `SolrUpdateResult` which is of type
+`IoResult<SolrUpdateResponse>`.
+`SolrUpdateResponse` contains `time` and `status` fields.
 
 ### Querying
 
-Work in progress..
+```rust
+let query = SolrQuery::new("*:*");
+match solr.query(&query) {
+  Ok(solr_response) => {
+    println!("Status: {}", solr_response.status);
+    println!("Time: {}", solr_response.time);
+    println!("Total rows found: {}", solr_response.total);
+    println!("Offset: {}", solr_response.start);
+    for item in solr_response.items.iter() {
+      println!("{}", item);
+    }
+  }
+  Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
+}
+```
+
+`Solr#query` returns `SolrQueryResult` which is of type
+`IoResult<SolrQueryResponse>`.
+
+#### Work in progress  on other querying features (facets, sorting, highlighting etc)
 
 ### Licence
 
