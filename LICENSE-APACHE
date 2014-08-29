@@ -31,7 +31,7 @@
     <meta name="selected-link" value="repo_source" data-pjax-transient>
       <meta name="google-analytics" content="UA-3769691-2">
 
-    <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="collector-cdn.github.com" name="octolytics-script-host" /><meta content="github" name="octolytics-app-id" /><meta content="058A701A:6A41:21433E67:54001252" name="octolytics-dimension-request_id" />
+    <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="collector-cdn.github.com" name="octolytics-script-host" /><meta content="github" name="octolytics-app-id" /><meta content="2E3F8680:7B5A:77DC7CE:540079CF" name="octolytics-dimension-request_id" />
     
 
     
@@ -40,14 +40,14 @@
 
 
     <meta content="authenticity_token" name="csrf-param" />
-<meta content="Q2lR2vhehdI8J+PCV4QtZk+0zaseji5EAoDn6UlJXzTem9HTLpMNOmfpEqZ0cq4BenVgH9Nk5X6mQK2iIsLUdw==" name="csrf-token" />
+<meta content="aezhN+7uY4PbC78ZcZiE1X8tY4fSDWqorHf1oH5XBUGDCdKubJ4Xy1EVvsPSym1VvMkPTt8p0uGJJ/COFix4WQ==" name="csrf-token" />
 
-    <link href="https://assets-cdn.github.com/assets/github-22ebe3fd5f83f100171e6b6cee5f168a822b9911.css" media="all" rel="stylesheet" type="text/css" />
-    <link href="https://assets-cdn.github.com/assets/github2-af7e2815f01f2deefbceefdbb5475077fbb94ccc.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://assets-cdn.github.com/assets/github-b0d261d9daea876eb9bd0ca4fcd51ab6c7acff7c.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://assets-cdn.github.com/assets/github2-746bf792d0833cec36a7a291fe8ee7108cb09ad7.css" media="all" rel="stylesheet" type="text/css" />
     
 
 
-    <meta http-equiv="x-pjax-version" content="8747430103af3d0195e2815190a65f6d">
+    <meta http-equiv="x-pjax-version" content="06238b2b987d01446d70b465435c7337">
 
       
   <meta name="description" content="rust-url - URL parser for Rust">
@@ -149,7 +149,7 @@
         Fork
       </a>
       <a href="/servo/rust-url/network" class="social-count">
-        11
+        12
       </a>
     </li>
 </ul>
@@ -1348,7 +1348,7 @@
     </a>
 
     <ul class="site-footer-links">
-      <li>&copy; 2014 <span title="0.02419s from github-fe122-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+      <li>&copy; 2014 <span title="0.01987s from github-fe137-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
         <li><a href="/site/terms">Terms</a></li>
         <li><a href="/site/privacy">Privacy</a></li>
         <li><a href="/security">Security</a></li>
