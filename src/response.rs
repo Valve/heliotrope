@@ -4,9 +4,14 @@ use document::SolrDocument;
 pub type SolrUpdateResult = Result<SolrUpdateResponse, SolrError>;
 pub type SolrQueryResult = Result<SolrQueryResponse, SolrError>;
 
+/// SolrError
 pub struct SolrError {
+  /// HTTP status.
+  /// When failed to connect, it will be 0 (zero).
   pub status: int,
+  /// Time it took to execute the request in milliseconds
   pub time: int,
+  /// Detailed error message
   pub message: String
 }
 
@@ -24,8 +29,12 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
   }
 }
 
+/// Solr response used for update/indexing/commit operations
 pub struct SolrUpdateResponse {
+  /// HTTP status.
+  /// When failed to connect, it will be 0 (zero).
   pub status: int,
+  /// Time it took to execute the request in milliseconds
   pub time: int
 }
 
@@ -42,12 +51,21 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrUpdateResponse {
   }
 }
 
+/// Solr query response
 #[deriving(Show)]
 pub struct SolrQueryResponse {
+  /// HTTP status.
+  /// When failed to connect, it will be 0 (zero).
   pub status: int,
+  /// Time it took to execute the request in milliseconds
   pub time: int,
+  /// Total number of rows found.
+  /// Note that this will probably be different from returned subset of rows,
+  /// because Solr will always use pagination
   pub total: int,
+  /// Rows offset (zero based)
   pub start: int,
+  /// Current page of found Solr documents
   pub items: Vec<SolrDocument>
 }
 

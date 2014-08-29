@@ -1,4 +1,4 @@
-// Copyright 2013-2014 Valentin Vasilyev.
+// Copyright 2014 Valentin Vasilyev.
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -6,8 +6,107 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+/*!
+
+Heliotrope is a Solr client for the [Rust](http://rust-lang.org/) programming language.
+
+It builds with [Cargo](http://crates.io/).
+To use it in your project, add this to your `Cargo.toml` file:
+
+```Cargo
+[dependencies.heliotrope]
+git = "https://github.com/Valve/heliotrope"
+```
+
+## Indexing
+
+### Adding new document to solr
+
+```
+extern crate heliotrope;
+
+use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+
+fn main(){
+  let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
+  let solr = Solr::new(url);
+  let mut document = SolrDocument::new();
+  document.add_field("id", SolrI64(1);
+  document.add_field("type", SolrString("Book".to_string()));
+  document.add_field("title", SolrString("How to train your dragon".to_string()));
+  document.add_field("body", SolrString("Vala Morgulis".to_string()));
+  match solr.add(&document) {
+    Ok(solr_response) => println!("{:?}", solr_response),
+    Err(solr_error) => println!("{:?}", solr_error)
+  }
+  match solr.commit() {
+    Ok(solr_response) => println!("{:?}", solr_response),
+    Err(solr_error) => println!("{:?}", solr_error)
+  }
+}
+```
+
+### Add and commit in one step
+
+```
+fn main(){
+  let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
+  let solr = Solr::new(url);
+  let mut document = SolrDocument::new();
+  document.add_field("id", SolrI64(2));
+  document.add_field("type", SolrString("Book".to_string()));
+  document.add_field("title", SolrString("The Great Gatsby".to_string()));
+  document.add_field("body", SolrString("In my younger and more vulnerable years..".to_string()));
+  match solr.add_and_commit(&document) {
+    Ok(solr_response) => println!("{:?}", solr_response),
+    Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
+  }
+}
+```
+
+### Adding multiple document at once
+
+```rust
+let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
+let solr = Solr::new(url);
+let mut document1 = SolrDocument::new();
+document1.add_field("id", SolrI64(3));
+document1.add_field("type", SolrString("Book".to_string()));
+document1.add_field("title", SolrString("The Great Gatsby".to_string()));
+document1.add_field("body", SolrString("In my younger and more vulnerable years".to_string()));
+
+let mut document2 = SolrDocument::new();
+document1.add_field("id", SolrI64(4));
+document1.add_field("type", SolrString("Book".to_string()));
+document2.add_field("title", SolrString("Moby Dick".to_string()));
+document2.add_field("body", SolrString("Call me Ishmael".to_string()));
+
+match solr.add_many_and_commit(vec!(&document1, &document2)) {
+  Ok(solr_response) => println!("{:?}", solr_response),
+  Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
+}
+```
+
+## Querying
+
+```rust
+let query = SolrQuery::new("*:*");
+match solr.query(&query) {
+  Ok(solr_response) => {
+    println!("Status: {}", solr_response.status);
+    println!("Time: {}", solr_response.time);
+    println!("Total rows found: {}", solr_response.total);
+    println!("Offset: {}", solr_response.start);
+    for item in solr_response.items.iter() {
+      println!("{}", item);
+    }
+  }
+  Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
+}
+```
+*/
+
 #![crate_name="heliotrope"]
-//#![warn(unstable)]
 
 extern crate serialize;
 extern crate url;
@@ -30,7 +129,11 @@ mod document;
 mod query;
 mod response;
 
+/// Represents your API connection to Solr.
+/// You will use this struct to perform operations on Solr.
 pub struct Solr {
+  /// Base URL to connect to Solr. Should include the core.
+  /// For example http://localhost:8983/solr/production/
   pub base_url: Url,
   select_url: Url,
   update_url: Url,
@@ -54,6 +157,7 @@ impl Solr {
     url_parser.base_url(url).parse("./update?commit=true").unwrap()
   }
 
+  /// Creates a new instance of Solr.
   pub fn new(url: &Url) -> Solr {
     Solr {base_url: url.clone(),
       select_url: Solr::build_select_url(url),
@@ -61,20 +165,24 @@ impl Solr {
       commit_url: Solr::build_commit_url(url)}
   }
 
+  /// Adds new document to Solr, without committing
   pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
     self.add_many([document])
   }
 
+  /// Adds new document to Solr and commits it
   pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
     self.add_many_and_commit([document])
   }
 
+  /// Adds multiple documents to Solr, without committing it
   pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
     let raw_json = json::encode(&documents);
     let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
     handle_http_result(http_result)
   }
 
+  /// Ads multiple documents to Solr and commits them
   pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
     let raw_json = json::encode(&documents);
     println!("{}", raw_json);
@@ -82,11 +190,13 @@ impl Solr {
     handle_http_result(http_result)
   }
 
+  /// Performs Solr commit
   pub fn commit(&self) -> SolrUpdateResult {
     let http_result = http_utils::post(&self.commit_url);
     handle_http_result(http_result)
   }
 
+  /// Performs Solr query
   pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
     let mut query_url = self.select_url.clone();
     query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(k,v)| (k,v)));

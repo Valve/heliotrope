@@ -1,5 +1,6 @@
 use serialize::{json, Encodable, Encoder, Decodable, Decoder};
 
+/// Strongly typed Solr document field value
 #[deriving(Show, Decodable)]
 pub enum SolrValue {
   SolrF64(f64),
@@ -17,22 +18,28 @@ impl<S: Encoder<E>, E> Encodable<S, E> for SolrValue {
   }
 }
 
+/// SolrDocument field
 #[deriving(Show)]
 pub struct SolrField {
   pub name: String,
   pub value: SolrValue
 }
+
+/// SolrDocument to be used to either index or query.
 #[deriving(Show)]
 pub struct SolrDocument {
+  /// Collection of document fields
   pub fields: Vec<SolrField>
 }
 
 impl SolrDocument {
+  /// Creates new empty SolrDocument
   pub fn new() -> SolrDocument {
     let fields: Vec<SolrField> = Vec::with_capacity(10);
     SolrDocument{fields: fields}
   }
 
+  /// Adds a field to the document
   pub fn add_field(&mut self, name: &str, value: SolrValue) {
     self.fields.push(SolrField{name: name.to_string(), value: value});
   }
