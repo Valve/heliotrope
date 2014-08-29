@@ -20,80 +20,14 @@ use serialize::{json, Encodable, Encoder, Decodable, Decoder};
 use serialize::json::Decoder as JsonDecoder;
 use serialize::json::{DecoderError};
 use http_utils::HttpResponse;
+pub use document::{SolrDocument, SolrF64, SolrI64, SolrString};
+pub use response::{SolrError, SolrUpdateResult, SolrQueryResult};
+pub use query::{SolrQuery};
 
 mod http_utils;
-
-pub type SolrUpdateResult = Result<SolrUpdateResponse, SolrError>;
-pub type SolrQueryResult = Result<SolrQueryResponse, SolrError>;
-
-#[deriving(Show, Decodable)]
-pub enum SolrValue {
-  SolrF64(f64),
-  SolrI64(i64),
-  SolrString(String)
-}
-
-impl<S: Encoder<E>, E> Encodable<S, E> for SolrValue {
-  fn encode(&self, e: &mut S) -> Result<(), E> {
-    match *self {
-      SolrF64(v) => v.encode(e),
-      SolrI64(v) => v.encode(e),
-      SolrString(ref v) => v.encode(e)
-    }
-  }
-}
-
-#[deriving(Show)]
-pub struct SolrField {
-  pub name: String,
-  pub value: SolrValue
-}
-
-#[deriving(Show)]
-pub struct SolrDocument {
-  pub fields: Vec<SolrField>
-}
-
-
-impl SolrDocument {
-  pub fn new() -> SolrDocument {
-    let fields: Vec<SolrField> = Vec::with_capacity(10);
-    SolrDocument{fields: fields}
-  }
-
-  pub fn add_field(&mut self, name: &str, value: SolrValue) {
-    self.fields.push(SolrField{name: name.to_string(), value: value});
-  }
-}
-
-impl<E, S: Encoder<E>> Encodable<S, E> for SolrDocument {
-  fn encode(&self, s: &mut S) -> Result<(), E> {
-    let mut i = 0u;
-    s.emit_struct("SolrDocument", self.fields.len(), |e| {
-      for field in self.fields.iter() {
-        try!(e.emit_struct_field(field.name.as_slice(), i, |e| field.value.encode(e)));
-        i = i + 1;
-      }
-      Ok(())
-    })
-  }
-}
-
-impl<E, D: Decoder<E>> Decodable<D, E> for SolrDocument {
-  fn decode(d: &mut D) -> Result<SolrDocument, E> {
-    d.read_map(|d, len| {
-      let mut doc = SolrDocument{fields: Vec::with_capacity(len)};
-      for i in range(0u, len) {
-        let field_name: String = try!(d.read_map_elt_key(i, Decodable::decode));
-        // TODO: match correct SolrValue
-        let field_value = SolrString(try!(d.read_map_elt_val(i, Decodable::decode)));
-        doc.fields.push(SolrField{name: field_name, value: field_value});
-      }
-      Ok(doc)
-    })
-  }
-}
-
+mod document;
+mod query;
+mod response;
 
 pub struct Solr {
   pub base_url: Url,
@@ -180,93 +114,3 @@ fn handle_http_result<R: Decodable<JsonDecoder, DecoderError>>(result: IoResult<
   }
 }
 
-pub struct SolrError {
-  pub status: int,
-  pub time: int,
-  pub message: String
-}
-
-impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
-  fn decode(d: &mut D) -> Result<SolrError, E> {
-    d.read_struct("root", 0, |d| {
-      d.read_struct_field("error", 0, |d| {
-        Ok(SolrError{
-          message: try!(d.read_struct_field("msg", 0, Decodable::decode)),
-          status: try!(d.read_struct_field("code", 1, Decodable::decode)),
-          // TODO: implement time parsing from request header
-          time: 0})
-      })
-    })
-  }
-}
-
-pub struct SolrUpdateResponse {
-  pub status: int,
-  pub time: int
-}
-
-impl<D: Decoder<E>, E> Decodable<D, E> for SolrUpdateResponse {
-  fn decode(d: &mut D) -> Result<SolrUpdateResponse, E> {
-    d.read_struct("root", 0, |d| {
-      d.read_struct_field("responseHeader", 0, |d| {
-        Ok(SolrUpdateResponse{
-          status: try!(d.read_struct_field("status", 0, Decodable::decode)),
-          time: try!(d.read_struct_field("QTime", 1, Decodable::decode))
-        })
-      })
-    })
-  }
-}
-
-#[deriving(Show)]
-pub struct SolrQueryResponse {
-  pub status: int,
-  pub time: int,
-  pub total: int,
-  pub start: int,
-  pub items: Vec<SolrDocument>
-}
-
-impl<D: Decoder<E>, E> Decodable<D, E> for SolrQueryResponse {
-  fn decode(d: &mut D) -> Result<SolrQueryResponse, E> {
-    let mut resp = SolrQueryResponse{ status: 0, time: 0, total: 0, start: 0, items: Vec::new() };
-    d.read_struct("root", 0, |d| {
-      d.read_struct_field("responseHeader", 0, |d| {
-        resp.status = try!(d.read_struct_field("status", 0, Decodable::decode));
-        resp.time = try!(d.read_struct_field("QTime", 1, Decodable::decode));
-        Ok(())
-      });
-      d.read_struct_field("response", 0, |d| {
-        resp.total = try!(d.read_struct_field("numFound", 0, Decodable::decode));
-        resp.start = try!(d.read_struct_field("start", 1, Decodable::decode));
-        d.read_struct_field("docs", 0, |d| {
-          d.read_seq(|d, len| {
-            println!("NUmber of docs: {}", len);
-            for i in range(0u, len) {
-              resp.items.push(try!(Decodable::decode(d)));
-            }
-            Ok(())
-          });
-          Ok(())
-        });
-        Ok(())
-      });
-      Ok(())
-    });
-    Ok(resp)
-  }
-}
-
-pub struct SolrQuery {
-  query: String
-}
-
-impl SolrQuery {
-  pub fn new(query: &str) -> SolrQuery {
-    SolrQuery{query: query.to_string()}
-  }
-
-  pub fn to_pairs(&self) -> Vec<(&str, &str)> {
-    vec!(("q", self.query.as_slice()), ("wt", "json"))
-  }
-}
