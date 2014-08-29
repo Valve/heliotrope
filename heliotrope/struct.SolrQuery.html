@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct current' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
+        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct current' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
     </section>
 
     <nav class="sub">
@@ -44,12 +44,16 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrQuery</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-2252' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#260-262'>[src]</a></div></h1>
+        </span><a id='src-1188' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#3-5'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct SolrQuery {
     // some fields omitted
-}</pre><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(query: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
-<h4 id='method.to_pairs' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.to_pairs' class='fnname'>to_pairs</a>(&amp;self) -&gt; <a class='struct' href='http://doc.rust-lang.org/master/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(&amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>, &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>)</a>&gt;</code></h4>
-</div></section>
+}</pre><div class='docblock'><p>Represents Solr query.
+You&#39;ll need to build the query and pass it to Solr to execute</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(query: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Creates a new SolrQuery with only query term inside it</p>
+</div><h4 id='method.to_pairs' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.to_pairs' class='fnname'>to_pairs</a>(&amp;self) -&gt; <a class='struct' href='http://doc.rust-lang.org/master/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(&amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>, &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>)</a>&gt;</code></h4>
+<div class='docblock'><p>Converts this query to a vector of pairs, suitable for URL percent encoding</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

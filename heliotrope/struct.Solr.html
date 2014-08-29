@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct ' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
+        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
     </section>
 
     <nav class="sub">
@@ -44,19 +44,30 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>Solr</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1180' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#98-103'>[src]</a></div></h1>
+        </span><a id='src-1930' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#134-141'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct Solr {
-    pub base_url: <a class='struct' href='../url/struct.Url.html' title='url::Url'>Url</a>,
+    pub base_url: Url,
     // some fields omitted
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr><td id='structfield.base_url'><a class='stability Unmarked' title='No stability level'></a><code>base_url</code></td><td></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../heliotrope/struct.Solr.html' title='heliotrope::Solr'>Solr</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(url: &amp;<a class='struct' href='../url/struct.Url.html' title='url::Url'>Url</a>) -&gt; <a class='struct' href='../heliotrope/struct.Solr.html' title='heliotrope::Solr'>Solr</a></code></h4>
-<h4 id='method.add' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add' class='fnname'>add</a>(&amp;self, document: &amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
-<h4 id='method.add_and_commit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_and_commit' class='fnname'>add_and_commit</a>(&amp;self, document: &amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
-<h4 id='method.add_many' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_many' class='fnname'>add_many</a>(&amp;self, documents: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>]</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
-<h4 id='method.add_many_and_commit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_many_and_commit' class='fnname'>add_many_and_commit</a>(&amp;self, documents: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>]</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
-<h4 id='method.commit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.commit' class='fnname'>commit</a>(&amp;self) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
-<h4 id='method.query' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.query' class='fnname'>query</a>(&amp;self, query: &amp;<a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a>) -&gt; <a class='type' href='../heliotrope/type.SolrQueryResult.html' title='heliotrope::SolrQueryResult'>SolrQueryResult</a></code></h4>
-</div></section>
+}</pre><div class='docblock'><p>Represents your API connection to Solr.
+You will use this struct to perform operations on Solr.</p>
+</div><h2 class='fields'>Fields</h2>
+<table><tr><td id='structfield.base_url'><a class='stability Unmarked' title='No stability level'></a><code>base_url</code></td><td><div class='docblock'><p>Base URL to connect to Solr. Should include the core.
+For example <a href="http://localhost:8983/solr/production/">http://localhost:8983/solr/production/</a></p>
+</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../heliotrope/struct.Solr.html' title='heliotrope::Solr'>Solr</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(url: &amp;Url) -&gt; <a class='struct' href='../heliotrope/struct.Solr.html' title='heliotrope::Solr'>Solr</a></code></h4>
+<div class='docblock'><p>Creates a new instance of Solr.</p>
+</div><h4 id='method.add' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add' class='fnname'>add</a>(&amp;self, document: &amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
+<div class='docblock'><p>Adds new document to Solr, without committing</p>
+</div><h4 id='method.add_and_commit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_and_commit' class='fnname'>add_and_commit</a>(&amp;self, document: &amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
+<div class='docblock'><p>Adds new document to Solr and commits it</p>
+</div><h4 id='method.add_many' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_many' class='fnname'>add_many</a>(&amp;self, documents: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>]</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
+<div class='docblock'><p>Adds multiple documents to Solr, without committing it</p>
+</div><h4 id='method.add_many_and_commit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_many_and_commit' class='fnname'>add_many_and_commit</a>(&amp;self, documents: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a class='struct' href='../heliotrope/struct.SolrDocument.html' title='heliotrope::SolrDocument'>SolrDocument</a>]</a>) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
+<div class='docblock'><p>Ads multiple documents to Solr and commits them</p>
+</div><h4 id='method.commit' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.commit' class='fnname'>commit</a>(&amp;self) -&gt; <a class='type' href='../heliotrope/type.SolrUpdateResult.html' title='heliotrope::SolrUpdateResult'>SolrUpdateResult</a></code></h4>
+<div class='docblock'><p>Performs Solr commit</p>
+</div><h4 id='method.query' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.query' class='fnname'>query</a>(&amp;self, query: &amp;<a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a>) -&gt; <a class='type' href='../heliotrope/type.SolrQueryResult.html' title='heliotrope::SolrQueryResult'>SolrQueryResult</a></code></h4>
+<div class='docblock'><p>Performs Solr query</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

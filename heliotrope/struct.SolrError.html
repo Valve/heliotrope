@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct current' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct ' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
+        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct current' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
     </section>
 
     <nav class="sub">
@@ -44,13 +44,18 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrError</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1592' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#183-187'>[src]</a></div></h1>
+        </span><a id='src-1270' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/response.rs.html#8-16'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct SolrError {
     pub status: <a href='http://doc.rust-lang.org/master/std/primitive.int.html'>int</a>,
     pub time: <a href='http://doc.rust-lang.org/master/std/primitive.int.html'>int</a>,
     pub message: <a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>,
-}</pre><h2 class='fields'>Fields</h2>
-<table><tr><td id='structfield.status'><a class='stability Unmarked' title='No stability level'></a><code>status</code></td><td></td></tr><tr><td id='structfield.time'><a class='stability Unmarked' title='No stability level'></a><code>time</code></td><td></td></tr><tr><td id='structfield.message'><a class='stability Unmarked' title='No stability level'></a><code>message</code></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;D: <a class='trait' href='http://doc.rust-lang.org/master/serialize/serialize/trait.Decoder.html' title='serialize::serialize::Decoder'>Decoder</a>&lt;E&gt;, E&gt; <a class='trait' href='http://doc.rust-lang.org/master/serialize/serialize/trait.Decodable.html' title='serialize::serialize::Decodable'>Decodable</a>&lt;D, E&gt; for <a class='struct' href='../heliotrope/struct.SolrError.html' title='heliotrope::SolrError'>SolrError</a></code></h3><div class='impl-methods'><h4 id='method.decode' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.decode' class='fnname'>decode</a>(d: &amp;mut D) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../heliotrope/struct.SolrError.html' title='heliotrope::SolrError'>SolrError</a>, E&gt;</code></h4>
+}</pre><div class='docblock'><p>SolrError</p>
+</div><h2 class='fields'>Fields</h2>
+<table><tr><td id='structfield.status'><a class='stability Unmarked' title='No stability level'></a><code>status</code></td><td><div class='docblock'><p>HTTP status.
+When failed to connect, it will be 0 (zero).</p>
+</div></td></tr><tr><td id='structfield.time'><a class='stability Unmarked' title='No stability level'></a><code>time</code></td><td><div class='docblock'><p>Time it took to execute the request in milliseconds</p>
+</div></td></tr><tr><td id='structfield.message'><a class='stability Unmarked' title='No stability level'></a><code>message</code></td><td><div class='docblock'><p>Detailed error message</p>
+</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;D: <a class='trait' href='http://doc.rust-lang.org/master/serialize/serialize/trait.Decoder.html' title='serialize::serialize::Decoder'>Decoder</a>&lt;E&gt;, E&gt; <a class='trait' href='http://doc.rust-lang.org/master/serialize/serialize/trait.Decodable.html' title='serialize::serialize::Decodable'>Decodable</a>&lt;D, E&gt; for <a class='struct' href='../heliotrope/struct.SolrError.html' title='heliotrope::SolrError'>SolrError</a></code></h3><div class='impl-methods'><h4 id='method.decode' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.decode' class='fnname'>decode</a>(d: &amp;mut D) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../heliotrope/struct.SolrError.html' title='heliotrope::SolrError'>SolrError</a>, E&gt;</code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
