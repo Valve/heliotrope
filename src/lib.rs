@@ -22,10 +22,8 @@ git = "https://github.com/Valve/heliotrope"
 
 ### Adding new document to solr
 
-```
-extern crate url;
-
-use url::{Url};
+```ignore
+use url::Url;
 use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
 
 fn main(){
@@ -49,8 +47,7 @@ fn main(){
 
 ### Add and commit in one step
 
-```
-extern crate url;
+```ignore
 use url::{Url};
 use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
 
@@ -71,8 +68,7 @@ fn main(){
 
 ### Adding multiple document at once
 
-```rust
-extern crate url;
+```ignore
 use url::{Url};
 use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
 
@@ -98,7 +94,7 @@ match solr.add_many_and_commit(vec!(&document1, &document2)) {
 
 ## Querying
 
-```rust
+```ignore
 extern crate url;
 use url::{Url};
 use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
