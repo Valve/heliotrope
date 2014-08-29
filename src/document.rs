@@ -1,4 +1,4 @@
-use serialize::{json, Encodable, Encoder, Decodable, Decoder};
+use serialize::{Encodable, Encoder, Decodable, Decoder};
 
 /// Strongly typed Solr document field value
 #[deriving(Show, Decodable)]

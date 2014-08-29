@@ -23,15 +23,16 @@ git = "https://github.com/Valve/heliotrope"
 ### Adding new document to solr
 
 ```
-extern crate heliotrope;
+extern crate url;
 
+use url::{Url};
 use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
 
 fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
   let mut document = SolrDocument::new();
-  document.add_field("id", SolrI64(1);
+  document.add_field("id", SolrI64(1));
   document.add_field("type", SolrString("Book".to_string()));
   document.add_field("title", SolrString("How to train your dragon".to_string()));
   document.add_field("body", SolrString("Vala Morgulis".to_string()));
@@ -49,6 +50,10 @@ fn main(){
 ### Add and commit in one step
 
 ```
+extern crate url;
+use url::{Url};
+use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+
 fn main(){
   let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
   let solr = Solr::new(url);
@@ -67,6 +72,10 @@ fn main(){
 ### Adding multiple document at once
 
 ```rust
+extern crate url;
+use url::{Url};
+use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+
 let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
 let solr = Solr::new(url);
 let mut document1 = SolrDocument::new();
@@ -90,6 +99,12 @@ match solr.add_many_and_commit(vec!(&document1, &document2)) {
 ## Querying
 
 ```rust
+extern crate url;
+use url::{Url};
+use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+
+let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
+let solr = Solr::new(url);
 let query = SolrQuery::new("*:*");
 match solr.query(&query) {
   Ok(solr_response) => {
@@ -115,12 +130,12 @@ extern crate debug;
 
 use std::io::IoResult;
 use url::{Url, UrlParser};
-use serialize::{json, Encodable, Encoder, Decodable, Decoder};
+use serialize::{json, Decodable};
 use serialize::json::Decoder as JsonDecoder;
 use serialize::json::{DecoderError};
 use http_utils::HttpResponse;
 
-pub use document::{SolrDocument, SolrValue, SolrF64, SolrI64, SolrString};
+pub use document::{SolrField, SolrDocument, SolrValue, SolrF64, SolrI64, SolrString};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
 pub use query::{SolrQuery};
 
