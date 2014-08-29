@@ -20,8 +20,9 @@ use serialize::{json, Encodable, Encoder, Decodable, Decoder};
 use serialize::json::Decoder as JsonDecoder;
 use serialize::json::{DecoderError};
 use http_utils::HttpResponse;
-pub use document::{SolrDocument, SolrF64, SolrI64, SolrString};
-pub use response::{SolrError, SolrUpdateResult, SolrQueryResult};
+
+pub use document::{SolrDocument, SolrValue, SolrF64, SolrI64, SolrString};
+pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
 pub use query::{SolrQuery};
 
 mod http_utils;
