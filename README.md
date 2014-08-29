@@ -5,10 +5,15 @@
 <a href="https://travis-ci.org/Valve/heliotrope"><img src="http://img.shields.io/travis/Valve/heliotrope/master.svg?style=flat" /></a>
 </p>
 
-[Documentation](http://valve.github.io/heliotrope/heliotrope/index.html)
+### [Documentation](http://valve.github.io/heliotrope/heliotrope/index.html)
 
 
-#### Work in progress  on other querying features (facets, sorting, highlighting etc)
+#### TODO
+
+* facets
+* deleting docs
+* highlighting
+* etc
 
 ### Licence
 
