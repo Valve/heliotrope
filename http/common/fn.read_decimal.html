@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `read_decimal` fn in crate `http`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, read_decimal">
+
+    <title>http::common::read_decimal - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>http</a>::<wbr><a href='index.html'>common</a></p><div class='block fn'><h2>Functions</h2><a class='fn current' href='fn.read_decimal.html'>read_decimal</a><a class='fn ' href='fn.read_hexadecimal.html'>read_hexadecimal</a><a class='fn ' href='fn.read_http_version.html'>read_http_version</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content fn">
+<h1 class='fqn'><div class='in-band'>Function <a href='../index.html'>http</a>::<wbr><a href='index.html'>common</a>::<wbr><a class='fn' href=''>read_decimal</a><wbr></div><div class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-2788' href='../../src/http/src/http/common.rs.html#46-73'>[src]</a></div></h1>
+<pre class='rust fn'>pub fn read_decimal&lt;R: <a class='trait' href='http://doc.rust-lang.org/master/std/io/trait.Reader.html' title='std::io::Reader'>Reader</a>, N: <a class='trait' href='http://doc.rust-lang.org/master/core/num/trait.Unsigned.html' title='core::num::Unsigned'>Unsigned</a> + <a class='trait' href='http://doc.rust-lang.org/master/core/num/trait.NumCast.html' title='core::num::NumCast'>NumCast</a> + <a class='trait' href='http://doc.rust-lang.org/master/core/cmp/trait.PartialOrd.html' title='core::cmp::PartialOrd'>PartialOrd</a> + <a class='trait' href='http://doc.rust-lang.org/master/core/num/trait.CheckedMul.html' title='core::num::CheckedMul'>CheckedMul</a> + <a class='trait' href='http://doc.rust-lang.org/master/core/num/trait.CheckedAdd.html' title='core::num::CheckedAdd'>CheckedAdd</a>&gt;(reader: &amp;mut R, expected_end: |<a href='http://doc.rust-lang.org/master/std/primitive.u8.html'>u8</a>| -&gt; <a href='http://doc.rust-lang.org/master/std/primitive.bool.html'>bool</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/master/std/io/type.IoResult.html' title='std::io::IoResult'>IoResult</a>&lt;N&gt;</pre><div class='docblock'><p>Read a positive decimal integer from the given reader.</p>
+
+<h1 id="arguments" class='section-header'><a
+                           href="#arguments">Arguments</a></h1>
+<ul>
+<li><code>reader</code> - the reader to read the decimal digits from (and whatever byte comes next)</li>
+<li><code>expected_end</code> - this function is called with the byte that follows the last decimal digit
+and should return <code>true</code> if that byte is what is expected to follow the number.</li>
+</ul>
+
+<h1 id="return-value" class='section-header'><a
+                           href="#return-value">Return value</a></h1>
+<ul>
+<li><code>None</code>, if the number overflows;</li>
+<li><code>None</code>, if there is a leading zero;</li>
+<li><code>None</code>, if all the digits are read and the <code>expected_end</code> function is false</li>
+</ul>
+
+<p>Should everything work as designed (i.e. none of these conditions occur) a <code>Some</code> is returned.</p>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "http";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `headers` mod in crate `http`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, headers">
+
+    <title>http::headers - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../index.html'>http</a></p><div class='block mod'><h2>Modules</h2><a class='mod ' href='../buffer/index.html'>buffer</a><a class='mod ' href='../client/index.html'>client</a><a class='mod ' href='../common/index.html'>common</a><a class='mod ' href='../connecter/index.html'>connecter</a><a class='mod current' href='../headers/index.html'>headers</a><a class='mod ' href='../method/index.html'>method</a><a class='mod ' href='../rfc2616/index.html'>rfc2616</a><a class='mod ' href='../server/index.html'>server</a><a class='mod ' href='../status/index.html'>status</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><div class='in-band'>Module <a href='../index.html'>http</a>::<wbr><a class='mod' href=''>headers</a><wbr></div><div class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-9528' href='../../src/http/src/http/headers/mod.rs.html#1-1116'>[src]</a></div></h1>
+<div class='docblock'><p>Types and utilities for working with headers in HTTP requests and responses.</p>
+
+<p>This HTTP system is Special in that it uses lots of strong typing for its header system. All
+known HTTP headers are type checked, rather than being dealt with as strings all the time. Only
+unknown headers are stored in a map in the traditional way.</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='accept_ranges/index.html'
+                               title='http::headers::accept_ranges'>accept_ranges</a></td>
+                        <td class='docblock short'><p>The Accept-Ranges request header, defined in RFC 2616, Section 14.5.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='connection/index.html'
+                               title='http::headers::connection'>connection</a></td>
+                        <td class='docblock short'><p>The Connection general header, defined in RFC 2616, Section 14.10.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='content_type/index.html'
+                               title='http::headers::content_type'>content_type</a></td>
+                        <td class='docblock short'><p>The Content-Type entity header, defined in RFC 2616, Section 14.17.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='etag/index.html'
+                               title='http::headers::etag'>etag</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='host/index.html'
+                               title='http::headers::host'>host</a></td>
+                        <td class='docblock short'><p>The Host request header, defined in RFC 2616, Section 14.23.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='request/index.html'
+                               title='http::headers::request'>request</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='response/index.html'
+                               title='http::headers::response'>response</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='serialization_utils/index.html'
+                               title='http::headers::serialization_utils'>serialization_utils</a></td>
+                        <td class='docblock short'><p>Utility functions for assisting with conversion of headers from and to the HTTP text form.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='test_utils/index.html'
+                               title='http::headers::test_utils'>test_utils</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='mod' href='transfer_encoding/index.html'
+                               title='http::headers::transfer_encoding'>transfer_encoding</a></td>
+                        <td class='docblock short'><p>The Transfer-Encoding request header, defined in RFC 2616, sections 14.41 and 3.6.</p>
+</td>
+                    </tr>
+                </table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.HeaderValueByteIterator.html'
+                               title='http::headers::HeaderValueByteIterator'>HeaderValueByteIterator</a></td>
+                        <td class='docblock short'><p>An iterator over the bytes of a header value.
+This ensures one cannot read past the end of a header mistakenly and that linear white space is
+handled correctly so that nothing else needs to worry about it. Any linear whitespace (multiple
+spaces outside of a quoted-string) is compacted into a single SP.</p>
+</td>
+                    </tr>
+                </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.ConsumeCommaLWSResult.html'
+                               title='http::headers::ConsumeCommaLWSResult'>ConsumeCommaLWSResult</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.HeaderLineErr.html'
+                               title='http::headers::HeaderLineErr'>HeaderLineErr</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                </table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.CommaListHeaderConvertible.html'
+                               title='http::headers::CommaListHeaderConvertible'>CommaListHeaderConvertible</a></td>
+                        <td class='docblock short'><p>A header with multiple comma-separated values. Implement this and a HeaderConvertible
+implementation for Vec<T> is yours for free—just make sure your reading does not consume the
+comma.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.HeaderConvertible.html'
+                               title='http::headers::HeaderConvertible'>HeaderConvertible</a></td>
+                        <td class='docblock short'><p>A datatype for headers.</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='trait' href='trait.HeaderEnum.html'
+                               title='http::headers::HeaderEnum'>HeaderEnum</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                </table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='fn' href='fn.header_enum_from_stream.html'
+                               title='http::headers::header_enum_from_stream'>header_enum_from_stream</a></td>
+                        <td class='docblock short'><p>Shifted out of being a default method to fix an ICE (not yet reported, TODO)</p>
+</td>
+                    </tr>
+                </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.DeltaSeconds.html'
+                               title='http::headers::DeltaSeconds'>DeltaSeconds</a></td>
+                        <td class='docblock short'></td>
+                    </tr>
+                </table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "http";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script async src="../../search-index.js"></script>
+</body>
+</html>

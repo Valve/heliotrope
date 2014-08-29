@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Request` struct in crate `http`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Request">
+
+    <title>http::server::request::Request - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <section class="sidebar">
+        
+        <p class='location'><a href='../../index.html'>http</a>::<wbr><a href='../index.html'>server</a>::<wbr><a href='index.html'>request</a></p><div class='block struct'><h2>Structs</h2><a class='struct current' href='struct.Request.html'>Request</a><a class='struct ' href='struct.RequestBuffer.html'>RequestBuffer</a></div>
+    </section>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><div class='in-band'>Struct <a href='../../index.html'>http</a>::<wbr><a href='../index.html'>server</a>::<wbr><a href='index.html'>request</a>::<wbr><a class='struct' href=''>Request</a><wbr></div><div class='out-of-band'><span id='render-detail'>
+            <a id="collapse-all" href="#">[-]
+            </a>&nbsp;<a id="expand-all" href="#">[+]</a>
+        </span><a id='src-5658' href='../../../src/http/src/http/server/request.rs.html#209-237'>[src]</a></div></h1>
+<pre class='rust struct'>pub struct Request {
+    pub remote_addr: <a class='type' href='http://doc.rust-lang.org/master/core/option/type.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='http://doc.rust-lang.org/master/std/io/net/ip/struct.SocketAddr.html' title='std::io::net::ip::SocketAddr'>SocketAddr</a>&gt;,
+    pub headers: <a class='struct' href='http://doc.rust-lang.org/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='struct' href='../../../http/headers/request/struct.HeaderCollection.html' title='http::headers::request::HeaderCollection'>HeaderCollection</a>&gt;,
+    pub body: <a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>,
+    pub method: <a class='type' href='../../../http/method/type.Method.html' title='http::method::Method'>Method</a>,
+    pub request_uri: <a class='type' href='../../../http/server/request/type.RequestUri.html' title='http::server::request::RequestUri'>RequestUri</a>,
+    pub close_connection: <a href='http://doc.rust-lang.org/master/std/primitive.bool.html'>bool</a>,
+    pub version: <a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a href='http://doc.rust-lang.org/master/std/primitive.uint.html'>uint</a>, <a href='http://doc.rust-lang.org/master/std/primitive.uint.html'>uint</a>)</a>,
+}</pre><div class='docblock'><p>An HTTP request sent to the server.</p>
+</div><h2 class='fields'>Fields</h2>
+<table><tr><td id='structfield.remote_addr'><a class='stability Unmarked' title='No stability level'></a><code>remote_addr</code></td><td><div class='docblock'><p>The originating IP address of the request.</p>
+</div></td></tr><tr><td id='structfield.headers'><a class='stability Unmarked' title='No stability level'></a><code>headers</code></td><td><div class='docblock'><p>The host name and IP address that the request was sent to; this must always be specified for
+HTTP/1.1 requests (or the request will be rejected), but for HTTP/1.0 requests the Host
+header was not defined, and so this field will probably be None in such cases.
+The headers sent with the request.</p>
+</div></td></tr><tr><td id='structfield.body'><a class='stability Unmarked' title='No stability level'></a><code>body</code></td><td><div class='docblock'><p>The body of the request; empty for such methods as GET.</p>
+</div></td></tr><tr><td id='structfield.method'><a class='stability Unmarked' title='No stability level'></a><code>method</code></td><td><div class='docblock'><p>The HTTP method for the request.</p>
+</div></td></tr><tr><td id='structfield.request_uri'><a class='stability Unmarked' title='No stability level'></a><code>request_uri</code></td><td><div class='docblock'><p>The URI that was requested, as found in the Request-URI of the Request-Line.
+You will almost never need to use this; you should prefer the <code>url</code> field instead.</p>
+</div></td></tr><tr><td id='structfield.close_connection'><a class='stability Unmarked' title='No stability level'></a><code>close_connection</code></td><td><div class='docblock'><p>Whether to close the TCP connection when the request has been served.
+The alternative is keeping the connection open and waiting for another request.</p>
+</div></td></tr><tr><td id='structfield.version'><a class='stability Unmarked' title='No stability level'></a><code>version</code></td><td><div class='docblock'><p>The HTTP version number; typically <code>(1, 1)</code> or, less commonly, <code>(1, 0)</code>.</p>
+</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../../../http/server/request/struct.Request.html' title='http::server::request::Request'>Request</a></code></h3><div class='impl-methods'><h4 id='method.load' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.load' class='fnname'>load</a>(stream: &amp;mut <a class='struct' href='../../../http/buffer/struct.BufferedStream.html' title='http::buffer::BufferedStream'>BufferedStream</a>&lt;<a class='struct' href='http://doc.rust-lang.org/master/std/io/net/tcp/struct.TcpStream.html' title='std::io::net::tcp::TcpStream'>TcpStream</a>&gt;) -&gt; <a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='struct' href='../../../http/server/request/struct.Request.html' title='http::server::request::Request'>Request</a>, <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a href='http://doc.rust-lang.org/master/std/primitive.unit.html'>()</a>, <a class='type' href='../../../http/status/type.Status.html' title='http::status::Status'>Status</a>&gt;)</a></code></h4>
+<div class='docblock'><p>Get a response from an open socket.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <div id="help" class="hidden">
+        <div class="shortcuts">
+            <h1>Keyboard shortcuts</h1>
+            <dl>
+                <dt>?</dt>
+                <dd>Show this help dialog</dd>
+                <dt>S</dt>
+                <dd>Focus the search field</dd>
+                <dt>&larrb;</dt>
+                <dd>Move up in search results</dd>
+                <dt>&rarrb;</dt>
+                <dd>Move down in search results</dd>
+                <dt>&#9166;</dt>
+                <dd>Go to active search result</dd>
+            </dl>
+        </div>
+        <div class="infos">
+            <h1>Search tricks</h1>
+            <p>
+                Prefix searches with a type followed by a colon (e.g.
+                <code>fn:</code>) to restrict the search to a given type.
+            </p>
+            <p>
+                Accepted types are: <code>fn</code>, <code>mod</code>,
+                <code>struct</code>, <code>enum</code>,
+                <code>trait</code>, <code>typedef</code> (or
+                <code>tdef</code>).
+            </p>
+        </div>
+    </div>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "http";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    
+    <script async src="../../../search-index.js"></script>
+</body>
+</html>
