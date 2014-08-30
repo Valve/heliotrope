@@ -1,7 +1,6 @@
 extern crate serialize;
 extern crate heliotrope;
 
-
 use serialize::json;
 use heliotrope::{SolrDocument, SolrString};
 

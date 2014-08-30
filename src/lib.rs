@@ -115,6 +115,13 @@ match solr.query(&query) {
     Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
 }
 ```
+
+You can chain query options:
+
+```ignore
+let query = SolrQuery::new("*:*").add_field("score");
+```
+
 */
 
 #![crate_name="heliotrope"]
@@ -210,7 +217,7 @@ impl Solr {
     /// Performs Solr query
     pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
         let mut query_url = self.select_url.clone();
-        query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(k,v)| (k,v)));
+        query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
         let http_result = http_utils::get(&query_url);
         handle_http_result(http_result)
     }
