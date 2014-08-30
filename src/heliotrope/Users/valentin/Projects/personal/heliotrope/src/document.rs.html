@@ -116,79 +116,79 @@
 <span id='74'>74</span>
 <span id='75'>75</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>serialize</span>::{<span class='ident'>json</span>, <span class='ident'>Encodable</span>, <span class='ident'>Encoder</span>, <span class='ident'>Decodable</span>, <span class='ident'>Decoder</span>};
+<span class='kw'>use</span> <span class='ident'>serialize</span>::{<span class='ident'>Encodable</span>, <span class='ident'>Encoder</span>, <span class='ident'>Decodable</span>, <span class='ident'>Decoder</span>};
 
 <span class='doccomment'>/// Strongly typed Solr document field value</span>
 <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>, <span class='ident'>Decodable</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SolrValue</span> {
-  <span class='ident'>SolrF64</span>(<span class='ident'>f64</span>),
-  <span class='ident'>SolrI64</span>(<span class='ident'>i64</span>),
-  <span class='ident'>SolrString</span>(<span class='ident'>String</span>)
+    <span class='ident'>SolrF64</span>(<span class='ident'>f64</span>),
+    <span class='ident'>SolrI64</span>(<span class='ident'>i64</span>),
+    <span class='ident'>SolrString</span>(<span class='ident'>String</span>)
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Encoder</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>Encodable</span><span class='op'>&lt;</span><span class='ident'>S</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SolrValue</span> {
-  <span class='kw'>fn</span> <span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-      <span class='ident'>SolrF64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-      <span class='ident'>SolrI64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-      <span class='ident'>SolrString</span>(<span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>)
+    <span class='kw'>fn</span> <span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+            <span class='ident'>SolrF64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrI64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrString</span>(<span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>)
+        }
     }
-  }
 }
 
 <span class='doccomment'>/// SolrDocument field</span>
 <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SolrField</span> {
-  <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>String</span>,
-  <span class='kw'>pub</span> <span class='ident'>value</span>: <span class='ident'>SolrValue</span>
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>String</span>,
+    <span class='kw'>pub</span> <span class='ident'>value</span>: <span class='ident'>SolrValue</span>
 }
 
 <span class='doccomment'>/// SolrDocument to be used to either index or query.</span>
 <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SolrDocument</span> {
-  <span class='doccomment'>/// Collection of document fields</span>
-  <span class='kw'>pub</span> <span class='ident'>fields</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SolrField</span><span class='op'>&gt;</span>
+    <span class='doccomment'>/// Collection of document fields</span>
+    <span class='kw'>pub</span> <span class='ident'>fields</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SolrField</span><span class='op'>&gt;</span>
 }
 
 <span class='kw'>impl</span> <span class='ident'>SolrDocument</span> {
-  <span class='doccomment'>/// Creates new empty SolrDocument</span>
-  <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>SolrDocument</span> {
-    <span class='kw'>let</span> <span class='ident'>fields</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SolrField</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>10</span>);
-    <span class='ident'>SolrDocument</span>{<span class='ident'>fields</span>: <span class='ident'>fields</span>}
-  }
+    <span class='doccomment'>/// Creates new empty SolrDocument</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>SolrDocument</span> {
+        <span class='kw'>let</span> <span class='ident'>fields</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SolrField</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='number'>10</span>);
+        <span class='ident'>SolrDocument</span>{<span class='ident'>fields</span>: <span class='ident'>fields</span>}
+    }
 
-  <span class='doccomment'>/// Adds a field to the document</span>
-  <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_field</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>value</span>: <span class='ident'>SolrValue</span>) {
-    <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>push</span>(<span class='ident'>SolrField</span>{<span class='ident'>name</span>: <span class='ident'>name</span>.<span class='ident'>to_string</span>(), <span class='ident'>value</span>: <span class='ident'>value</span>});
-  }
+    <span class='doccomment'>/// Adds a field to the document</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_field</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>value</span>: <span class='ident'>SolrValue</span>) {
+        <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>push</span>(<span class='ident'>SolrField</span>{<span class='ident'>name</span>: <span class='ident'>name</span>.<span class='ident'>to_string</span>(), <span class='ident'>value</span>: <span class='ident'>value</span>});
+    }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>S</span>: <span class='ident'>Encoder</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='ident'>Encodable</span><span class='op'>&lt;</span><span class='ident'>S</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SolrDocument</span> {
-  <span class='kw'>fn</span> <span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u</span>;
-    <span class='ident'>s</span>.<span class='ident'>emit_struct</span>(<span class='string'>&quot;SolrDocument&quot;</span>, <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>len</span>(), <span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> {
-      <span class='kw'>for</span> <span class='ident'>field</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>iter</span>() {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>e</span>.<span class='ident'>emit_struct_field</span>(<span class='ident'>field</span>.<span class='ident'>name</span>.<span class='ident'>as_slice</span>(), <span class='ident'>i</span>, <span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>field</span>.<span class='ident'>value</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>)));
-        <span class='ident'>i</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>;
-      }
-      <span class='prelude-val'>Ok</span>(())
-    })
-  }
+    <span class='kw'>fn</span> <span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0u</span>;
+        <span class='ident'>s</span>.<span class='ident'>emit_struct</span>(<span class='string'>&quot;SolrDocument&quot;</span>, <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>len</span>(), <span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> {
+            <span class='kw'>for</span> <span class='ident'>field</span> <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>iter</span>() {
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>e</span>.<span class='ident'>emit_struct_field</span>(<span class='ident'>field</span>.<span class='ident'>name</span>.<span class='ident'>as_slice</span>(), <span class='ident'>i</span>, <span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> <span class='ident'>field</span>.<span class='ident'>value</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>)));
+                <span class='ident'>i</span> <span class='op'>=</span> <span class='ident'>i</span> <span class='op'>+</span> <span class='number'>1</span>;
+            }
+            <span class='prelude-val'>Ok</span>(())
+        })
+    }
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>E</span>, <span class='ident'>D</span>: <span class='ident'>Decoder</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;&gt;</span> <span class='ident'>Decodable</span><span class='op'>&lt;</span><span class='ident'>D</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SolrDocument</span> {
-  <span class='kw'>fn</span> <span class='ident'>decode</span>(<span class='ident'>d</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SolrDocument</span>, <span class='ident'>E</span><span class='op'>&gt;</span> {
-    <span class='ident'>d</span>.<span class='ident'>read_map</span>(<span class='op'>|</span><span class='ident'>d</span>, <span class='ident'>len</span><span class='op'>|</span> {
-      <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>doc</span> <span class='op'>=</span> <span class='ident'>SolrDocument</span>{<span class='ident'>fields</span>: <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>)};
-      <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>len</span>) {
-        <span class='kw'>let</span> <span class='ident'>field_name</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_map_elt_key</span>(<span class='ident'>i</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
-        <span class='comment'>// TODO: match correct SolrValue</span>
-        <span class='kw'>let</span> <span class='ident'>field_value</span> <span class='op'>=</span> <span class='ident'>SolrString</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_map_elt_val</span>(<span class='ident'>i</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>)));
-        <span class='ident'>doc</span>.<span class='ident'>fields</span>.<span class='ident'>push</span>(<span class='ident'>SolrField</span>{<span class='ident'>name</span>: <span class='ident'>field_name</span>, <span class='ident'>value</span>: <span class='ident'>field_value</span>});
-      }
-      <span class='prelude-val'>Ok</span>(<span class='ident'>doc</span>)
-    })
-  }
+    <span class='kw'>fn</span> <span class='ident'>decode</span>(<span class='ident'>d</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SolrDocument</span>, <span class='ident'>E</span><span class='op'>&gt;</span> {
+        <span class='ident'>d</span>.<span class='ident'>read_map</span>(<span class='op'>|</span><span class='ident'>d</span>, <span class='ident'>len</span><span class='op'>|</span> {
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>doc</span> <span class='op'>=</span> <span class='ident'>SolrDocument</span>{<span class='ident'>fields</span>: <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>len</span>)};
+            <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>len</span>) {
+                <span class='kw'>let</span> <span class='ident'>field_name</span>: <span class='ident'>String</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_map_elt_key</span>(<span class='ident'>i</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
+                <span class='comment'>// TODO: match correct SolrValue</span>
+                <span class='kw'>let</span> <span class='ident'>field_value</span> <span class='op'>=</span> <span class='ident'>SolrString</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_map_elt_val</span>(<span class='ident'>i</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>)));
+                <span class='ident'>doc</span>.<span class='ident'>fields</span>.<span class='ident'>push</span>(<span class='ident'>SolrField</span>{<span class='ident'>name</span>: <span class='ident'>field_name</span>, <span class='ident'>value</span>: <span class='ident'>field_value</span>});
+            }
+            <span class='prelude-val'>Ok</span>(<span class='ident'>doc</span>)
+        })
+    }
 }
 
 </pre>
