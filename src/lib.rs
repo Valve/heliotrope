@@ -97,11 +97,11 @@ match solr.add_many_and_commit(vec!(&document1, &document2)) {
 ```ignore
 extern crate url;
 use url::{Url};
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument, SolrQuery, Descending};
 
 let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
 let solr = Solr::new(url);
-let query = SolrQuery::new("*:*");
+let query = SolrQuery::new("*:*").add_sort("year", Descending);
 match solr.query(&query) {
     Ok(solr_response) => {
         println!("Status: {}", solr_response.status);
@@ -119,7 +119,11 @@ match solr.query(&query) {
 You can chain query options:
 
 ```ignore
-let query = SolrQuery::new("*:*").add_field("score");
+let query = SolrQuery::new("*:*")
+    .add_field("score")
+    .add_field("*")
+    .add_sort("age", Descending)
+    .add_sort("balance", Ascending);
 ```
 
 */
@@ -140,7 +144,7 @@ use http_utils::HttpResponse;
 
 pub use document::{SolrField, SolrDocument, SolrValue, SolrF64, SolrI64, SolrString};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
-pub use query::{SolrQuery};
+pub use query::{SolrQuery, Ascending, Descending};
 
 mod http_utils;
 mod document;
