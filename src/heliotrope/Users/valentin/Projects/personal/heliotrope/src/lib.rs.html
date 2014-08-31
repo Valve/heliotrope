@@ -285,6 +285,10 @@
 <span id='243'>243</span>
 <span id='244'>244</span>
 <span id='245'>245</span>
+<span id='246'>246</span>
+<span id='247'>247</span>
+<span id='248'>248</span>
+<span id='249'>249</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Valentin Vasilyev.</span>
 <span class='comment'>//</span>
@@ -385,11 +389,11 @@ match solr.add_many_and_commit(vec!(&amp;document1, &amp;document2)) {
 ```ignore
 extern crate url;
 use url::{Url};
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument, SolrQuery, Descending};
 
 let url = Url::parse(&quot;http://localhost:8983/solr/test/&quot;).unwrap();
 let solr = Solr::new(url);
-let query = SolrQuery::new(&quot;*:*&quot;);
+let query = SolrQuery::new(&quot;*:*&quot;).add_sort(&quot;year&quot;, Descending);
 match solr.query(&amp;query) {
     Ok(solr_response) =&gt; {
         println!(&quot;Status: {}&quot;, solr_response.status);
@@ -407,7 +411,11 @@ match solr.query(&amp;query) {
 You can chain query options:
 
 ```ignore
-let query = SolrQuery::new(&quot;*:*&quot;).add_field(&quot;score&quot;);
+let query = SolrQuery::new(&quot;*:*&quot;)
+    .add_field(&quot;score&quot;)
+    .add_field(&quot;*&quot;)
+    .add_sort(&quot;age&quot;, Descending)
+    .add_sort(&quot;balance&quot;, Ascending);
 ```
 
 */</span>
@@ -428,7 +436,7 @@ let query = SolrQuery::new(&quot;*:*&quot;).add_field(&quot;score&quot;);
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>document</span>::{<span class='ident'>SolrField</span>, <span class='ident'>SolrDocument</span>, <span class='ident'>SolrValue</span>, <span class='ident'>SolrF64</span>, <span class='ident'>SolrI64</span>, <span class='ident'>SolrString</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>response</span>::{<span class='ident'>SolrError</span>, <span class='ident'>SolrUpdateResult</span>, <span class='ident'>SolrQueryResult</span>, <span class='ident'>SolrUpdateResponse</span>, <span class='ident'>SolrQueryResponse</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>query</span>::{<span class='ident'>SolrQuery</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>query</span>::{<span class='ident'>SolrQuery</span>, <span class='ident'>Ascending</span>, <span class='ident'>Descending</span>};
 
 <span class='kw'>mod</span> <span class='ident'>http_utils</span>;
 <span class='kw'>mod</span> <span class='ident'>document</span>;

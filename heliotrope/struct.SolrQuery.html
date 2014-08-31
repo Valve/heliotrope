@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrQuery</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1185' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#5-9'>[src]</a></div></h1>
+        </span><a id='src-1196' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#9-13'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct SolrQuery {
     // some fields omitted
 }</pre><div class='docblock'><p>Represents Solr query.
@@ -58,6 +58,8 @@ This is done to enable chaining.</p>
 </div><h4 id='method.set_fields' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_fields' class='fnname'>set_fields</a>(&amp;self, fields: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Sets fields (fl) as the list of returned fields.
 The already set fields are overwritten.</p>
+</div><h4 id='method.add_sort' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_sort' class='fnname'>add_sort</a>(&amp;self, field: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>, order: SortOrder) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Adds sort to query.</p>
 </div><h4 id='method.to_pairs' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.to_pairs' class='fnname'>to_pairs</a>(&amp;self) -&gt; <a class='struct' href='http://doc.rust-lang.org/master/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>)</a>&gt;</code></h4>
 <div class='docblock'><p>Converts this query to a vector of pairs, suitable for URL percent encoding</p>
 </div></div></section>
