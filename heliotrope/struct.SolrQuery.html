@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrQuery</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1198' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#9-13'>[src]</a></div></h1>
+        </span><a id='src-1198' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#9-14'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct SolrQuery {
     // some fields omitted
 }</pre><div class='docblock'><p>Represents Solr query.
@@ -54,10 +54,15 @@ This is done to enable chaining.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h3><div class='impl-methods'><h4 id='method.new' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.new' class='fnname'>new</a>(query: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Creates a new SolrQuery with only query term inside it</p>
 </div><h4 id='method.add_field' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_field' class='fnname'>add_field</a>(&amp;self, field: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
-<div class='docblock'><p>Adds field (fl) to the list of returned fields</p>
+<div class='docblock'><p>Adds field (l) to the list of returned fields</p>
 </div><h4 id='method.set_fields' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_fields' class='fnname'>set_fields</a>(&amp;self, fields: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Sets fields (fl) as the list of returned fields.
 The already set fields are overwritten.</p>
+</div><h4 id='method.add_filter' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_filter' class='fnname'>add_filter</a>(&amp;self, filter: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Adds query filter (fq)</p>
+</div><h4 id='method.set_filters' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_filters' class='fnname'>set_filters</a>(&amp;self, filters: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Sets query filters (fq)
+Already existing filters are overwritten.</p>
 </div><h4 id='method.add_sort' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_sort' class='fnname'>add_sort</a>(&amp;self, field: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>, order: <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>SortOrder</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Adds sort to query.</p>
 </div><h4 id='method.set_sorts' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_sorts' class='fnname'>set_sorts</a>(&amp;self, sorts: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[<a class='struct' href='../heliotrope/struct.SortClause.html' title='heliotrope::SortClause'>SortClause</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>

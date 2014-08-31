@@ -163,6 +163,53 @@
 <span id='121'>121</span>
 <span id='122'>122</span>
 <span id='123'>123</span>
+<span id='124'>124</span>
+<span id='125'>125</span>
+<span id='126'>126</span>
+<span id='127'>127</span>
+<span id='128'>128</span>
+<span id='129'>129</span>
+<span id='130'>130</span>
+<span id='131'>131</span>
+<span id='132'>132</span>
+<span id='133'>133</span>
+<span id='134'>134</span>
+<span id='135'>135</span>
+<span id='136'>136</span>
+<span id='137'>137</span>
+<span id='138'>138</span>
+<span id='139'>139</span>
+<span id='140'>140</span>
+<span id='141'>141</span>
+<span id='142'>142</span>
+<span id='143'>143</span>
+<span id='144'>144</span>
+<span id='145'>145</span>
+<span id='146'>146</span>
+<span id='147'>147</span>
+<span id='148'>148</span>
+<span id='149'>149</span>
+<span id='150'>150</span>
+<span id='151'>151</span>
+<span id='152'>152</span>
+<span id='153'>153</span>
+<span id='154'>154</span>
+<span id='155'>155</span>
+<span id='156'>156</span>
+<span id='157'>157</span>
+<span id='158'>158</span>
+<span id='159'>159</span>
+<span id='160'>160</span>
+<span id='161'>161</span>
+<span id='162'>162</span>
+<span id='163'>163</span>
+<span id='164'>164</span>
+<span id='165'>165</span>
+<span id='166'>166</span>
+<span id='167'>167</span>
+<span id='168'>168</span>
+<span id='169'>169</span>
+<span id='170'>170</span>
 </pre><pre class='rust '>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ToUrlParam</span> {
     <span class='kw'>fn</span> <span class='ident'>to_url_param</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span>;
@@ -175,16 +222,17 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SolrQuery</span> {
     <span class='ident'>query</span>: <span class='ident'>String</span>,
     <span class='ident'>fields</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
+    <span class='ident'>filters</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>,
     <span class='ident'>sorts</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>SortClause</span><span class='op'>&gt;&gt;</span>
 }
 
 <span class='kw'>impl</span> <span class='ident'>SolrQuery</span> {
     <span class='doccomment'>/// Creates a new SolrQuery with only query term inside it</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>query</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>SolrQuery</span> {
-        <span class='ident'>SolrQuery</span>{<span class='ident'>query</span>: <span class='ident'>query</span>.<span class='ident'>to_string</span>(), <span class='ident'>fields</span>: <span class='prelude-val'>None</span>, <span class='ident'>sorts</span>: <span class='prelude-val'>None</span>}
+        <span class='ident'>SolrQuery</span>{<span class='ident'>query</span>: <span class='ident'>query</span>.<span class='ident'>to_string</span>(), <span class='ident'>fields</span>: <span class='prelude-val'>None</span>, <span class='ident'>filters</span>: <span class='prelude-val'>None</span>, <span class='ident'>sorts</span>: <span class='prelude-val'>None</span>}
     }
 
-    <span class='doccomment'>/// Adds field (fl) to the list of returned fields</span>
+    <span class='doccomment'>/// Adds field (l) to the list of returned fields</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_field</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>SolrQuery</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>fields</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>clone</span>();
         <span class='ident'>fields</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>fields</span> {
@@ -194,7 +242,10 @@
             },
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>field</span>.<span class='ident'>to_string</span>()))
         };
-        <span class='ident'>SolrQuery</span>{<span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(), <span class='ident'>fields</span>: <span class='ident'>fields</span>, <span class='ident'>sorts</span>: <span class='self'>self</span>.<span class='ident'>sorts</span>.<span class='ident'>clone</span>()}
+        <span class='ident'>SolrQuery</span>{ <span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(),
+                   <span class='ident'>fields</span>: <span class='ident'>fields</span>,
+                   <span class='ident'>filters</span>: <span class='self'>self</span>.<span class='ident'>filters</span>.<span class='ident'>clone</span>(),
+                   <span class='ident'>sorts</span>: <span class='self'>self</span>.<span class='ident'>sorts</span>.<span class='ident'>clone</span>() }
     }
 
     <span class='doccomment'>/// Sets fields (fl) as the list of returned fields.</span>
@@ -202,7 +253,37 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_fields</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fields</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='ident'>SolrQuery</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_fields</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>fields</span>.<span class='ident'>len</span>());
         <span class='ident'>new_fields</span>.<span class='ident'>extend</span>(<span class='ident'>fields</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>.<span class='ident'>to_string</span>()));
-        <span class='ident'>SolrQuery</span>{<span class='ident'>query</span>:<span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(), <span class='ident'>fields</span>: <span class='prelude-val'>Some</span>(<span class='ident'>new_fields</span>), <span class='ident'>sorts</span>:<span class='self'>self</span>.<span class='ident'>sorts</span>.<span class='ident'>clone</span>()}
+        <span class='ident'>SolrQuery</span> { <span class='ident'>query</span>:<span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>fields</span>: <span class='prelude-val'>Some</span>(<span class='ident'>new_fields</span>),
+                    <span class='ident'>filters</span>: <span class='self'>self</span>.<span class='ident'>filters</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>sorts</span>:<span class='self'>self</span>.<span class='ident'>sorts</span>.<span class='ident'>clone</span>() }
+    }
+
+    <span class='doccomment'>/// Adds query filter (fq)</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_filter</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>filter</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>SolrQuery</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>filters</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>filters</span>.<span class='ident'>clone</span>();
+        <span class='ident'>filters</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>filters</span> {
+            <span class='prelude-val'>Some</span>(<span class='kw-2'>mut</span> <span class='ident'>f</span>) <span class='op'>=&gt;</span> {
+                <span class='ident'>f</span>.<span class='ident'>push</span>(<span class='ident'>filter</span>.<span class='ident'>to_string</span>());
+                <span class='prelude-val'>Some</span>(<span class='ident'>f</span>)
+            },
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='ident'>filter</span>.<span class='ident'>to_string</span>()))
+        };
+        <span class='ident'>SolrQuery</span> { <span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>fields</span>: <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>filters</span>: <span class='ident'>filters</span>,
+                    <span class='ident'>sorts</span>: <span class='self'>self</span>.<span class='ident'>sorts</span>.<span class='ident'>clone</span>() }
+    }
+
+    <span class='doccomment'>/// Sets query filters (fq)</span>
+    <span class='doccomment'>/// Already existing filters are overwritten.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_filters</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>filters</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>str</span>]) <span class='op'>-&gt;</span> <span class='ident'>SolrQuery</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_filters</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>filters</span>.<span class='ident'>len</span>());
+        <span class='ident'>new_filters</span>.<span class='ident'>extend</span>(<span class='ident'>filters</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='ident'>x</span>.<span class='ident'>to_string</span>()));
+        <span class='ident'>SolrQuery</span> { <span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>fields</span>: <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>clone</span>(),
+                    <span class='ident'>filters</span>: <span class='prelude-val'>Some</span>(<span class='ident'>new_filters</span>),
+                    <span class='ident'>sorts</span>: <span class='self'>self</span>.<span class='ident'>sorts</span>.<span class='ident'>clone</span>() }
     }
 
     <span class='doccomment'>/// Adds sort to query.</span>
@@ -219,6 +300,7 @@
         <span class='ident'>SolrQuery</span> {
             <span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(),
             <span class='ident'>fields</span>: <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>clone</span>(),
+            <span class='ident'>filters</span>: <span class='self'>self</span>.<span class='ident'>filters</span>.<span class='ident'>clone</span>(),
             <span class='ident'>sorts</span>: <span class='ident'>sorts</span>
         }
     }
@@ -228,7 +310,11 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_sorts</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sorts</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>SortClause</span>]) <span class='op'>-&gt;</span> <span class='ident'>SolrQuery</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_sorts</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>sorts</span>.<span class='ident'>len</span>());
         <span class='ident'>new_sorts</span>.<span class='ident'>push_all</span>(<span class='ident'>sorts</span>);
-        <span class='ident'>SolrQuery</span>{<span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(), <span class='ident'>fields</span>: <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>clone</span>(), <span class='ident'>sorts</span>: <span class='prelude-val'>Some</span>(<span class='ident'>new_sorts</span>)}
+        <span class='ident'>SolrQuery</span> {
+            <span class='ident'>query</span>: <span class='self'>self</span>.<span class='ident'>query</span>.<span class='ident'>clone</span>(),
+            <span class='ident'>fields</span>: <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>clone</span>(),
+            <span class='ident'>filters</span>: <span class='self'>self</span>.<span class='ident'>filters</span>.<span class='ident'>clone</span>(),
+            <span class='ident'>sorts</span>: <span class='prelude-val'>Some</span>(<span class='ident'>new_sorts</span>) }
     }
 
     <span class='doccomment'>/// Converts this query to a vector of pairs, suitable for URL percent encoding</span>
@@ -244,6 +330,14 @@
             },
             _ <span class='op'>=&gt;</span> ()
         }
+
+        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>filters</span> {
+            <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>f</span>) <span class='op'>=&gt;</span> {
+                <span class='ident'>vec</span>.<span class='ident'>extend</span>(<span class='ident'>f</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> (<span class='string'>&quot;fq&quot;</span>.<span class='ident'>to_string</span>(), <span class='ident'>x</span>.<span class='ident'>clone</span>())));
+            },
+            _ <span class='op'>=&gt;</span> ()
+        }
+
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>sorts</span> {
             <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> {
                 <span class='kw'>let</span> <span class='ident'>sort_url_params</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>clone</span>()
