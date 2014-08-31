@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `SolrUpdateResult` type in crate `heliotrope`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, SolrUpdateResult">
+    <meta name="description" content="API documentation for the Rust `SortOrder` type in crate `heliotrope`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, SortOrder">
 
-    <title>heliotrope::SolrUpdateResult - Rust</title>
+    <title>heliotrope::SortOrder - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../main.css">
 
@@ -41,11 +41,19 @@
     </nav>
 
     <section id='main' class="content type">
-<h1 class='fqn'><div class='in-band'><a href='index.html'>heliotrope</a>::<wbr><a class='type' href=''>SolrUpdateResult</a><wbr></div><div class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><div class='in-band'>Enum <a href='index.html'>heliotrope</a>::<wbr><a class='type' href=''>SortOrder</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1834' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/response.rs.html#4'>[src]</a></div></h1>
-<pre class='rust typedef'>type SolrUpdateResult = <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../heliotrope/struct.SolrUpdateResponse.html' title='heliotrope::SolrUpdateResponse'>SolrUpdateResponse</a>, <a class='struct' href='../heliotrope/struct.SolrError.html' title='heliotrope::SolrError'>SolrError</a>&gt;;</pre></section>
+        </span><a id='src-1654' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#98-101'>[src]</a></div></h1>
+<pre class='rust enum'>pub enum SortOrder {
+    Ascending,
+    Descending,
+}</pre><div class='docblock'><p>Represents sort ordering for a field</p>
+</div><h2 class='variants'>Variants</h2>
+<table><tr><td id='variant.Ascending'><a class='stability Unmarked' title='No stability level'></a><code>Ascending</code></td><td></td></tr><tr><td id='variant.Descending'><a class='stability Unmarked' title='No stability level'></a><code>Descending</code></td><td></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl ToUrlParam for <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>SortOrder</a></code></h3><div class='impl-methods'><h4 id='method.to_url_param' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.to_url_param' class='fnname'>to_url_param</a>(&amp;self) -&gt; <a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/master/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>SortOrder</a></code></h3><div class='impl-methods'><h4 id='method.clone' class='method'><a class='stability Unstable' title='Unstable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>SortOrder</a></code></h4>
+<h4 id='method.clone_from' class='method'><a class='stability Experimental' title='Experimental: this function is mostly unused'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

@@ -156,7 +156,7 @@ git = &quot;https://github.com/Valve/heliotrope&quot;</code></pre>
     .<span class='ident'>add_sort</span>(<span class='string'>&quot;balance&quot;</span>, <span class='ident'>Ascending</span>);
 </pre>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use document::{<a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrF64</a>, <a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrI64</a>, <a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrString</a>};</code></td></tr><tr><td><code>pub use query::{Ascending, Descending};</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr><td><code>pub use document::{<a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrF64</a>, <a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrI64</a>, <a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrString</a>};</code></td></tr><tr><td><code>pub use query::{<a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>Ascending</a>, <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>Descending</a>};</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Solr.html'
@@ -210,12 +210,26 @@ This is done to enable chaining.</p>
                         <td class='docblock short'><p>Solr response used for update/indexing/commit operations</p>
 </td>
                     </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.SortClause.html'
+                               title='heliotrope::SortClause'>SortClause</a></td>
+                        <td class='docblock short'><p>A utility struct to hold sorting for a field</p>
+</td>
+                    </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.SolrValue.html'
                                title='heliotrope::SolrValue'>SolrValue</a></td>
                         <td class='docblock short'><p>Strongly typed Solr document field value</p>
+</td>
+                    </tr>
+                
+                    <tr>
+                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.SortOrder.html'
+                               title='heliotrope::SortOrder'>SortOrder</a></td>
+                        <td class='docblock short'><p>Represents sort ordering for a field</p>
 </td>
                     </tr>
                 </table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>

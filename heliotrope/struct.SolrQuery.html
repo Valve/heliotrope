@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct current' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a></div>
+        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct current' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct ' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a><a class='struct ' href='struct.SortClause.html'>SortClause</a></div>
     </section>
 
     <nav class="sub">
@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrQuery</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1196' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#9-13'>[src]</a></div></h1>
+        </span><a id='src-1198' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#9-13'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct SolrQuery {
     // some fields omitted
 }</pre><div class='docblock'><p>Represents Solr query.
@@ -58,8 +58,11 @@ This is done to enable chaining.</p>
 </div><h4 id='method.set_fields' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_fields' class='fnname'>set_fields</a>(&amp;self, fields: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[&amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Sets fields (fl) as the list of returned fields.
 The already set fields are overwritten.</p>
-</div><h4 id='method.add_sort' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_sort' class='fnname'>add_sort</a>(&amp;self, field: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>, order: SortOrder) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+</div><h4 id='method.add_sort' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.add_sort' class='fnname'>add_sort</a>(&amp;self, field: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.str.html'>str</a>, order: <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>SortOrder</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Adds sort to query.</p>
+</div><h4 id='method.set_sorts' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_sorts' class='fnname'>set_sorts</a>(&amp;self, sorts: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[<a class='struct' href='../heliotrope/struct.SortClause.html' title='heliotrope::SortClause'>SortClause</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Sets sorts for fields.
+Already existing sorts will be overwritten</p>
 </div><h4 id='method.to_pairs' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.to_pairs' class='fnname'>to_pairs</a>(&amp;self) -&gt; <a class='struct' href='http://doc.rust-lang.org/master/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>)</a>&gt;</code></h4>
 <div class='docblock'><p>Converts this query to a vector of pairs, suitable for URL percent encoding</p>
 </div></div></section>
