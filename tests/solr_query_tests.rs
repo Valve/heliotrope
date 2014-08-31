@@ -31,13 +31,46 @@ fn query_and_many_fields_with_add_field_to_pairs() {
 }
 
 #[test]
-fn query_and_many_fields_with_set_fields_to_paris() {
+fn query_and_many_fields_with_set_fields_to_pairs() {
     let mut query = SolrQuery::new("abba");
     query = query.set_fields(&["id", "title"]);
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
                     ("q".to_string(), "abba".to_string()),
                     ("fl".to_string(), "id, title".to_string())));
+}
+
+#[test]
+fn query_and_filter_with_add_filter_to_pairs() {
+    let mut query = SolrQuery::new("abba");
+    query = query.add_filter("type:Person");
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string()),
+                    ("fq".to_string(), "type:Person".to_string())));
+}
+
+#[test]
+fn query_and_many_filters_with_add_filter_to_pairs() {
+    let mut query = SolrQuery::new("abba");
+    query = query.add_filter("type:Person");
+    query = query.add_filter("class:ActiveRecord");
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string()),
+                    ("fq".to_string(), "type:Person".to_string()),
+                    ("fq".to_string(), "class:ActiveRecord".to_string())));
+}
+
+#[test]
+fn query_and_many_filters_with_set_filters_to_pairs() {
+    let mut query = SolrQuery::new("abba");
+    query = query.set_filters(&["type:Person", "class:Person"]);
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string()),
+                    ("fq".to_string(), "type:Person".to_string()),
+                    ("fq".to_string(), "class:Person".to_string())));
 }
 
 #[test]

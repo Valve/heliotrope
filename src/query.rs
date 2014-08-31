@@ -9,16 +9,17 @@ pub trait ToUrlParam {
 pub struct SolrQuery {
     query: String,
     fields: Option<Vec<String>>,
+    filters: Option<Vec<String>>,
     sorts: Option<Vec<SortClause>>
 }
 
 impl SolrQuery {
     /// Creates a new SolrQuery with only query term inside it
     pub fn new(query: &str) -> SolrQuery {
-        SolrQuery{query: query.to_string(), fields: None, sorts: None}
+        SolrQuery{query: query.to_string(), fields: None, filters: None, sorts: None}
     }
 
-    /// Adds field (fl) to the list of returned fields
+    /// Adds field (l) to the list of returned fields
     pub fn add_field(&self, field: &str) -> SolrQuery {
         let mut fields = self.fields.clone();
         fields = match fields {
@@ -28,7 +29,10 @@ impl SolrQuery {
             },
             None => Some(vec!(field.to_string()))
         };
-        SolrQuery{query: self.query.clone(), fields: fields, sorts: self.sorts.clone()}
+        SolrQuery{ query: self.query.clone(),
+                   fields: fields,
+                   filters: self.filters.clone(),
+                   sorts: self.sorts.clone() }
     }
 
     /// Sets fields (fl) as the list of returned fields.
@@ -36,7 +40,37 @@ impl SolrQuery {
     pub fn set_fields(&self, fields: &[&str]) -> SolrQuery {
         let mut new_fields = Vec::with_capacity(fields.len());
         new_fields.extend(fields.iter().map(|x| x.to_string()));
-        SolrQuery{query:self.query.clone(), fields: Some(new_fields), sorts:self.sorts.clone()}
+        SolrQuery { query:self.query.clone(),
+                    fields: Some(new_fields),
+                    filters: self.filters.clone(),
+                    sorts:self.sorts.clone() }
+    }
+
+    /// Adds query filter (fq)
+    pub fn add_filter(&self, filter: &str) -> SolrQuery {
+        let mut filters = self.filters.clone();
+        filters = match filters {
+            Some(mut f) => {
+                f.push(filter.to_string());
+                Some(f)
+            },
+            None => Some(vec!(filter.to_string()))
+        };
+        SolrQuery { query: self.query.clone(),
+                    fields: self.fields.clone(),
+                    filters: filters,
+                    sorts: self.sorts.clone() }
+    }
+
+    /// Sets query filters (fq)
+    /// Already existing filters are overwritten.
+    pub fn set_filters(&self, filters: &[&str]) -> SolrQuery {
+        let mut new_filters = Vec::with_capacity(filters.len());
+        new_filters.extend(filters.iter().map(|x| x.to_string()));
+        SolrQuery { query: self.query.clone(),
+                    fields: self.fields.clone(),
+                    filters: Some(new_filters),
+                    sorts: self.sorts.clone() }
     }
 
     /// Adds sort to query.
@@ -53,6 +87,7 @@ impl SolrQuery {
         SolrQuery {
             query: self.query.clone(),
             fields: self.fields.clone(),
+            filters: self.filters.clone(),
             sorts: sorts
         }
     }
@@ -62,7 +97,11 @@ impl SolrQuery {
     pub fn set_sorts(&self, sorts: &[SortClause]) -> SolrQuery {
         let mut new_sorts = Vec::with_capacity(sorts.len());
         new_sorts.push_all(sorts);
-        SolrQuery{query: self.query.clone(), fields: self.fields.clone(), sorts: Some(new_sorts)}
+        SolrQuery {
+            query: self.query.clone(),
+            fields: self.fields.clone(),
+            filters: self.filters.clone(),
+            sorts: Some(new_sorts) }
     }
 
     /// Converts this query to a vector of pairs, suitable for URL percent encoding
@@ -78,6 +117,14 @@ impl SolrQuery {
             },
             _ => ()
         }
+
+        match self.filters {
+            Some(ref f) => {
+                vec.extend(f.iter().map(|x| ("fq".to_string(), x.clone())));
+            },
+            _ => ()
+        }
+
         match self.sorts {
             Some(ref s) => {
                 let sort_url_params: Vec<String> = s.clone()
