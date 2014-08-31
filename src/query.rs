@@ -57,6 +57,14 @@ impl SolrQuery {
         }
     }
 
+    /// Sets sorts for fields.
+    /// Already existing sorts will be overwritten
+    pub fn set_sorts(&self, sorts: &[SortClause]) -> SolrQuery {
+        let mut new_sorts = Vec::with_capacity(sorts.len());
+        new_sorts.push_all(sorts);
+        SolrQuery{query: self.query.clone(), fields: self.fields.clone(), sorts: Some(new_sorts)}
+    }
+
     /// Converts this query to a vector of pairs, suitable for URL percent encoding
     pub fn to_pairs(&self) -> Vec<(String, String)> {
         // usually will be wt, q and something else
