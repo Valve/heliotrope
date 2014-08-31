@@ -14,7 +14,7 @@ impl SolrQuery {
         SolrQuery{query: query.to_string(), fields: None, sorts: None}
     }
 
-    // Adds field (fl) to the list of returned fields
+    /// Adds field (fl) to the list of returned fields
     pub fn add_field(&self, field: &str) -> SolrQuery {
         let mut fields = self.fields.clone();
         fields = match fields {
@@ -25,6 +25,14 @@ impl SolrQuery {
             None => Some(vec!(field.to_string()))
         };
         SolrQuery{query: self.query.clone(), fields: fields, sorts: self.sorts.clone()}
+    }
+
+    /// Sets fields (fl) as the list of returned fields.
+    /// The already set fields are overwritten.
+    pub fn set_fields(&self, fields: &[&str]) -> SolrQuery {
+        let mut new_fields = Vec::with_capacity(fields.len());
+        new_fields.extend(fields.iter().map(|x| x.to_string()));
+        SolrQuery{query:self.query.clone(), fields: Some(new_fields), sorts:self.sorts.clone()}
     }
 
     /// Converts this query to a vector of pairs, suitable for URL percent encoding
