@@ -126,13 +126,16 @@ let query = SolrQuery::new("*:*")
     .add_filter("type:Person");
 ```
 
+#### Replacing arguments
+Each `add_*` method on SolrQuery, that accepts a single argument has a corresponding
+`set_*` method which accepts a slice of arguments and replaces existing ones.
+
 ### Pagination
 
 ```ignore
 // getting third page of size 50
 let query = SolrQuery::new("manufacturer:Sony").start(100).rows(50);
 ```
-
 */
 
 #![crate_name="heliotrope"]
