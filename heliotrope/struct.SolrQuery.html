@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrQuery</a><wbr></div><div class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-1198' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#9-14'>[src]</a></div></h1>
+        </span><a id='src-1206' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/query.rs.html#13-20'>[src]</a></div></h1>
 <pre class='rust struct'>pub struct SolrQuery {
     // some fields omitted
 }</pre><div class='docblock'><p>Represents Solr query.
@@ -68,9 +68,19 @@ Already existing filters are overwritten.</p>
 </div><h4 id='method.set_sorts' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.set_sorts' class='fnname'>set_sorts</a>(&amp;self, sorts: &amp;<a href='http://doc.rust-lang.org/master/std/primitive.slice.html'>[<a class='struct' href='../heliotrope/struct.SortClause.html' title='heliotrope::SortClause'>SortClause</a>]</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
 <div class='docblock'><p>Sets sorts for fields.
 Already existing sorts will be overwritten</p>
+</div><h4 id='method.start' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.start' class='fnname'>start</a>(&amp;self, start: <a href='http://doc.rust-lang.org/master/std/primitive.u64.html'>u64</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Sets initial offset (zero based).
+This method is only required when you want to get non-zero offset,
+because by default it&#39;s 0 (zero)</p>
+</div><h4 id='method.rows' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.rows' class='fnname'>rows</a>(&amp;self, rows: <a href='http://doc.rust-lang.org/master/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<div class='docblock'><p>Sets number of rows to be returned.
+This method is only required when you want to get non-default page size,
+which is 10.</p>
 </div><h4 id='method.to_pairs' class='method'><a class='stability Unmarked' title='No stability level'></a><code>fn <a href='#method.to_pairs' class='fnname'>to_pairs</a>(&amp;self) -&gt; <a class='struct' href='http://doc.rust-lang.org/master/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a href='http://doc.rust-lang.org/master/std/primitive.tuple.html'>(<a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='struct' href='http://doc.rust-lang.org/master/collections/string/struct.String.html' title='collections::string::String'>String</a>)</a>&gt;</code></h4>
 <div class='docblock'><p>Converts this query to a vector of pairs, suitable for URL percent encoding</p>
-</div></div></section>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/master/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h3><div class='impl-methods'><h4 id='method.clone' class='method'><a class='stability Unstable' title='Unstable'></a><code>fn <a href='#method.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../heliotrope/struct.SolrQuery.html' title='heliotrope::SolrQuery'>SolrQuery</a></code></h4>
+<h4 id='method.clone_from' class='method'><a class='stability Experimental' title='Experimental: this function is mostly unused'></a><code>fn <a href='#tymethod.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

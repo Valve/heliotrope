@@ -289,6 +289,13 @@
 <span id='247'>247</span>
 <span id='248'>248</span>
 <span id='249'>249</span>
+<span id='250'>250</span>
+<span id='251'>251</span>
+<span id='252'>252</span>
+<span id='253'>253</span>
+<span id='254'>254</span>
+<span id='255'>255</span>
+<span id='256'>256</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Valentin Vasilyev.</span>
 <span class='comment'>//</span>
@@ -408,14 +415,21 @@ match solr.query(&amp;query) {
 }
 ```
 
-You can chain query options:
+### Query options chaining
 
 ```ignore
 let query = SolrQuery::new(&quot;*:*&quot;)
     .add_field(&quot;score&quot;)
     .add_field(&quot;*&quot;)
     .add_sort(&quot;age&quot;, Descending)
-    .add_sort(&quot;balance&quot;, Ascending);
+    .add_filter(&quot;type:Person&quot;);
+```
+
+### Pagination
+
+```ignore
+// getting third page of size 50
+let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
 ```
 
 */</span>
