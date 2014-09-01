@@ -296,6 +296,9 @@
 <span id='254'>254</span>
 <span id='255'>255</span>
 <span id='256'>256</span>
+<span id='257'>257</span>
+<span id='258'>258</span>
+<span id='259'>259</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Valentin Vasilyev.</span>
 <span class='comment'>//</span>
@@ -425,13 +428,16 @@ let query = SolrQuery::new(&quot;*:*&quot;)
     .add_filter(&quot;type:Person&quot;);
 ```
 
+#### Replacing arguments
+Each `add_*` method on SolrQuery, that accepts a single argument has a corresponding
+`set_*` method which accepts a slice of arguments and replaces existing ones.
+
 ### Pagination
 
 ```ignore
 // getting third page of size 50
 let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
 ```
-
 */</span>
 
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>crate_name</span><span class='op'>=</span><span class='string'>&quot;heliotrope&quot;</span>]</span>

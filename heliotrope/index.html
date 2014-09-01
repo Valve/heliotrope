@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Crate <a class='mod' href=''>heliotrope</a><wbr></div><div class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#9-255'>[src]</a></div></h1>
+        </span><a id='src-0' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#9-258'>[src]</a></div></h1>
 <div class='docblock'><p>Heliotrope is a Solr client for the <a href="http://rust-lang.org/">Rust</a> programming language.</p>
 
 <p>It builds with <a href="http://crates.io/">Cargo</a>.
@@ -155,6 +155,11 @@ git = &quot;https://github.com/Valve/heliotrope&quot;</code></pre>
     .<span class='ident'>add_sort</span>(<span class='string'>&quot;age&quot;</span>, <span class='ident'>Descending</span>)
     .<span class='ident'>add_filter</span>(<span class='string'>&quot;type:Person&quot;</span>);
 </pre>
+
+<h4 id="replacing-arguments" class='section-header'><a
+                           href="#replacing-arguments">Replacing arguments</a></h4>
+<p>Each <code>add_*</code> method on SolrQuery, that accepts a single argument has a corresponding
+<code>set_*</code> method which accepts a slice of arguments and replaces existing ones.</p>
 
 <h3 id="pagination" class='section-header'><a
                            href="#pagination">Pagination</a></h3><pre class='rust '>
