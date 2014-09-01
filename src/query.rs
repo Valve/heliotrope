@@ -1,3 +1,6 @@
+static DEFAULT_START: u64 = 0;
+static DEFAULT_ROWS: u32 = 10;
+
 pub trait ToUrlParam {
     fn to_url_param(&self) -> String;
 }
@@ -6,17 +9,26 @@ pub trait ToUrlParam {
 /// You'll need to build the query and pass it to Solr to execute.
 /// This struct is immutable, ie returns modified clone of itself when building.
 /// This is done to enable chaining.
+#[deriving(Clone)]
 pub struct SolrQuery {
     query: String,
     fields: Option<Vec<String>>,
     filters: Option<Vec<String>>,
-    sorts: Option<Vec<SortClause>>
+    sorts: Option<Vec<SortClause>>,
+    start: u64,
+    rows: u32
 }
 
 impl SolrQuery {
     /// Creates a new SolrQuery with only query term inside it
     pub fn new(query: &str) -> SolrQuery {
-        SolrQuery{query: query.to_string(), fields: None, filters: None, sorts: None}
+        SolrQuery { query: query.to_string(),
+            fields: None,
+            filters: None,
+            sorts: None,
+            start: 0,
+            rows: DEFAULT_ROWS }
+
     }
 
     /// Adds field (l) to the list of returned fields
@@ -29,10 +41,9 @@ impl SolrQuery {
             },
             None => Some(vec!(field.to_string()))
         };
-        SolrQuery{ query: self.query.clone(),
-                   fields: fields,
-                   filters: self.filters.clone(),
-                   sorts: self.sorts.clone() }
+        let mut solr_query = self.clone();
+        solr_query.fields = fields;
+        solr_query
     }
 
     /// Sets fields (fl) as the list of returned fields.
@@ -40,10 +51,9 @@ impl SolrQuery {
     pub fn set_fields(&self, fields: &[&str]) -> SolrQuery {
         let mut new_fields = Vec::with_capacity(fields.len());
         new_fields.extend(fields.iter().map(|x| x.to_string()));
-        SolrQuery { query:self.query.clone(),
-                    fields: Some(new_fields),
-                    filters: self.filters.clone(),
-                    sorts:self.sorts.clone() }
+        let mut solr_query = self.clone();
+        solr_query.fields = Some(new_fields);
+        solr_query
     }
 
     /// Adds query filter (fq)
@@ -56,10 +66,9 @@ impl SolrQuery {
             },
             None => Some(vec!(filter.to_string()))
         };
-        SolrQuery { query: self.query.clone(),
-                    fields: self.fields.clone(),
-                    filters: filters,
-                    sorts: self.sorts.clone() }
+        let mut solr_query = self.clone();
+        solr_query.filters = filters;
+        solr_query
     }
 
     /// Sets query filters (fq)
@@ -67,10 +76,9 @@ impl SolrQuery {
     pub fn set_filters(&self, filters: &[&str]) -> SolrQuery {
         let mut new_filters = Vec::with_capacity(filters.len());
         new_filters.extend(filters.iter().map(|x| x.to_string()));
-        SolrQuery { query: self.query.clone(),
-                    fields: self.fields.clone(),
-                    filters: Some(new_filters),
-                    sorts: self.sorts.clone() }
+        let mut solr_query = self.clone();
+        solr_query.filters = Some(new_filters);
+        solr_query
     }
 
     /// Adds sort to query.
@@ -84,12 +92,9 @@ impl SolrQuery {
             },
             None => Some(vec!(sort_clause))
         };
-        SolrQuery {
-            query: self.query.clone(),
-            fields: self.fields.clone(),
-            filters: self.filters.clone(),
-            sorts: sorts
-        }
+        let mut solr_query = self.clone();
+        solr_query.sorts = sorts;
+        solr_query
     }
 
     /// Sets sorts for fields.
@@ -97,11 +102,27 @@ impl SolrQuery {
     pub fn set_sorts(&self, sorts: &[SortClause]) -> SolrQuery {
         let mut new_sorts = Vec::with_capacity(sorts.len());
         new_sorts.push_all(sorts);
-        SolrQuery {
-            query: self.query.clone(),
-            fields: self.fields.clone(),
-            filters: self.filters.clone(),
-            sorts: Some(new_sorts) }
+        let mut solr_query = self.clone();
+        solr_query.sorts = Some(new_sorts);
+        solr_query
+    }
+
+    /// Sets initial offset (zero based).
+    /// This method is only required when you want to get non-zero offset,
+    /// because by default it's 0 (zero)
+    pub fn start(&self, start: u64) -> SolrQuery {
+        let mut solr_query = self.clone();
+        solr_query.start = start;
+        solr_query
+    }
+
+    /// Sets number of rows to be returned.
+    /// This method is only required when you want to get non-default page size,
+    /// which is 10.
+    pub fn rows(&self, rows: u32) -> SolrQuery {
+        let mut solr_query = self.clone();
+        solr_query.rows = rows;
+        solr_query
     }
 
     /// Converts this query to a vector of pairs, suitable for URL percent encoding
@@ -135,6 +156,14 @@ impl SolrQuery {
                 vec.push(("sort".to_string(), formatted_sorts));
             },
             _ => ()
+        }
+
+        if self.start != DEFAULT_START {
+            vec.push(("start".to_string(), self.start.to_string()));
+        }
+
+        if self.rows != DEFAULT_ROWS {
+            vec.push(("rows".to_string(), self.rows.to_string()));
         }
         vec
     }

@@ -105,3 +105,47 @@ fn query_and_many_sorts_with_set_sorts_to_pairs() {
                     ("q".to_string(), "abba".to_string()),
                     ("sort".to_string(), "age desc, balance asc".to_string())));
 }
+
+#[test]
+fn query_and_default_start() {
+    let query = SolrQuery::new("abba").start(0);
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string())));
+}
+
+#[test]
+fn query_and_non_default_start() {
+    let query = SolrQuery::new("abba").start(50);
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string()),
+                    ("start".to_string(), "50".to_string())));
+}
+
+#[test]
+fn query_and_default_rows() {
+    let query = SolrQuery::new("abba").rows(10);
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string())));
+}
+
+#[test]
+fn query_and_non_default_rows() {
+    let query = SolrQuery::new("abba").rows(25);
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string()),
+                    ("rows".to_string(), "25".to_string())));
+}
+
+#[test]
+fn query_and_custom_start_and_rows() {
+    let query = SolrQuery::new("abba").start(125).rows(25);
+    assert_eq!(query.to_pairs(),
+               vec!(("wt".to_string(), "json".to_string()),
+                    ("q".to_string(), "abba".to_string()),
+                    ("start".to_string(), "125".to_string()),
+                    ("rows".to_string(), "25".to_string())));
+}

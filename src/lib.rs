@@ -116,14 +116,21 @@ match solr.query(&query) {
 }
 ```
 
-You can chain query options:
+### Query options chaining
 
 ```ignore
 let query = SolrQuery::new("*:*")
     .add_field("score")
     .add_field("*")
     .add_sort("age", Descending)
-    .add_sort("balance", Ascending);
+    .add_filter("type:Person");
+```
+
+### Pagination
+
+```ignore
+// getting third page of size 50
+let query = SolrQuery::new("manufacturer:Sony").start(100).rows(50);
 ```
 
 */
