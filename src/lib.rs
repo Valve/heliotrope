@@ -127,8 +127,14 @@ let query = SolrQuery::new("*:*")
 ```
 
 #### Replacing arguments
-Each `add_*` method on SolrQuery, that accepts a single argument has a corresponding
+Each `add_*` method on SolrQuery, that accepts a single argument, has a corresponding
 `set_*` method which accepts a slice of arguments and replaces existing ones.
+
+```ignore
+let query = SolrQuery::new("*:*")
+    .set_fields(["id", "title", "score"])
+    .set_filters(["type:Person", "class:AR"]);
+```
 
 ### Pagination
 

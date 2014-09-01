@@ -72,29 +72,29 @@ pub struct SolrQueryResponse {
 impl<D: Decoder<E>, E> Decodable<D, E> for SolrQueryResponse {
     fn decode(d: &mut D) -> Result<SolrQueryResponse, E> {
         let mut resp = SolrQueryResponse{ status: 0, time: 0, total: 0, start: 0, items: Vec::new() };
-        d.read_struct("root", 0, |d| {
-            d.read_struct_field("responseHeader", 0, |d| {
+        try!(d.read_struct("root", 0, |d| {
+            try!(d.read_struct_field("responseHeader", 0, |d| {
                 resp.status = try!(d.read_struct_field("status", 0, Decodable::decode));
                 resp.time = try!(d.read_struct_field("QTime", 1, Decodable::decode));
                 Ok(())
-            });
-            d.read_struct_field("response", 0, |d| {
+            }));
+            try!(d.read_struct_field("response", 0, |d| {
                 resp.total = try!(d.read_struct_field("numFound", 0, Decodable::decode));
                 resp.start = try!(d.read_struct_field("start", 1, Decodable::decode));
-                d.read_struct_field("docs", 0, |d| {
-                    d.read_seq(|d, len| {
+                try!(d.read_struct_field("docs", 0, |d| {
+                    try!(d.read_seq(|d, len| {
                         println!("NUmber of docs: {}", len);
                         for i in range(0u, len) {
                             resp.items.push(try!(Decodable::decode(d)));
                         }
                         Ok(())
-                    });
+                    }));
                     Ok(())
-                });
+                }));
                 Ok(())
-            });
+            }));
             Ok(())
-        });
+        }));
         Ok(resp)
     }
 }
