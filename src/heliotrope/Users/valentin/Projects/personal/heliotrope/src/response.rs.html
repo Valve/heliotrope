@@ -215,29 +215,29 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Decoder</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>Decodable</span><span class='op'>&lt;</span><span class='ident'>D</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SolrQueryResponse</span> {
     <span class='kw'>fn</span> <span class='ident'>decode</span>(<span class='ident'>d</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SolrQueryResponse</span>, <span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='ident'>SolrQueryResponse</span>{ <span class='ident'>status</span>: <span class='number'>0</span>, <span class='ident'>time</span>: <span class='number'>0</span>, <span class='ident'>total</span>: <span class='number'>0</span>, <span class='ident'>start</span>: <span class='number'>0</span>, <span class='ident'>items</span>: <span class='ident'>Vec</span>::<span class='ident'>new</span>() };
-        <span class='ident'>d</span>.<span class='ident'>read_struct</span>(<span class='string'>&quot;root&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
-            <span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;responseHeader&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct</span>(<span class='string'>&quot;root&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;responseHeader&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
                 <span class='ident'>resp</span>.<span class='ident'>status</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;status&quot;</span>, <span class='number'>0</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
                 <span class='ident'>resp</span>.<span class='ident'>time</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;QTime&quot;</span>, <span class='number'>1</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
                 <span class='prelude-val'>Ok</span>(())
-            });
-            <span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;response&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
+            }));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;response&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
                 <span class='ident'>resp</span>.<span class='ident'>total</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;numFound&quot;</span>, <span class='number'>0</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
                 <span class='ident'>resp</span>.<span class='ident'>start</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;start&quot;</span>, <span class='number'>1</span>, <span class='ident'>Decodable</span>::<span class='ident'>decode</span>));
-                <span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;docs&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
-                    <span class='ident'>d</span>.<span class='ident'>read_seq</span>(<span class='op'>|</span><span class='ident'>d</span>, <span class='ident'>len</span><span class='op'>|</span> {
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_struct_field</span>(<span class='string'>&quot;docs&quot;</span>, <span class='number'>0</span>, <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>d</span>.<span class='ident'>read_seq</span>(<span class='op'>|</span><span class='ident'>d</span>, <span class='ident'>len</span><span class='op'>|</span> {
                         <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;NUmber of docs: {}&quot;</span>, <span class='ident'>len</span>);
                         <span class='kw'>for</span> <span class='ident'>i</span> <span class='kw'>in</span> <span class='ident'>range</span>(<span class='number'>0u</span>, <span class='ident'>len</span>) {
                             <span class='ident'>resp</span>.<span class='ident'>items</span>.<span class='ident'>push</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Decodable</span>::<span class='ident'>decode</span>(<span class='ident'>d</span>)));
                         }
                         <span class='prelude-val'>Ok</span>(())
-                    });
+                    }));
                     <span class='prelude-val'>Ok</span>(())
-                });
+                }));
                 <span class='prelude-val'>Ok</span>(())
-            });
+            }));
             <span class='prelude-val'>Ok</span>(())
-        });
+        }));
         <span class='prelude-val'>Ok</span>(<span class='ident'>resp</span>)
     }
 }

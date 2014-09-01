@@ -299,6 +299,12 @@
 <span id='257'>257</span>
 <span id='258'>258</span>
 <span id='259'>259</span>
+<span id='260'>260</span>
+<span id='261'>261</span>
+<span id='262'>262</span>
+<span id='263'>263</span>
+<span id='264'>264</span>
+<span id='265'>265</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Valentin Vasilyev.</span>
 <span class='comment'>//</span>
@@ -429,8 +435,14 @@ let query = SolrQuery::new(&quot;*:*&quot;)
 ```
 
 #### Replacing arguments
-Each `add_*` method on SolrQuery, that accepts a single argument has a corresponding
+Each `add_*` method on SolrQuery, that accepts a single argument, has a corresponding
 `set_*` method which accepts a slice of arguments and replaces existing ones.
+
+```ignore
+let query = SolrQuery::new(&quot;*:*&quot;)
+    .set_fields([&quot;id&quot;, &quot;title&quot;, &quot;score&quot;])
+    .set_filters([&quot;type:Person&quot;, &quot;class:AR&quot;]);
+```
 
 ### Pagination
 
