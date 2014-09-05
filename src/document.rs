@@ -1,23 +1,26 @@
-use serialize::{Encodable, Encoder, Decodable, Decoder};
+use serialize::{Encodable, Encoder};
 
-/// Strongly typed Solr document field value
-#[deriving(Show, Decodable)]
+#[deriving(Show)]
 pub enum SolrValue {
-    SolrF64(f64),
     SolrI64(i64),
-    SolrString(String)
+    SolrU64(u64),
+    SolrF64(f64),
+    SolrString(String),
+    SolrBoolean(bool),
+    SolrNull
 }
-
 impl<S: Encoder<E>, E> Encodable<S, E> for SolrValue {
     fn encode(&self, e: &mut S) -> Result<(), E> {
         match *self {
-            SolrF64(v) => v.encode(e),
             SolrI64(v) => v.encode(e),
-            SolrString(ref v) => v.encode(e)
+            SolrU64(v) => v.encode(e),
+            SolrF64(v) => v.encode(e),
+            SolrString(ref v) => v.encode(e),
+            SolrBoolean(v) => v.encode(e),
+            SolrNull => "null".encode(e)
         }
     }
 }
-
 /// SolrDocument field
 #[deriving(Show)]
 pub struct SolrField {
@@ -40,8 +43,8 @@ impl SolrDocument {
     }
 
     /// Adds a field to the document
-    pub fn add_field(&mut self, name: &str, value: SolrValue) {
-        self.fields.push(SolrField{name: name.to_string(), value: value});
+    pub fn add_field(&mut self, name: &str, value: &str) {
+        self.fields.push(SolrField{name: name.to_string(), value: SolrString(value.to_string())});
     }
 }
 
@@ -57,19 +60,3 @@ impl<E, S: Encoder<E>> Encodable<S, E> for SolrDocument {
         })
     }
 }
-
-impl<E, D: Decoder<E>> Decodable<D, E> for SolrDocument {
-    fn decode(d: &mut D) -> Result<SolrDocument, E> {
-        d.read_map(|d, len| {
-            let mut doc = SolrDocument{fields: Vec::with_capacity(len)};
-            for i in range(0u, len) {
-                let field_name: String = try!(d.read_map_elt_key(i, Decodable::decode));
-                // TODO: match correct SolrValue
-                let field_value = SolrString(try!(d.read_map_elt_val(i, Decodable::decode)));
-                doc.fields.push(SolrField{name: field_name, value: field_value});
-            }
-            Ok(doc)
-        })
-    }
-}
-

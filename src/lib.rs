@@ -24,16 +24,16 @@ git = "https://github.com/Valve/heliotrope"
 
 ```ignore
 use url::Url;
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument};
 
 fn main(){
     let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
     let solr = Solr::new(url);
     let mut document = SolrDocument::new();
-    document.add_field("id", SolrI64(1));
-    document.add_field("type", SolrString("Book".to_string()));
-    document.add_field("title", SolrString("How to train your dragon".to_string()));
-    document.add_field("body", SolrString("Vala Morgulis".to_string()));
+    document.add_field("id", "1".to_string());
+    document.add_field("type", "Book".to_string());
+    document.add_field("title", "How to train your dragon".to_string());
+    document.add_field("body", "Vala Morgulis".to_string());
     match solr.add(&document) {
         Ok(solr_response) => println!("{:?}", solr_response),
         Err(solr_error) => println!("{:?}", solr_error)
@@ -49,16 +49,16 @@ fn main(){
 
 ```ignore
 use url::{Url};
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument};
 
 fn main(){
     let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
     let solr = Solr::new(url);
     let mut document = SolrDocument::new();
-    document.add_field("id", SolrI64(2));
-    document.add_field("type", SolrString("Book".to_string()));
-    document.add_field("title", SolrString("The Great Gatsby".to_string()));
-    document.add_field("body", SolrString("In my younger and more vulnerable years..".to_string()));
+    document.add_field("id", "2".to_string());
+    document.add_field("type", "Book".to_string());
+    document.add_field("title", "The Great Gatsby".to_string());
+    document.add_field("body", "In my younger and more vulnerable years..".to_string());
     match solr.add_and_commit(&document) {
         Ok(solr_response) => println!("{:?}", solr_response),
         Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
@@ -70,21 +70,21 @@ fn main(){
 
 ```ignore
 use url::{Url};
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument};
 
 let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
 let solr = Solr::new(url);
 let mut document1 = SolrDocument::new();
-document1.add_field("id", SolrI64(3));
-document1.add_field("type", SolrString("Book".to_string()));
-document1.add_field("title", SolrString("The Great Gatsby".to_string()));
-document1.add_field("body", SolrString("In my younger and more vulnerable years".to_string()));
+document1.add_field("id", "3".to_string());
+document1.add_field("type", "Book".to_string());
+document1.add_field("title", "The Great Gatsby".to_string());
+document1.add_field("body", "In my younger and more vulnerable years".to_string());
 
 let mut document2 = SolrDocument::new();
-document1.add_field("id", SolrI64(4));
-document1.add_field("type", SolrString("Book".to_string()));
-document2.add_field("title", SolrString("Moby Dick".to_string()));
-document2.add_field("body", SolrString("Call me Ishmael".to_string()));
+document1.add_field("id", "4".to_string());
+document1.add_field("type", "Book".to_string());
+document2.add_field("title", "Moby Dick".to_string());
+document2.add_field("body", "Call me Ishmael".to_string());
 
 match solr.add_many_and_commit(vec!(&document1, &document2)) {
     Ok(solr_response) => println!("{:?}", solr_response),
@@ -153,12 +153,10 @@ extern crate debug;
 
 use std::io::IoResult;
 use url::{Url, UrlParser};
-use serialize::{json, Decodable};
-use serialize::json::Decoder as JsonDecoder;
-use serialize::json::{DecoderError};
+use serialize::{json};
 use http_utils::HttpResponse;
 
-pub use document::{SolrField, SolrDocument, SolrValue, SolrF64, SolrI64, SolrString};
+pub use document::{SolrField, SolrDocument};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
 pub use query::{SolrQuery, SortOrder, Ascending, Descending, SortClause};
 
@@ -217,7 +215,7 @@ impl Solr {
     pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
         let raw_json = json::encode(&documents);
         let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
-        handle_http_result(http_result)
+        handle_http_update_result(http_result)
     }
 
     /// Ads multiple documents to Solr and commits them
@@ -225,13 +223,13 @@ impl Solr {
         let raw_json = json::encode(&documents);
         println!("{}", raw_json);
         let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        handle_http_result(http_result)
+        handle_http_update_result(http_result)
     }
 
     /// Performs Solr commit
     pub fn commit(&self) -> SolrUpdateResult {
         let http_result = http_utils::post(&self.commit_url);
-        handle_http_result(http_result)
+        handle_http_update_result(http_result)
     }
 
     /// Performs Solr query
@@ -239,17 +237,36 @@ impl Solr {
         let mut query_url = self.select_url.clone();
         query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
         let http_result = http_utils::get(&query_url);
-        handle_http_result(http_result)
+        handle_http_result(http_result, |http_response| {
+            match SolrQueryResponse::from_json_str(http_response.body_str().unwrap()) {
+                Ok(sqr) => Ok(sqr),
+                // TODO: insert actual builder_error inside solr_error
+                Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
+            }
+        })
     }
 }
 
-fn handle_http_result<R: Decodable<JsonDecoder, DecoderError>>(result: IoResult<HttpResponse>) -> Result<R, SolrError> {
+fn handle_http_update_result(http_result: IoResult<HttpResponse>) -> SolrUpdateResult {
+    handle_http_result(http_result, |http_response| {
+        match json::decode::<SolrUpdateResponse>(http_response.body_str().unwrap()) {
+            Ok(sur) => Ok(sur),
+            // TODO: insert actual parse_error inside solr_error
+            Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
+        }
+    })
+
+}
+
+fn handle_http_result<R>(result: IoResult<HttpResponse>, f: |&HttpResponse| ->  Result<R, SolrError>) -> Result<R, SolrError> {
     match result {
         Ok(http_response) => {
             match http_response.code {
                 200 => {
-                    let response: R = json::decode(http_response.body_str().unwrap()).unwrap();
-                    Ok(response)
+                    match f(&http_response) {
+                        Ok(response) => Ok(response),
+                        Err(e) => Err(e)
+                    }
                 },
                 _ => {
                     let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
@@ -262,4 +279,3 @@ fn handle_http_result<R: Decodable<JsonDecoder, DecoderError>>(result: IoResult<
         }
     }
 }
-
