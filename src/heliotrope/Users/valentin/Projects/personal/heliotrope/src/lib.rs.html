@@ -305,6 +305,22 @@
 <span id='263'>263</span>
 <span id='264'>264</span>
 <span id='265'>265</span>
+<span id='266'>266</span>
+<span id='267'>267</span>
+<span id='268'>268</span>
+<span id='269'>269</span>
+<span id='270'>270</span>
+<span id='271'>271</span>
+<span id='272'>272</span>
+<span id='273'>273</span>
+<span id='274'>274</span>
+<span id='275'>275</span>
+<span id='276'>276</span>
+<span id='277'>277</span>
+<span id='278'>278</span>
+<span id='279'>279</span>
+<span id='280'>280</span>
+<span id='281'>281</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2014 Valentin Vasilyev.</span>
 <span class='comment'>//</span>
@@ -332,16 +348,16 @@ git = &quot;https://github.com/Valve/heliotrope&quot;
 
 ```ignore
 use url::Url;
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument};
 
 fn main(){
     let url = Url::parse(&quot;http://localhost:8983/solr/test/&quot;).unwrap();
     let solr = Solr::new(url);
     let mut document = SolrDocument::new();
-    document.add_field(&quot;id&quot;, SolrI64(1));
-    document.add_field(&quot;type&quot;, SolrString(&quot;Book&quot;.to_string()));
-    document.add_field(&quot;title&quot;, SolrString(&quot;How to train your dragon&quot;.to_string()));
-    document.add_field(&quot;body&quot;, SolrString(&quot;Vala Morgulis&quot;.to_string()));
+    document.add_field(&quot;id&quot;, &quot;1&quot;.to_string());
+    document.add_field(&quot;type&quot;, &quot;Book&quot;.to_string());
+    document.add_field(&quot;title&quot;, &quot;How to train your dragon&quot;.to_string());
+    document.add_field(&quot;body&quot;, &quot;Vala Morgulis&quot;.to_string());
     match solr.add(&amp;document) {
         Ok(solr_response) =&gt; println!(&quot;{:?}&quot;, solr_response),
         Err(solr_error) =&gt; println!(&quot;{:?}&quot;, solr_error)
@@ -357,16 +373,16 @@ fn main(){
 
 ```ignore
 use url::{Url};
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument};
 
 fn main(){
     let url = Url::parse(&quot;http://localhost:8983/solr/test/&quot;).unwrap();
     let solr = Solr::new(url);
     let mut document = SolrDocument::new();
-    document.add_field(&quot;id&quot;, SolrI64(2));
-    document.add_field(&quot;type&quot;, SolrString(&quot;Book&quot;.to_string()));
-    document.add_field(&quot;title&quot;, SolrString(&quot;The Great Gatsby&quot;.to_string()));
-    document.add_field(&quot;body&quot;, SolrString(&quot;In my younger and more vulnerable years..&quot;.to_string()));
+    document.add_field(&quot;id&quot;, &quot;2&quot;.to_string());
+    document.add_field(&quot;type&quot;, &quot;Book&quot;.to_string());
+    document.add_field(&quot;title&quot;, &quot;The Great Gatsby&quot;.to_string());
+    document.add_field(&quot;body&quot;, &quot;In my younger and more vulnerable years..&quot;.to_string());
     match solr.add_and_commit(&amp;document) {
         Ok(solr_response) =&gt; println!(&quot;{:?}&quot;, solr_response),
         Err(solr_error) =&gt; println!(&quot;Status: {}, Message: {}&quot;, solr_error.status, solr_error.message)
@@ -378,21 +394,21 @@ fn main(){
 
 ```ignore
 use url::{Url};
-use heliotrope::{Solr, SolrDocument, SolrString, SolrI64};
+use heliotrope::{Solr, SolrDocument};
 
 let url = Url::parse(&quot;http://localhost:8983/solr/test/&quot;).unwrap();
 let solr = Solr::new(url);
 let mut document1 = SolrDocument::new();
-document1.add_field(&quot;id&quot;, SolrI64(3));
-document1.add_field(&quot;type&quot;, SolrString(&quot;Book&quot;.to_string()));
-document1.add_field(&quot;title&quot;, SolrString(&quot;The Great Gatsby&quot;.to_string()));
-document1.add_field(&quot;body&quot;, SolrString(&quot;In my younger and more vulnerable years&quot;.to_string()));
+document1.add_field(&quot;id&quot;, &quot;3&quot;.to_string());
+document1.add_field(&quot;type&quot;, &quot;Book&quot;.to_string());
+document1.add_field(&quot;title&quot;, &quot;The Great Gatsby&quot;.to_string());
+document1.add_field(&quot;body&quot;, &quot;In my younger and more vulnerable years&quot;.to_string());
 
 let mut document2 = SolrDocument::new();
-document1.add_field(&quot;id&quot;, SolrI64(4));
-document1.add_field(&quot;type&quot;, SolrString(&quot;Book&quot;.to_string()));
-document2.add_field(&quot;title&quot;, SolrString(&quot;Moby Dick&quot;.to_string()));
-document2.add_field(&quot;body&quot;, SolrString(&quot;Call me Ishmael&quot;.to_string()));
+document1.add_field(&quot;id&quot;, &quot;4&quot;.to_string());
+document1.add_field(&quot;type&quot;, &quot;Book&quot;.to_string());
+document2.add_field(&quot;title&quot;, &quot;Moby Dick&quot;.to_string());
+document2.add_field(&quot;body&quot;, &quot;Call me Ishmael&quot;.to_string());
 
 match solr.add_many_and_commit(vec!(&amp;document1, &amp;document2)) {
     Ok(solr_response) =&gt; println!(&quot;{:?}&quot;, solr_response),
@@ -461,12 +477,10 @@ let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>IoResult</span>;
 <span class='kw'>use</span> <span class='ident'>url</span>::{<span class='ident'>Url</span>, <span class='ident'>UrlParser</span>};
-<span class='kw'>use</span> <span class='ident'>serialize</span>::{<span class='ident'>json</span>, <span class='ident'>Decodable</span>};
-<span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>json</span>::<span class='ident'>Decoder</span> <span class='kw'>as</span> <span class='ident'>JsonDecoder</span>;
-<span class='kw'>use</span> <span class='ident'>serialize</span>::<span class='ident'>json</span>::{<span class='ident'>DecoderError</span>};
+<span class='kw'>use</span> <span class='ident'>serialize</span>::{<span class='ident'>json</span>};
 <span class='kw'>use</span> <span class='ident'>http_utils</span>::<span class='ident'>HttpResponse</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>document</span>::{<span class='ident'>SolrField</span>, <span class='ident'>SolrDocument</span>, <span class='ident'>SolrValue</span>, <span class='ident'>SolrF64</span>, <span class='ident'>SolrI64</span>, <span class='ident'>SolrString</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>document</span>::{<span class='ident'>SolrField</span>, <span class='ident'>SolrDocument</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>response</span>::{<span class='ident'>SolrError</span>, <span class='ident'>SolrUpdateResult</span>, <span class='ident'>SolrQueryResult</span>, <span class='ident'>SolrUpdateResponse</span>, <span class='ident'>SolrQueryResponse</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>query</span>::{<span class='ident'>SolrQuery</span>, <span class='ident'>SortOrder</span>, <span class='ident'>Ascending</span>, <span class='ident'>Descending</span>, <span class='ident'>SortClause</span>};
 
@@ -525,7 +539,7 @@ let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_many</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>documents</span>: <span class='kw-2'>&amp;</span>[<span class='kw-2'>&amp;</span><span class='ident'>SolrDocument</span>]) <span class='op'>-&gt;</span> <span class='ident'>SolrUpdateResult</span> {
         <span class='kw'>let</span> <span class='ident'>raw_json</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='ident'>documents</span>);
         <span class='kw'>let</span> <span class='ident'>http_result</span> <span class='op'>=</span>  <span class='ident'>http_utils</span>::<span class='ident'>post_json</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>update_url</span>, <span class='ident'>raw_json</span>.<span class='ident'>as_slice</span>());
-        <span class='ident'>handle_http_result</span>(<span class='ident'>http_result</span>)
+        <span class='ident'>handle_http_update_result</span>(<span class='ident'>http_result</span>)
     }
 
     <span class='doccomment'>/// Ads multiple documents to Solr and commits them</span>
@@ -533,13 +547,13 @@ let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
         <span class='kw'>let</span> <span class='ident'>raw_json</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='ident'>documents</span>);
         <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>raw_json</span>);
         <span class='kw'>let</span> <span class='ident'>http_result</span> <span class='op'>=</span>  <span class='ident'>http_utils</span>::<span class='ident'>post_json</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>commit_url</span>, <span class='ident'>raw_json</span>.<span class='ident'>as_slice</span>());
-        <span class='ident'>handle_http_result</span>(<span class='ident'>http_result</span>)
+        <span class='ident'>handle_http_update_result</span>(<span class='ident'>http_result</span>)
     }
 
     <span class='doccomment'>/// Performs Solr commit</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>commit</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>SolrUpdateResult</span> {
         <span class='kw'>let</span> <span class='ident'>http_result</span> <span class='op'>=</span> <span class='ident'>http_utils</span>::<span class='ident'>post</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>commit_url</span>);
-        <span class='ident'>handle_http_result</span>(<span class='ident'>http_result</span>)
+        <span class='ident'>handle_http_update_result</span>(<span class='ident'>http_result</span>)
     }
 
     <span class='doccomment'>/// Performs Solr query</span>
@@ -547,17 +561,36 @@ let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>query_url</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>select_url</span>.<span class='ident'>clone</span>();
         <span class='ident'>query_url</span>.<span class='ident'>set_query_from_pairs</span>(<span class='ident'>query</span>.<span class='ident'>to_pairs</span>().<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>k</span>, <span class='kw-2'>ref</span> <span class='ident'>v</span>)<span class='op'>|</span> (<span class='ident'>k</span>.<span class='ident'>as_slice</span>(),<span class='ident'>v</span>.<span class='ident'>as_slice</span>())));
         <span class='kw'>let</span> <span class='ident'>http_result</span> <span class='op'>=</span> <span class='ident'>http_utils</span>::<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>query_url</span>);
-        <span class='ident'>handle_http_result</span>(<span class='ident'>http_result</span>)
+        <span class='ident'>handle_http_result</span>(<span class='ident'>http_result</span>, <span class='op'>|</span><span class='ident'>http_response</span><span class='op'>|</span> {
+            <span class='kw'>match</span> <span class='ident'>SolrQueryResponse</span>::<span class='ident'>from_json_str</span>(<span class='ident'>http_response</span>.<span class='ident'>body_str</span>().<span class='ident'>unwrap</span>()) {
+                <span class='prelude-val'>Ok</span>(<span class='ident'>sqr</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>sqr</span>),
+                <span class='comment'>// TODO: insert actual builder_error inside solr_error</span>
+                <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>SolrError</span>{<span class='ident'>status</span>: <span class='number'>0</span>, <span class='ident'>time</span>: <span class='number'>0</span>, <span class='ident'>message</span>: <span class='string'>&quot;Error parsing query response JSON&quot;</span>.<span class='ident'>to_string</span>()})
+            }
+        })
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>handle_http_result</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Decodable</span><span class='op'>&lt;</span><span class='ident'>JsonDecoder</span>, <span class='ident'>DecoderError</span><span class='op'>&gt;&gt;</span>(<span class='ident'>result</span>: <span class='ident'>IoResult</span><span class='op'>&lt;</span><span class='ident'>HttpResponse</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>SolrError</span><span class='op'>&gt;</span> {
+<span class='kw'>fn</span> <span class='ident'>handle_http_update_result</span>(<span class='ident'>http_result</span>: <span class='ident'>IoResult</span><span class='op'>&lt;</span><span class='ident'>HttpResponse</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>SolrUpdateResult</span> {
+    <span class='ident'>handle_http_result</span>(<span class='ident'>http_result</span>, <span class='op'>|</span><span class='ident'>http_response</span><span class='op'>|</span> {
+        <span class='kw'>match</span> <span class='ident'>json</span>::<span class='ident'>decode</span>::<span class='op'>&lt;</span><span class='ident'>SolrUpdateResponse</span><span class='op'>&gt;</span>(<span class='ident'>http_response</span>.<span class='ident'>body_str</span>().<span class='ident'>unwrap</span>()) {
+            <span class='prelude-val'>Ok</span>(<span class='ident'>sur</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>sur</span>),
+            <span class='comment'>// TODO: insert actual parse_error inside solr_error</span>
+            <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>SolrError</span>{<span class='ident'>status</span>: <span class='number'>0</span>, <span class='ident'>time</span>: <span class='number'>0</span>, <span class='ident'>message</span>: <span class='string'>&quot;Error parsing query response JSON&quot;</span>.<span class='ident'>to_string</span>()})
+        }
+    })
+
+}
+
+<span class='kw'>fn</span> <span class='ident'>handle_http_result</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='ident'>result</span>: <span class='ident'>IoResult</span><span class='op'>&lt;</span><span class='ident'>HttpResponse</span><span class='op'>&gt;</span>, <span class='ident'>f</span>: <span class='op'>|</span><span class='kw-2'>&amp;</span><span class='ident'>HttpResponse</span><span class='op'>|</span> <span class='op'>-&gt;</span>  <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>SolrError</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>SolrError</span><span class='op'>&gt;</span> {
     <span class='kw'>match</span> <span class='ident'>result</span> {
         <span class='prelude-val'>Ok</span>(<span class='ident'>http_response</span>) <span class='op'>=&gt;</span> {
             <span class='kw'>match</span> <span class='ident'>http_response</span>.<span class='ident'>code</span> {
                 <span class='number'>200</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>let</span> <span class='ident'>response</span>: <span class='ident'>R</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>(<span class='ident'>http_response</span>.<span class='ident'>body_str</span>().<span class='ident'>unwrap</span>()).<span class='ident'>unwrap</span>();
-                    <span class='prelude-val'>Ok</span>(<span class='ident'>response</span>)
+                    <span class='kw'>match</span> <span class='ident'>f</span>(<span class='kw-2'>&amp;</span><span class='ident'>http_response</span>) {
+                        <span class='prelude-val'>Ok</span>(<span class='ident'>response</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>response</span>),
+                        <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>e</span>)
+                    }
                 },
                 _ <span class='op'>=&gt;</span> {
                     <span class='kw'>let</span> <span class='ident'>error</span>: <span class='ident'>SolrError</span> <span class='op'>=</span> <span class='ident'>json</span>::<span class='ident'>decode</span>(<span class='ident'>http_response</span>.<span class='ident'>body_str</span>().<span class='ident'>unwrap</span>()).<span class='ident'>unwrap</span>();
@@ -570,7 +603,6 @@ let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
         }
     }
 }
-
 </pre>
 </section>
     <section id='search' class="content hidden"></section>

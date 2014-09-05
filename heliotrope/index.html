@@ -44,7 +44,7 @@
 <h1 class='fqn'><div class='in-band'>Crate <a class='mod' href=''>heliotrope</a><wbr></div><div class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#9-264'>[src]</a></div></h1>
+        </span><a id='src-0' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/lib.rs.html#9-281'>[src]</a></div></h1>
 <div class='docblock'><p>Heliotrope is a Solr client for the <a href="http://rust-lang.org/">Rust</a> programming language.</p>
 
 <p>It builds with <a href="http://crates.io/">Cargo</a>.
@@ -58,16 +58,16 @@ git = &quot;https://github.com/Valve/heliotrope&quot;</code></pre>
 <h3 id="adding-new-document-to-solr" class='section-header'><a
                            href="#adding-new-document-to-solr">Adding new document to solr</a></h3><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>Url</span>;
-<span class='kw'>use</span> <span class='ident'>heliotrope</span>::{<span class='ident'>Solr</span>, <span class='ident'>SolrDocument</span>, <span class='ident'>SolrString</span>, <span class='ident'>SolrI64</span>};
+<span class='kw'>use</span> <span class='ident'>heliotrope</span>::{<span class='ident'>Solr</span>, <span class='ident'>SolrDocument</span>};
 
 <span class='kw'>fn</span> <span class='ident'>main</span>(){
     <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='string'>&quot;http://localhost:8983/solr/test/&quot;</span>).<span class='ident'>unwrap</span>();
     <span class='kw'>let</span> <span class='ident'>solr</span> <span class='op'>=</span> <span class='ident'>Solr</span>::<span class='ident'>new</span>(<span class='ident'>url</span>);
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>document</span> <span class='op'>=</span> <span class='ident'>SolrDocument</span>::<span class='ident'>new</span>();
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='ident'>SolrI64</span>(<span class='number'>1</span>));
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>()));
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;How to train your dragon&quot;</span>.<span class='ident'>to_string</span>()));
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Vala Morgulis&quot;</span>.<span class='ident'>to_string</span>()));
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='string'>&quot;1&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='string'>&quot;How to train your dragon&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='string'>&quot;Vala Morgulis&quot;</span>.<span class='ident'>to_string</span>());
     <span class='kw'>match</span> <span class='ident'>solr</span>.<span class='ident'>add</span>(<span class='kw-2'>&amp;</span><span class='ident'>document</span>) {
         <span class='prelude-val'>Ok</span>(<span class='ident'>solr_response</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>solr_response</span>),
         <span class='prelude-val'>Err</span>(<span class='ident'>solr_error</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>solr_error</span>)
@@ -82,16 +82,16 @@ git = &quot;https://github.com/Valve/heliotrope&quot;</code></pre>
 <h3 id="add-and-commit-in-one-step" class='section-header'><a
                            href="#add-and-commit-in-one-step">Add and commit in one step</a></h3><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>url</span>::{<span class='ident'>Url</span>};
-<span class='kw'>use</span> <span class='ident'>heliotrope</span>::{<span class='ident'>Solr</span>, <span class='ident'>SolrDocument</span>, <span class='ident'>SolrString</span>, <span class='ident'>SolrI64</span>};
+<span class='kw'>use</span> <span class='ident'>heliotrope</span>::{<span class='ident'>Solr</span>, <span class='ident'>SolrDocument</span>};
 
 <span class='kw'>fn</span> <span class='ident'>main</span>(){
     <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='string'>&quot;http://localhost:8983/solr/test/&quot;</span>).<span class='ident'>unwrap</span>();
     <span class='kw'>let</span> <span class='ident'>solr</span> <span class='op'>=</span> <span class='ident'>Solr</span>::<span class='ident'>new</span>(<span class='ident'>url</span>);
     <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>document</span> <span class='op'>=</span> <span class='ident'>SolrDocument</span>::<span class='ident'>new</span>();
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='ident'>SolrI64</span>(<span class='number'>2</span>));
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>()));
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;The Great Gatsby&quot;</span>.<span class='ident'>to_string</span>()));
-    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;In my younger and more vulnerable years..&quot;</span>.<span class='ident'>to_string</span>()));
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='string'>&quot;2&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='string'>&quot;The Great Gatsby&quot;</span>.<span class='ident'>to_string</span>());
+    <span class='ident'>document</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='string'>&quot;In my younger and more vulnerable years..&quot;</span>.<span class='ident'>to_string</span>());
     <span class='kw'>match</span> <span class='ident'>solr</span>.<span class='ident'>add_and_commit</span>(<span class='kw-2'>&amp;</span><span class='ident'>document</span>) {
         <span class='prelude-val'>Ok</span>(<span class='ident'>solr_response</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>solr_response</span>),
         <span class='prelude-val'>Err</span>(<span class='ident'>solr_error</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Status: {}, Message: {}&quot;</span>, <span class='ident'>solr_error</span>.<span class='ident'>status</span>, <span class='ident'>solr_error</span>.<span class='ident'>message</span>)
@@ -102,21 +102,21 @@ git = &quot;https://github.com/Valve/heliotrope&quot;</code></pre>
 <h3 id="adding-multiple-document-at-once" class='section-header'><a
                            href="#adding-multiple-document-at-once">Adding multiple document at once</a></h3><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>url</span>::{<span class='ident'>Url</span>};
-<span class='kw'>use</span> <span class='ident'>heliotrope</span>::{<span class='ident'>Solr</span>, <span class='ident'>SolrDocument</span>, <span class='ident'>SolrString</span>, <span class='ident'>SolrI64</span>};
+<span class='kw'>use</span> <span class='ident'>heliotrope</span>::{<span class='ident'>Solr</span>, <span class='ident'>SolrDocument</span>};
 
 <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='string'>&quot;http://localhost:8983/solr/test/&quot;</span>).<span class='ident'>unwrap</span>();
 <span class='kw'>let</span> <span class='ident'>solr</span> <span class='op'>=</span> <span class='ident'>Solr</span>::<span class='ident'>new</span>(<span class='ident'>url</span>);
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>document1</span> <span class='op'>=</span> <span class='ident'>SolrDocument</span>::<span class='ident'>new</span>();
-<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='ident'>SolrI64</span>(<span class='number'>3</span>));
-<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>()));
-<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;The Great Gatsby&quot;</span>.<span class='ident'>to_string</span>()));
-<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;In my younger and more vulnerable years&quot;</span>.<span class='ident'>to_string</span>()));
+<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='string'>&quot;3&quot;</span>.<span class='ident'>to_string</span>());
+<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>());
+<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='string'>&quot;The Great Gatsby&quot;</span>.<span class='ident'>to_string</span>());
+<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='string'>&quot;In my younger and more vulnerable years&quot;</span>.<span class='ident'>to_string</span>());
 
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>document2</span> <span class='op'>=</span> <span class='ident'>SolrDocument</span>::<span class='ident'>new</span>();
-<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='ident'>SolrI64</span>(<span class='number'>4</span>));
-<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>()));
-<span class='ident'>document2</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Moby Dick&quot;</span>.<span class='ident'>to_string</span>()));
-<span class='ident'>document2</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='ident'>SolrString</span>(<span class='string'>&quot;Call me Ishmael&quot;</span>.<span class='ident'>to_string</span>()));
+<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;id&quot;</span>, <span class='string'>&quot;4&quot;</span>.<span class='ident'>to_string</span>());
+<span class='ident'>document1</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;type&quot;</span>, <span class='string'>&quot;Book&quot;</span>.<span class='ident'>to_string</span>());
+<span class='ident'>document2</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;title&quot;</span>, <span class='string'>&quot;Moby Dick&quot;</span>.<span class='ident'>to_string</span>());
+<span class='ident'>document2</span>.<span class='ident'>add_field</span>(<span class='string'>&quot;body&quot;</span>, <span class='string'>&quot;Call me Ishmael&quot;</span>.<span class='ident'>to_string</span>());
 
 <span class='kw'>match</span> <span class='ident'>solr</span>.<span class='ident'>add_many_and_commit</span>(<span class='macro'>vec</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>document1</span>, <span class='kw-2'>&amp;</span><span class='ident'>document2</span>)) {
     <span class='prelude-val'>Ok</span>(<span class='ident'>solr_response</span>) <span class='op'>=&gt;</span> <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>solr_response</span>),
@@ -172,7 +172,7 @@ git = &quot;https://github.com/Valve/heliotrope&quot;</code></pre>
 <span class='kw'>let</span> <span class='ident'>query</span> <span class='op'>=</span> <span class='ident'>SolrQuery</span>::<span class='ident'>new</span>(<span class='string'>&quot;manufacturer:Sony&quot;</span>).<span class='ident'>start</span>(<span class='number'>100</span>).<span class='ident'>rows</span>(<span class='number'>50</span>);
 </pre>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use document::{<a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrF64</a>, <a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrI64</a>, <a class='type' href='../heliotrope/type.SolrValue.html' title='heliotrope::SolrValue'>SolrString</a>};</code></td></tr><tr><td><code>pub use query::{<a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>Ascending</a>, <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>Descending</a>};</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr><td><code>pub use query::{<a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>Ascending</a>, <a class='type' href='../heliotrope/type.SortOrder.html' title='heliotrope::SortOrder'>Descending</a>};</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Solr.html'
@@ -235,13 +235,6 @@ This is done to enable chaining.</p>
                     </tr>
                 </table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
-                    <tr>
-                        <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.SolrValue.html'
-                               title='heliotrope::SolrValue'>SolrValue</a></td>
-                        <td class='docblock short'><p>Strongly typed Solr document field value</p>
-</td>
-                    </tr>
-                
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='type' href='type.SortOrder.html'
                                title='heliotrope::SortOrder'>SortOrder</a></td>
