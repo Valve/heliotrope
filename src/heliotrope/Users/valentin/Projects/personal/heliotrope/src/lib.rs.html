@@ -480,7 +480,7 @@ let query = SolrQuery::new(&quot;manufacturer:Sony&quot;).start(100).rows(50);
 <span class='kw'>use</span> <span class='ident'>serialize</span>::{<span class='ident'>json</span>};
 <span class='kw'>use</span> <span class='ident'>http_utils</span>::<span class='ident'>HttpResponse</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>document</span>::{<span class='ident'>SolrField</span>, <span class='ident'>SolrDocument</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>document</span>::{<span class='ident'>SolrValue</span>, <span class='ident'>SolrField</span>, <span class='ident'>SolrDocument</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>response</span>::{<span class='ident'>SolrError</span>, <span class='ident'>SolrUpdateResult</span>, <span class='ident'>SolrQueryResult</span>, <span class='ident'>SolrUpdateResponse</span>, <span class='ident'>SolrQueryResponse</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>query</span>::{<span class='ident'>SolrQuery</span>, <span class='ident'>SortOrder</span>, <span class='ident'>Ascending</span>, <span class='ident'>Descending</span>, <span class='ident'>SortClause</span>};
 
