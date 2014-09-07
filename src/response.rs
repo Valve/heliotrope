@@ -1,5 +1,5 @@
 use serialize::{json, Decodable, Decoder};
-use serialize::json::{Object, List, I64, U64, F64, Boolean, String};
+use serialize::json::{Json, Object, List, I64, U64, F64, Boolean, String};
 use document::{SolrDocument, SolrField, SolrString, SolrI64, SolrU64, SolrF64, SolrBoolean, SolrNull};
 
 pub type SolrUpdateResult = Result<SolrUpdateResponse, SolrError>;
@@ -131,23 +131,9 @@ impl SolrQueryResponse {
                                     match docs_json {
                                         & List(ref docs) => {
                                             for doc_json in docs.iter() {
-                                                match doc_json {
-                                                    & Object(ref tm) => {
-                                                        let mut doc = SolrDocument{fields: Vec::with_capacity(tm.len())};
-                                                        for (k, json_v) in tm.iter() {
-                                                            let v = match json_v {
-                                                                & I64(i64) => SolrI64(i64),
-                                                                & U64(u64) => SolrU64(u64),
-                                                                & F64(f64) => SolrF64(f64),
-                                                                & String(ref string) => SolrString(string.clone()),
-                                                                & Boolean(bool) => SolrBoolean(bool),
-                                                                _ => SolrNull
-                                                            };
-                                                            doc.fields.push(SolrField{name: k.clone(), value: v});
-                                                        }
-                                                        response.items.push(doc);
-                                                    },
-                                                    _ => error = "SolrQueryResponse JSON parsing error (response => docs): doc is not an object".to_string()
+                                                match SolrQueryResponse::parse_doc(doc_json){
+                                                    Ok(doc) => response.items.push(doc),
+                                                    Err(e) => error = e
                                                 }
 
                                             }
@@ -169,6 +155,27 @@ impl SolrQueryResponse {
             Ok(response)
         } else {
             Err(SolrError{time: 0, status: 0, message: error})
+        }
+    }
+
+    fn parse_doc(doc_json: &Json) -> Result<SolrDocument, String> {
+        match doc_json {
+            & Object(ref tm) => {
+                let mut doc = SolrDocument{fields: Vec::with_capacity(tm.len())};
+                for (k, json_v) in tm.iter() {
+                    let v = match json_v {
+                        & I64(i64) => SolrI64(i64),
+                        & U64(u64) => SolrU64(u64),
+                        & F64(f64) => SolrF64(f64),
+                        & String(ref string) => SolrString(string.clone()),
+                        & Boolean(bool) => SolrBoolean(bool),
+                        _ => SolrNull
+                    };
+                    doc.fields.push(SolrField{name: k.clone(), value: v});
+                }
+                Ok(doc)
+            },
+            _ => Err("SolrQueryResponse JSON parsing error (response => docs): doc is not an object".to_string())
         }
     }
 }
