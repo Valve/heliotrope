@@ -149,7 +149,6 @@ let query = SolrQuery::new("manufacturer:Sony").start(100).rows(50);
 extern crate serialize;
 extern crate url;
 extern crate http;
-extern crate debug;
 
 use std::io::IoResult;
 use url::{Url, UrlParser};
