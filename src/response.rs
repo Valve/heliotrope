@@ -102,13 +102,13 @@ impl SolrQueryResponse {
         match json::from_str(json_str) {
             Ok(json) => match json {
                Object(tree_map) => {
-                    match tree_map.find(&"responseHeader".to_string()) {
+                    match tree_map.get(&"responseHeader".to_string()) {
                         Some(rh) => {
-                            match rh.find(&"QTime".to_string()){
+                            match rh.find("QTime"){
                                 Some(time_json) => response.time = time_json.as_i64().unwrap() as u32,
                                 None => error = "SolrQueryResponse JSON parsing error (responseHeader): QTime not found".to_string()
                             }
-                            match rh.find(&"status".to_string()) {
+                            match rh.find("status") {
                                 Some(status_json) => response.status = status_json.as_u64().unwrap() as u32,
                                 None => error = "SolrQueryResponse JSON parsing error (responseHeader): status not found".to_string()
                             }
@@ -116,17 +116,17 @@ impl SolrQueryResponse {
                         None => error = "SolrQueryResponse JSON parsing error: responseHeader not found".to_string()
 
                     }
-                    match tree_map.find(&"response".to_string()) {
+                    match tree_map.get(&"response".to_string()) {
                         Some(rs) => {
-                            match rs.find(&"numFound".to_string()){
+                            match rs.find("numFound"){
                                 Some(total_json) => response.total = total_json.as_u64().unwrap(),
                                 None => error = "SolrQueryResponse JSON parsing error (response): numFound not found".to_string()
                             }
-                            match rs.find(&"start".to_string()) {
+                            match rs.find("start") {
                                 Some(start_json) => response.start = start_json.as_u64().unwrap(),
                                 None => error = "SolrQueryResponse JSON parsing error (response): start not found".to_string()
                             }
-                            match rs.find(&"docs".to_string()){
+                            match rs.find("docs"){
                                 Some(docs_json) => {
                                     match docs_json {
                                         & List(ref docs) => {
