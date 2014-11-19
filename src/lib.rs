@@ -157,7 +157,7 @@ use http_utils::HttpResponse;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
-pub use query::{SolrQuery, SortOrder, Ascending, Descending, SortClause};
+pub use query::{SolrQuery, SortOrder, SortClause};
 
 mod http_utils;
 mod document;

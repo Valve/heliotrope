@@ -179,8 +179,8 @@ pub enum SortOrder {
 impl ToUrlParam for SortOrder {
     fn to_url_param(&self) -> String {
         match *self {
-            Ascending => "asc".to_string(),
-            Descending => "desc".to_string()
+            SortOrder::Ascending => "asc".to_string(),
+            SortOrder::Descending => "desc".to_string()
         }
     }
 }

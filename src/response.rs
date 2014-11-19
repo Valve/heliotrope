@@ -1,6 +1,7 @@
 use serialize::{json, Decodable, Decoder};
 use serialize::json::{Json, Object, List, I64, U64, F64, Boolean, String};
-use document::{SolrDocument, SolrField, SolrString, SolrI64, SolrU64, SolrF64, SolrBoolean, SolrNull};
+use document::{SolrDocument, SolrField};
+use document::SolrValue;
 
 pub type SolrUpdateResult = Result<SolrUpdateResponse, SolrError>;
 pub type SolrQueryResult = Result<SolrQueryResponse, SolrError>;
@@ -164,12 +165,12 @@ impl SolrQueryResponse {
                 let mut doc = SolrDocument{fields: Vec::with_capacity(tm.len())};
                 for (k, json_v) in tm.iter() {
                     let v = match json_v {
-                        & I64(i64) => SolrI64(i64),
-                        & U64(u64) => SolrU64(u64),
-                        & F64(f64) => SolrF64(f64),
-                        & String(ref string) => SolrString(string.clone()),
-                        & Boolean(bool) => SolrBoolean(bool),
-                        _ => SolrNull
+                        & I64(i64) => SolrValue::I64(i64),
+                        & U64(u64) => SolrValue::U64(u64),
+                        & F64(f64) => SolrValue::F64(f64),
+                        & String(ref string) => SolrValue::String(string.clone()),
+                        & Boolean(bool) => SolrValue::Boolean(bool),
+                        _ => SolrValue::Null
                     };
                     doc.fields.push(SolrField{name: k.clone(), value: v});
                 }

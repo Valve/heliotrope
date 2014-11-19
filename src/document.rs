@@ -2,22 +2,22 @@ use serialize::{Encodable, Encoder};
 
 #[deriving(Show)]
 pub enum SolrValue {
-    SolrI64(i64),
-    SolrU64(u64),
-    SolrF64(f64),
-    SolrString(String),
-    SolrBoolean(bool),
-    SolrNull
+    I64(i64),
+    U64(u64),
+    F64(f64),
+    String(String),
+    Boolean(bool),
+    Null
 }
 impl<S: Encoder<E>, E> Encodable<S, E> for SolrValue {
     fn encode(&self, e: &mut S) -> Result<(), E> {
         match *self {
-            SolrI64(v) => v.encode(e),
-            SolrU64(v) => v.encode(e),
-            SolrF64(v) => v.encode(e),
-            SolrString(ref v) => v.encode(e),
-            SolrBoolean(v) => v.encode(e),
-            SolrNull => "null".encode(e)
+            SolrValue::I64(v) => v.encode(e),
+            SolrValue::U64(v) => v.encode(e),
+            SolrValue::F64(v) => v.encode(e),
+            SolrValue::String(ref v) => v.encode(e),
+            SolrValue::Boolean(v) => v.encode(e),
+            SolrValue::Null => "null".encode(e)
         }
     }
 }
@@ -44,7 +44,7 @@ impl SolrDocument {
 
     /// Adds a field to the document
     pub fn add_field(&mut self, name: &str, value: &str) {
-        self.fields.push(SolrField{name: name.to_string(), value: SolrString(value.to_string())});
+        self.fields.push(SolrField{name: name.to_string(), value: SolrValue::String(value.to_string())});
     }
 }
 

@@ -1,6 +1,6 @@
 extern crate heliotrope;
 
-use heliotrope::{SolrQuery, SortClause, Ascending, Descending};
+use heliotrope::{SolrQuery, SortClause, SortOrder};
 
 #[test]
 fn query_only_query_to_pairs() {
@@ -76,7 +76,7 @@ fn query_and_many_filters_with_set_filters_to_pairs() {
 #[test]
 fn query_and_sort_with_add_sort_to_pairs() {
     let mut query = SolrQuery::new("abba");
-    query = query.add_sort("age", Descending);
+    query = query.add_sort("age", SortOrder::Descending);
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
                     ("q".to_string(), "abba".to_string()),
@@ -86,8 +86,8 @@ fn query_and_sort_with_add_sort_to_pairs() {
 #[test]
 fn query_and_many_sorts_with_add_sort_to_pairs() {
     let mut query = SolrQuery::new("abba");
-    query = query.add_sort("age", Descending);
-    query = query.add_sort("balance", Ascending);
+    query = query.add_sort("age", SortOrder::Descending);
+    query = query.add_sort("balance", SortOrder::Ascending);
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
                     ("q".to_string(), "abba".to_string()),
@@ -97,8 +97,8 @@ fn query_and_many_sorts_with_add_sort_to_pairs() {
 #[test]
 fn query_and_many_sorts_with_set_sorts_to_pairs() {
     let mut query = SolrQuery::new("abba");
-    let sorts = vec!(SortClause {field: "age".to_string(), order: Descending},
-                     SortClause {field: "balance".to_string(), order: Ascending});
+    let sorts = vec!(SortClause {field: "age".to_string(), order: SortOrder::Descending},
+                     SortClause {field: "balance".to_string(), order: SortOrder::Ascending});
     query = query.set_sorts(sorts.as_slice());
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
