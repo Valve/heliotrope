@@ -202,12 +202,12 @@ impl Solr {
 
     /// Adds new document to Solr, without committing
     pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
-        self.add_many([document])
+        self.add_many(&[document])
     }
 
     /// Adds new document to Solr and commits it
     pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
-        self.add_many_and_commit([document])
+        self.add_many_and_commit(&[document])
     }
 
     /// Adds multiple documents to Solr, without committing it
