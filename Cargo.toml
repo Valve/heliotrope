@@ -1,11 +1,9 @@
 [package]
 name = "heliotrope"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Valentin Vasilyev <valentin.vasilyev@outlook.com>"]
 
-[dependencies.http]
-git = "https://github.com/chris-morgan/rust-http"
-
-[dependencies.url]
-git = "https://github.com/servo/rust-url"
+[dependencies]
+url = "*"
+hyper = "*"
 

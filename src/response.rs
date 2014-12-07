@@ -1,5 +1,5 @@
 use serialize::{json, Decodable, Decoder};
-use serialize::json::{Json, Object, List, I64, U64, F64, Boolean, String};
+use serialize::json::Json;
 use document::{SolrDocument, SolrField};
 use document::SolrValue;
 
@@ -102,7 +102,7 @@ impl SolrQueryResponse {
         let mut error: String = "".to_string();
         match json::from_str(json_str) {
             Ok(json) => match json {
-               Object(tree_map) => {
+               Json::Object(tree_map) => {
                     match tree_map.get(&"responseHeader".to_string()) {
                         Some(rh) => {
                             match rh.find("QTime"){
@@ -130,7 +130,7 @@ impl SolrQueryResponse {
                             match rs.find("docs"){
                                 Some(docs_json) => {
                                     match docs_json {
-                                        & List(ref docs) => {
+                                        & Json::Array(ref docs) => {
                                             for doc_json in docs.iter() {
                                                 match SolrQueryResponse::parse_doc(doc_json){
                                                     Ok(doc) => response.items.push(doc),
@@ -161,15 +161,15 @@ impl SolrQueryResponse {
 
     fn parse_doc(doc_json: &Json) -> Result<SolrDocument, String> {
         match doc_json {
-            & Object(ref tm) => {
+            & Json::Object(ref tm) => {
                 let mut doc = SolrDocument{fields: Vec::with_capacity(tm.len())};
                 for (k, json_v) in tm.iter() {
                     let v = match json_v {
-                        & I64(i64) => SolrValue::I64(i64),
-                        & U64(u64) => SolrValue::U64(u64),
-                        & F64(f64) => SolrValue::F64(f64),
-                        & String(ref string) => SolrValue::String(string.clone()),
-                        & Boolean(bool) => SolrValue::Boolean(bool),
+                        & Json::I64(i64) => SolrValue::I64(i64),
+                        & Json::U64(u64) => SolrValue::U64(u64),
+                        & Json::F64(f64) => SolrValue::F64(f64),
+                        & Json::String(ref string) => SolrValue::String(string.clone()),
+                        & Json::Boolean(bool) => SolrValue::Boolean(bool),
                         _ => SolrValue::Null
                     };
                     doc.fields.push(SolrField{name: k.clone(), value: v});

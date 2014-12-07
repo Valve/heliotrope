@@ -148,11 +148,11 @@ let query = SolrQuery::new("manufacturer:Sony").start(100).rows(50);
 
 extern crate serialize;
 extern crate url;
-extern crate http;
+extern crate hyper;
 
-use std::io::IoResult;
 use url::{Url, UrlParser};
 use serialize::{json};
+use hyper::HttpResult;
 use http_utils::HttpResponse;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
@@ -237,7 +237,7 @@ impl Solr {
         query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
         let http_result = http_utils::get(&query_url);
         handle_http_result(http_result, |http_response| {
-            match SolrQueryResponse::from_json_str(http_response.body_str().unwrap()) {
+            match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
                 Ok(sqr) => Ok(sqr),
                 // TODO: insert actual builder_error inside solr_error
                 Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
@@ -246,9 +246,9 @@ impl Solr {
     }
 }
 
-fn handle_http_update_result(http_result: IoResult<HttpResponse>) -> SolrUpdateResult {
+fn handle_http_update_result(http_result: HttpResult<HttpResponse>) -> SolrUpdateResult {
     handle_http_result(http_result, |http_response| {
-        match json::decode::<SolrUpdateResponse>(http_response.body_str().unwrap()) {
+        match json::decode::<SolrUpdateResponse>(http_response.body.as_slice()) {
             Ok(sur) => Ok(sur),
             // TODO: insert actual parse_error inside solr_error
             Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
@@ -257,7 +257,7 @@ fn handle_http_update_result(http_result: IoResult<HttpResponse>) -> SolrUpdateR
 
 }
 
-fn handle_http_result<R>(result: IoResult<HttpResponse>, f: |&HttpResponse| ->  Result<R, SolrError>) -> Result<R, SolrError> {
+fn handle_http_result<R>(result: HttpResult<HttpResponse>, f: |&HttpResponse| ->  Result<R, SolrError>) -> Result<R, SolrError> {
     match result {
         Ok(http_response) => {
             match http_response.code {
@@ -268,13 +268,14 @@ fn handle_http_result<R>(result: IoResult<HttpResponse>, f: |&HttpResponse| ->  
                     }
                 },
                 _ => {
-                    let error: SolrError = json::decode(http_response.body_str().unwrap()).unwrap();
+                    let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
                     Err(error)
                 }
             }
         },
         Err(err) => {
-            Err(SolrError{status: 0, time: 0, message: err.desc.to_string()})
+            // TODO: review
+            Err(SolrError{status: 0, time: 0, message: err.to_string()})
         }
     }
 }
