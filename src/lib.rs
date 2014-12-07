@@ -14,8 +14,7 @@ It builds with [Cargo](http://crates.io/).
 To use it in your project, add this to your `Cargo.toml` file:
 
 ```Cargo
-[dependencies.heliotrope]
-git = "https://github.com/Valve/heliotrope"
+heliotrope = "~0.0.2"
 ```
 
 ## Indexing
