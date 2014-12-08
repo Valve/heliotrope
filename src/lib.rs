@@ -34,12 +34,12 @@ fn main(){
     document.add_field("title", "How to train your dragon".to_string());
     document.add_field("body", "Vala Morgulis".to_string());
     match solr.add(&document) {
-        Ok(solr_response) => println!("{:?}", solr_response),
-        Err(solr_error) => println!("{:?}", solr_error)
+        Ok(solr_response) => println!("{}", solr_response),
+        Err(solr_error) => println!("{}", solr_error)
     }
     match solr.commit() {
-        Ok(solr_response) => println!("{:?}", solr_response),
-        Err(solr_error) => println!("{:?}", solr_error)
+        Ok(solr_response) => println!("{}", solr_response),
+        Err(solr_error) => println!("{}", solr_error)
     }
 }
 ```
@@ -59,7 +59,7 @@ fn main(){
     document.add_field("title", "The Great Gatsby".to_string());
     document.add_field("body", "In my younger and more vulnerable years..".to_string());
     match solr.add_and_commit(&document) {
-        Ok(solr_response) => println!("{:?}", solr_response),
+        Ok(solr_response) => println!("{}", solr_response),
         Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
     }
 }
@@ -86,7 +86,7 @@ document2.add_field("title", "Moby Dick".to_string());
 document2.add_field("body", "Call me Ishmael".to_string());
 
 match solr.add_many_and_commit(vec!(&document1, &document2)) {
-    Ok(solr_response) => println!("{:?}", solr_response),
+    Ok(solr_response) => println!("{}", solr_response),
     Err(solr_error) => println!("Status: {}, Message: {}", solr_error.status, solr_error.message)
 }
 ```
@@ -155,12 +155,14 @@ use hyper::HttpResult;
 use http_utils::HttpResponse;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
+pub use request::{SolrDeleteRequest};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
 pub use query::{SolrQuery, SortOrder, SortClause};
 
 mod http_utils;
 mod document;
 mod query;
+mod request;
 mod response;
 
 /// Represents your API connection to Solr.
@@ -219,7 +221,6 @@ impl Solr {
     /// Ads multiple documents to Solr and commits them
     pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
         let raw_json = json::encode(&documents);
-        println!("{}", raw_json);
         let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
         handle_http_update_result(http_result)
     }
@@ -242,6 +243,14 @@ impl Solr {
                 Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
             }
         })
+    }
+
+    pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
+        let delete_request = SolrDeleteRequest::from_id(id);
+        let raw_json = json::encode(&delete_request);
+        println!("{}", raw_json);
+        let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
+        handle_http_update_result(http_result)
     }
 }
 

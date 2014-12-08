@@ -32,6 +32,7 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
 }
 
 /// Solr response used for update/indexing/commit operations
+#[deriving(Show)]
 pub struct SolrUpdateResponse {
     /// HTTP status.
     /// When failed to connect, it will be 0 (zero).
