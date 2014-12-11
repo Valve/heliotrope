@@ -26,7 +26,7 @@
 
     <section class="sidebar">
         
-        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct ' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct current' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a><a class='struct ' href='struct.SortClause.html'>SortClause</a></div>
+        <p class='location'><a href='index.html'>heliotrope</a></p><div class='block struct'><h2>Structs</h2><a class='struct ' href='struct.Solr.html'>Solr</a><a class='struct ' href='struct.SolrDeleteRequest.html'>SolrDeleteRequest</a><a class='struct ' href='struct.SolrDocument.html'>SolrDocument</a><a class='struct ' href='struct.SolrError.html'>SolrError</a><a class='struct ' href='struct.SolrField.html'>SolrField</a><a class='struct ' href='struct.SolrQuery.html'>SolrQuery</a><a class='struct ' href='struct.SolrQueryResponse.html'>SolrQueryResponse</a><a class='struct current' href='struct.SolrUpdateResponse.html'>SolrUpdateResponse</a><a class='struct ' href='struct.SortClause.html'>SortClause</a></div><div class='block enum'><h2>Enums</h2><a class='enum ' href='enum.SolrValue.html'>SolrValue</a><a class='enum ' href='enum.SortOrder.html'>SortOrder</a></div>
     </section>
 
     <nav class="sub">
@@ -41,19 +41,20 @@
     </nav>
 
     <section id='main' class="content struct">
-<h1 class='fqn'><div class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrUpdateResponse</a><wbr></div><div class='out-of-band'><span id='render-detail'>
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>heliotrope</a>::<wbr><a class='struct' href=''>SolrUpdateResponse</a><wbr></span><span class='out-of-band'><span id='render-detail'>
             <a id="collapse-all" href="#">[-]
             </a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-2209' href='../src/heliotrope/Users/valentin/Projects/personal/heliotrope/src/response.rs.html#34-40'>[src]</a></div></h1>
+        </span><a id='src-2331' href='../src/heliotrope/response.rs.html#36-42'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct SolrUpdateResponse {
-    pub status: <a href='http://doc.rust-lang.org/master/std/primitive.int.html'>int</a>,
-    pub time: <a href='http://doc.rust-lang.org/master/std/primitive.int.html'>int</a>,
+    pub status: <a href='http://doc.rust-lang.org/nightly/std/primitive.int.html'>int</a>,
+    pub time: <a href='http://doc.rust-lang.org/nightly/std/primitive.int.html'>int</a>,
 }</pre><div class='docblock'><p>Solr response used for update/indexing/commit operations</p>
 </div><h2 class='fields'>Fields</h2>
 <table><tr><td id='structfield.status'><a class='stability Unmarked' title='No stability level'></a><code>status</code></td><td><div class='docblock'><p>HTTP status.
 When failed to connect, it will be 0 (zero).</p>
 </div></td></tr><tr><td id='structfield.time'><a class='stability Unmarked' title='No stability level'></a><code>time</code></td><td><div class='docblock'><p>Time it took to execute the request in milliseconds</p>
-</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;D: <a class='trait' href='http://doc.rust-lang.org/master/serialize/serialize/trait.Decoder.html' title='serialize::serialize::Decoder'>Decoder</a>&lt;E&gt;, E&gt; <a class='trait' href='http://doc.rust-lang.org/master/serialize/serialize/trait.Decodable.html' title='serialize::serialize::Decodable'>Decodable</a>&lt;D, E&gt; for <a class='struct' href='../heliotrope/struct.SolrUpdateResponse.html' title='heliotrope::SolrUpdateResponse'>SolrUpdateResponse</a></code></h3><div class='impl-methods'><h4 id='method.decode' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.decode' class='fnname'>decode</a>(d: &amp;mut D) -&gt; <a class='type' href='http://doc.rust-lang.org/master/core/result/type.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../heliotrope/struct.SolrUpdateResponse.html' title='heliotrope::SolrUpdateResponse'>SolrUpdateResponse</a>, E&gt;</code></h4>
+</div></td></tr></table><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl&lt;D: <a class='trait' href='http://doc.rust-lang.org/nightly/serialize/serialize/trait.Decoder.html' title='serialize::serialize::Decoder'>Decoder</a>&lt;E&gt;, E&gt; <a class='trait' href='http://doc.rust-lang.org/nightly/serialize/serialize/trait.Decodable.html' title='serialize::serialize::Decodable'>Decodable</a>&lt;D, E&gt; for <a class='struct' href='../heliotrope/struct.SolrUpdateResponse.html' title='heliotrope::SolrUpdateResponse'>SolrUpdateResponse</a></code></h3><div class='impl-items'><h4 id='method.decode' class='method'><a class='stability Experimental' title='Experimental'></a><code>fn <a href='#method.decode' class='fnname'>decode</a>(d: &amp;mut D) -&gt; <a class='enum' href='http://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='struct' href='../heliotrope/struct.SolrUpdateResponse.html' title='heliotrope::SolrUpdateResponse'>SolrUpdateResponse</a>, E&gt;</code></h4>
+</div><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><a class='stability Unmarked' title='No stability level'></a><code>impl <a class='trait' href='http://doc.rust-lang.org/nightly/core/fmt/trait.Show.html' title='core::fmt::Show'>Show</a> for <a class='struct' href='../heliotrope/struct.SolrUpdateResponse.html' title='heliotrope::SolrUpdateResponse'>SolrUpdateResponse</a></code></h3><div class='impl-items'><h4 id='method.fmt' class='method'><a class='stability Unstable' title='Unstable: I/O and core have yet to be reconciled'></a><code>fn <a href='#method.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='http://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='http://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 

@@ -9,7 +9,7 @@
 
     <title>document.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../../../../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
 
     
     
@@ -107,22 +107,22 @@
 
 <span class='attribute'>#[<span class='ident'>deriving</span>(<span class='ident'>Show</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>SolrValue</span> {
-    <span class='ident'>SolrI64</span>(<span class='ident'>i64</span>),
-    <span class='ident'>SolrU64</span>(<span class='ident'>u64</span>),
-    <span class='ident'>SolrF64</span>(<span class='ident'>f64</span>),
-    <span class='ident'>SolrString</span>(<span class='ident'>String</span>),
-    <span class='ident'>SolrBoolean</span>(<span class='ident'>bool</span>),
-    <span class='ident'>SolrNull</span>
+    <span class='ident'>I64</span>(<span class='ident'>i64</span>),
+    <span class='ident'>U64</span>(<span class='ident'>u64</span>),
+    <span class='ident'>F64</span>(<span class='ident'>f64</span>),
+    <span class='ident'>String</span>(<span class='ident'>String</span>),
+    <span class='ident'>Boolean</span>(<span class='ident'>bool</span>),
+    <span class='ident'>Null</span>
 }
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>Encoder</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='ident'>Encodable</span><span class='op'>&lt;</span><span class='ident'>S</span>, <span class='ident'>E</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>SolrValue</span> {
     <span class='kw'>fn</span> <span class='ident'>encode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>e</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>E</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>SolrI64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-            <span class='ident'>SolrU64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-            <span class='ident'>SolrF64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-            <span class='ident'>SolrString</span>(<span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-            <span class='ident'>SolrBoolean</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
-            <span class='ident'>SolrNull</span> <span class='op'>=&gt;</span> <span class='string'>&quot;null&quot;</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>)
+            <span class='ident'>SolrValue</span>::<span class='ident'>I64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrValue</span>::<span class='ident'>U64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrValue</span>::<span class='ident'>F64</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrValue</span>::<span class='ident'>String</span>(<span class='kw-2'>ref</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrValue</span>::<span class='ident'>Boolean</span>(<span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>),
+            <span class='ident'>SolrValue</span>::<span class='ident'>Null</span> <span class='op'>=&gt;</span> <span class='string'>&quot;null&quot;</span>.<span class='ident'>encode</span>(<span class='ident'>e</span>)
         }
     }
 }
@@ -149,7 +149,7 @@
 
     <span class='doccomment'>/// Adds a field to the document</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_field</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) {
-        <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>push</span>(<span class='ident'>SolrField</span>{<span class='ident'>name</span>: <span class='ident'>name</span>.<span class='ident'>to_string</span>(), <span class='ident'>value</span>: <span class='ident'>SolrString</span>(<span class='ident'>value</span>.<span class='ident'>to_string</span>())});
+        <span class='self'>self</span>.<span class='ident'>fields</span>.<span class='ident'>push</span>(<span class='ident'>SolrField</span>{<span class='ident'>name</span>: <span class='ident'>name</span>.<span class='ident'>to_string</span>(), <span class='ident'>value</span>: <span class='ident'>SolrValue</span>::<span class='ident'>String</span>(<span class='ident'>value</span>.<span class='ident'>to_string</span>())});
     }
 }
 
@@ -205,13 +205,13 @@
     
 
     <script>
-        window.rootPath = "../../../../../../../../";
+        window.rootPath = "../../";
         window.currentCrate = "heliotrope";
         window.playgroundUrl = "";
     </script>
-    <script src="../../../../../../../../jquery.js"></script>
-    <script src="../../../../../../../../main.js"></script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
     
-    <script async src="../../../../../../../../search-index.js"></script>
+    <script async src="../../search-index.js"></script>
 </body>
 </html>
