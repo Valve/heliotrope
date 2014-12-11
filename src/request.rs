@@ -1,10 +1,13 @@
 use serialize::{Encodable, Encoder};
 
+/// Represents a document(s) delete request
+#[deriving(Show)]
 pub struct SolrDeleteRequest {
     id: String
 }
 
 impl SolrDeleteRequest {
+    /// Creates a SolrDeleteRequest that will delete by a given Id
     pub fn from_id(id: &str) -> SolrDeleteRequest {
         SolrDeleteRequest { id: id.to_string() }
     }
