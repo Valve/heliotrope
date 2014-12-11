@@ -141,6 +141,14 @@ let query = SolrQuery::new("*:*")
 // getting third page of size 50
 let query = SolrQuery::new("manufacturer:Sony").start(100).rows(50);
 ```
+
+### Delete documents by ID
+
+```ignore
+solr.delete_by_id("99");
+```
+
+Note that `delete_by_id` commits automatically after every delete request
 */
 
 #![crate_name="heliotrope"]
