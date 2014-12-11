@@ -14,7 +14,7 @@ It builds with [Cargo](http://crates.io/).
 To use it in your project, add this to your `Cargo.toml` file:
 
 ```Cargo
-heliotrope = "~0.0.2"
+heliotrope = "~0.0.3"
 ```
 
 ## Indexing
