@@ -170,7 +170,7 @@ impl SolrQuery {
 }
 
 /// Represents sort ordering for a field
-#[deriving(Clone)]
+#[deriving(Clone, Copy)]
 pub enum SortOrder {
     Ascending,
     Descending
