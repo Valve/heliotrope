@@ -157,9 +157,9 @@ extern crate serialize;
 extern crate url;
 extern crate hyper;
 
+use std::error::{Error};
 use url::{Url, UrlParser};
 use serialize::{json};
-use hyper::HttpResult;
 use http_utils::HttpResponse;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
@@ -273,12 +273,12 @@ fn handle_http_update_result(http_result: HttpResult<HttpResponse>) -> SolrUpdat
 
 }
 
-fn handle_http_result<R>(result: HttpResult<HttpResponse>, f: |&HttpResponse| ->  Result<R, SolrError>) -> Result<R, SolrError> {
+fn handle_http_result<R, F: Fn(HttpResponse) -> Result<R, SolrError>>(result: HttpResult<HttpResponse>, f: F) -> Result<R, SolrError> {
     match result {
         Ok(http_response) => {
             match http_response.code {
                 200 => {
-                    match f(&http_response) {
+                    match f(http_response) {
                         Ok(response) => Ok(response),
                         Err(e) => Err(e)
                     }
@@ -291,7 +291,7 @@ fn handle_http_result<R>(result: HttpResult<HttpResponse>, f: |&HttpResponse| ->
         },
         Err(err) => {
             // TODO: review
-            Err(SolrError{status: 0, time: 0, message: err.to_string()})
+            Err(SolrError{status: 0, time: 0, message: err.description().to_string()})
         }
     }
 }

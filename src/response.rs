@@ -17,8 +17,8 @@ pub struct SolrError {
     pub message: String
 }
 
-impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
-    fn decode(d: &mut D) -> Result<SolrError, E> {
+impl Decodable for SolrError {
+    fn decode<D: Decoder>(d: &mut D) -> Result<SolrError, D::Error> {
         d.read_struct("root", 0, |d| {
             d.read_struct_field("error", 0, |d| {
                 Ok(SolrError{
@@ -32,7 +32,7 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrError {
 }
 
 /// Solr response used for update/indexing/commit operations
-#[deriving(Show, Copy)]
+#[derive(Debug, Copy)]
 pub struct SolrUpdateResponse {
     /// HTTP status.
     /// When failed to connect, it will be 0 (zero).
@@ -41,8 +41,8 @@ pub struct SolrUpdateResponse {
     pub time: int
 }
 
-impl<D: Decoder<E>, E> Decodable<D, E> for SolrUpdateResponse {
-    fn decode(d: &mut D) -> Result<SolrUpdateResponse, E> {
+impl Decodable for SolrUpdateResponse {
+    fn decode<D: Decoder>(d: &mut D) -> Result<SolrUpdateResponse, D::Error> {
         d.read_struct("root", 0, |d| {
             d.read_struct_field("responseHeader", 0, |d| {
                 Ok(SolrUpdateResponse{
@@ -55,7 +55,7 @@ impl<D: Decoder<E>, E> Decodable<D, E> for SolrUpdateResponse {
 }
 
 /// Solr query response
-#[deriving(Show)]
+#[derive(Debug)]
 pub struct SolrQueryResponse {
     /// HTTP status.
     /// When failed to connect, it will be 0 (zero).
@@ -151,7 +151,8 @@ impl SolrQueryResponse {
                },
                _ => error = "SolrQueryResponse JSON parsing error: query response is not a JSON object.".to_string()
             },
-            Err(e) => error = format!("SolrQueryResponse JSON parsing error: {}", e).to_string()
+            // TODO: verify e type and additional error info
+            Err(e) => error = "SolrQueryResponse JSON parsing error".to_string()
         }
         if error.len() == 0 {
             Ok(response)

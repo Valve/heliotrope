@@ -1,7 +1,7 @@
 use serialize::{Encodable, Encoder};
 
 /// Represents a document(s) delete request
-#[deriving(Show)]
+#[derive(Debug)]
 pub struct SolrDeleteRequest {
     id: String
 }
@@ -13,9 +13,9 @@ impl SolrDeleteRequest {
     }
 }
 
-impl<E, S: Encoder<E>> Encodable<S, E> for SolrDeleteRequest {
-    fn encode(&self, s: &mut S) -> Result<(), E> {
-        s.emit_struct("SolrDeleteRequest", 1, |e| {
+impl Encodable for SolrDeleteRequest {
+    fn encode<E: Encoder>(&self, e: &mut E) -> Result<(), E::Error> {
+        e.emit_struct("SolrDeleteRequest", 1, |e| {
             e.emit_struct_field("delete", 0, |e| {
                 e.emit_struct("delete", 1, |e| {
                     try!(e.emit_struct_field("id", 0, |e| self.id.encode(e)));

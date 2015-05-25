@@ -9,7 +9,7 @@ pub trait ToUrlParam {
 /// You'll need to build the query and pass it to Solr to execute.
 /// This struct is immutable, ie returns modified clone of itself when building.
 /// This is done to enable chaining.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct SolrQuery {
     query: String,
     fields: Option<Vec<String>>,
@@ -133,7 +133,7 @@ impl SolrQuery {
         vec.push(("q".to_string(), self.query.to_string()));
         match self.fields {
             Some(ref f) => {
-                let formatted_fields = format!("{:#}", f.clone());
+                let formatted_fields = format!("{:#?}", f);
                 vec.push(("fl".to_string(), formatted_fields));
             },
             _ => ()
@@ -152,7 +152,7 @@ impl SolrQuery {
                                               .iter()
                                               .map(|x| x.to_url_param())
                                               .collect();
-                let formatted_sorts = format!("{:#}", sort_url_params);
+                let formatted_sorts = format!("{:#?}", sort_url_params);
                 vec.push(("sort".to_string(), formatted_sorts));
             },
             _ => ()
@@ -170,7 +170,7 @@ impl SolrQuery {
 }
 
 /// Represents sort ordering for a field
-#[deriving(Clone, Copy)]
+#[derive(Clone, Copy)]
 pub enum SortOrder {
     Ascending,
     Descending
@@ -186,7 +186,7 @@ impl ToUrlParam for SortOrder {
 }
 
 /// A utility struct to hold sorting for a field
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct SortClause {
     pub field: String,
     pub order: SortOrder
