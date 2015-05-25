@@ -10,7 +10,7 @@ pub struct HttpResponse {
     pub body: String
 }
 
-pub fn get(url: &Url) -> HttpResult<HttpResponse> {
+pub fn get<E>(url: &Url) -> Result<HttpResponse, E> {
     //let mut req = Request::get(url.clone()).unwrap();
     //req.headers_mut().set(ContentType(from_str("application/json").unwrap()));
     //req.headers_mut().set(ContentLength(0));
@@ -23,7 +23,7 @@ pub fn get(url: &Url) -> HttpResult<HttpResponse> {
 
 }
 
-pub fn post(url: &Url) -> HttpResult<HttpResponse> {
+pub fn post<E>(url: &Url) -> Result<HttpResponse, E> {
     let mut client = Client::new();
     client.post(url.to_string().as_slice()).header(ContentType("application/json".parse().unwrap()));
     //let mut req = Request::post(url.clone()).unwrap();
@@ -32,7 +32,7 @@ pub fn post(url: &Url) -> HttpResult<HttpResponse> {
     //make_request(req)
 }
 
-pub fn post_json(url: &Url, json: &str) -> HttpResult<HttpResponse> {
+pub fn post_json<E>(url: &Url, json: &str) -> Result<HttpResponse, E> {
     let mut client = Client::new();
     client.post(url.to_string().as_slice()).header(ContentType("application/json".parse().unwrap()));
     //let mut req = Request::post(url.clone()).unwrap();
@@ -55,7 +55,7 @@ pub fn post_json(url: &Url, json: &str) -> HttpResult<HttpResponse> {
     //}
 }
 
-fn make_request<C>(client: &mut Client<C>) -> Result<HttpResponse, HttpError> {
+//fn make_request<C, E>(client: &mut Client<C>) -> Result<HttpResponse, E> {
 
     //match req.start() {
         //Ok(req) => {
@@ -71,4 +71,4 @@ fn make_request<C>(client: &mut Client<C>) -> Result<HttpResponse, HttpError> {
         //},
         //Err(e) => Err(e)
     //}
-}
+//}

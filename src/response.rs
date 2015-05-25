@@ -10,9 +10,9 @@ pub type SolrQueryResult = Result<SolrQueryResponse, SolrError>;
 pub struct SolrError {
     /// HTTP status.
     /// When failed to connect, it will be 0 (zero).
-    pub status: int,
+    pub status: i32,
     /// Time it took to execute the request in milliseconds
-    pub time: int,
+    pub time: i32,
     /// Detailed error message
     pub message: String
 }
@@ -32,13 +32,13 @@ impl Decodable for SolrError {
 }
 
 /// Solr response used for update/indexing/commit operations
-#[derive(Debug, Copy)]
+#[derive(Debug, Copy, Clone)]
 pub struct SolrUpdateResponse {
     /// HTTP status.
     /// When failed to connect, it will be 0 (zero).
-    pub status: int,
+    pub status: i32,
     /// Time it took to execute the request in milliseconds
-    pub time: int
+    pub time: i32
 }
 
 impl Decodable for SolrUpdateResponse {

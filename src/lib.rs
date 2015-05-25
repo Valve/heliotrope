@@ -262,7 +262,7 @@ impl Solr {
     }
 }
 
-fn handle_http_update_result(http_result: HttpResult<HttpResponse>) -> SolrUpdateResult {
+fn handle_http_update_result<E>(http_result: Result<HttpResponse, E>) -> SolrUpdateResult {
     handle_http_result(http_result, |http_response| {
         match json::decode::<SolrUpdateResponse>(http_response.body.as_slice()) {
             Ok(sur) => Ok(sur),
@@ -273,7 +273,8 @@ fn handle_http_update_result(http_result: HttpResult<HttpResponse>) -> SolrUpdat
 
 }
 
-fn handle_http_result<R, F: Fn(HttpResponse) -> Result<R, SolrError>>(result: HttpResult<HttpResponse>, f: F) -> Result<R, SolrError> {
+fn handle_http_result<R, F, E>(result: Result<HttpResponse, E>, f: F) -> Result<R, SolrError> 
+    where F: FnMut(HttpResponse) -> Result<R, SolrError> {
     match result {
         Ok(http_response) => {
             match http_response.code {
