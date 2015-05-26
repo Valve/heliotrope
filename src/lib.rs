@@ -1,4 +1,4 @@
-// Copyright 2014 Valentin Vasilyev.
+// Copyright 2015 Valentin Vasilyev.
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -173,126 +173,126 @@ mod query;
 mod request;
 mod response;
 
-/// Represents your API connection to Solr.
-/// You will use this struct to perform operations on Solr.
-pub struct Solr {
-    /// Base URL to connect to Solr. Should include the core.
-    /// For example http://localhost:8983/solr/production/
-    pub base_url: Url,
-    select_url: Url,
-    update_url: Url,
-    commit_url: Url
-}
+///// Represents your API connection to Solr.
+///// You use this struct to perform operations on Solr.
+//pub struct Solr {
+    ///// Base URL to connect to Solr. Should include the core.
+    ///// For example http://localhost:8983/solr/production/
+    //pub base_url: Url,
+    //select_url: Url,
+    //update_url: Url,
+    //commit_url: Url
+//}
 
-impl Solr {
+//impl Solr {
 
-    fn build_update_url(url: &Url) -> Url{
-        let mut url_parser = UrlParser::new();
-        url_parser.base_url(url).parse("./update").unwrap()
-    }
+    //fn build_update_url(url: &Url) -> Url{
+        //let mut url_parser = UrlParser::new();
+        //url_parser.base_url(url).parse("./update").unwrap()
+    //}
 
-    fn build_select_url(url: &Url) -> Url {
-        let mut url_parser = UrlParser::new();
-        url_parser.base_url(url).parse("./select").unwrap()
-    }
+    //fn build_select_url(url: &Url) -> Url {
+        //let mut url_parser = UrlParser::new();
+        //url_parser.base_url(url).parse("./select").unwrap()
+    //}
 
-    fn build_commit_url(url: &Url) -> Url {
-        let mut url_parser = UrlParser::new();
-        url_parser.base_url(url).parse("./update?commit=true").unwrap()
-    }
+    //fn build_commit_url(url: &Url) -> Url {
+        //let mut url_parser = UrlParser::new();
+        //url_parser.base_url(url).parse("./update?commit=true").unwrap()
+    //}
 
-    /// Creates a new instance of Solr.
-    pub fn new(url: &Url) -> Solr {
-        Solr {base_url: url.clone(),
-            select_url: Solr::build_select_url(url),
-            update_url: Solr::build_update_url(url),
-            commit_url: Solr::build_commit_url(url)}
-    }
+    ///// Creates a new instance of Solr.
+    //pub fn new(url: &Url) -> Solr {
+        //Solr {base_url: url.clone(),
+            //select_url: Solr::build_select_url(url),
+            //update_url: Solr::build_update_url(url),
+            //commit_url: Solr::build_commit_url(url)}
+    //}
 
-    /// Adds new document to Solr, without committing
-    pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
-        self.add_many(&[document])
-    }
+    ///// Adds new document to Solr, without committing
+    //pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
+        //self.add_many(&[document])
+    //}
 
-    /// Adds new document to Solr and commits it
-    pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
-        self.add_many_and_commit(&[document])
-    }
+    ///// Adds new document to Solr and commits it
+    //pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
+        //self.add_many_and_commit(&[document])
+    //}
 
-    /// Adds multiple documents to Solr, without committing it
-    pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
-        let raw_json = json::encode(&documents);
-        let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
-        handle_http_update_result(http_result)
-    }
+    ///// Adds multiple documents to Solr, without committing it
+    //pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
+        //let raw_json = json::encode(&documents);
+        //let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
+        //handle_http_update_result(http_result)
+    //}
 
-    /// Ads multiple documents to Solr and commits them
-    pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
-        let raw_json = json::encode(&documents);
-        let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        handle_http_update_result(http_result)
-    }
+    ///// Ads multiple documents to Solr and commits them
+    //pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
+        //let raw_json = json::encode(&documents);
+        //let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
+        //handle_http_update_result(http_result)
+    //}
 
-    /// Performs Solr commit
-    pub fn commit(&self) -> SolrUpdateResult {
-        let http_result = http_utils::post(&self.commit_url);
-        handle_http_update_result(http_result)
-    }
+    ///// Performs Solr commit
+    //pub fn commit(&self) -> SolrUpdateResult {
+        //let http_result = http_utils::post(&self.commit_url);
+        //handle_http_update_result(http_result)
+    //}
 
-    /// Performs Solr query
-    pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
-        let mut query_url = self.select_url.clone();
-        query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
-        let http_result = http_utils::get(&query_url);
-        handle_http_result(http_result, |http_response| {
-            match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
-                Ok(sqr) => Ok(sqr),
-                // TODO: insert actual builder_error inside solr_error
-                Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-            }
-        })
-    }
+    ///// Performs Solr query
+    //pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
+        //let mut query_url = self.select_url.clone();
+        //query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
+        //let http_result = http_utils::get(&query_url);
+        //handle_http_result(http_result, |http_response| {
+            //match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
+                //Ok(sqr) => Ok(sqr),
+                //// TODO: insert actual builder_error inside solr_error
+                //Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
+            //}
+        //})
+    //}
 
-    pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
-        let delete_request = SolrDeleteRequest::from_id(id);
-        let raw_json = json::encode(&delete_request);
-        println!("{}", raw_json);
-        let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        handle_http_update_result(http_result)
-    }
-}
+    //pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
+        //let delete_request = SolrDeleteRequest::from_id(id);
+        //let raw_json = json::encode(&delete_request);
+        //println!("{}", raw_json);
+        //let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
+        //handle_http_update_result(http_result)
+    //}
+//}
 
-fn handle_http_update_result<E>(http_result: Result<HttpResponse, E>) -> SolrUpdateResult {
-    handle_http_result(http_result, |http_response| {
-        match json::decode::<SolrUpdateResponse>(http_response.body.as_slice()) {
-            Ok(sur) => Ok(sur),
-            // TODO: insert actual parse_error inside solr_error
-            Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-        }
-    })
+//fn handle_http_update_result<E>(http_result: Result<HttpResponse, E>) -> SolrUpdateResult {
+    //handle_http_result(http_result, |http_response| {
+        //match json::decode::<SolrUpdateResponse>(http_response.body.as_slice()) {
+            //Ok(sur) => Ok(sur),
+            //// TODO: insert actual parse_error inside solr_error
+            //Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
+        //}
+    //})
 
-}
+//}
 
-fn handle_http_result<R, F, E>(result: Result<HttpResponse, E>, f: F) -> Result<R, SolrError> 
-    where F: FnMut(HttpResponse) -> Result<R, SolrError> {
-    match result {
-        Ok(http_response) => {
-            match http_response.code {
-                200 => {
-                    match f(http_response) {
-                        Ok(response) => Ok(response),
-                        Err(e) => Err(e)
-                    }
-                },
-                _ => {
-                    let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
-                    Err(error)
-                }
-            }
-        },
-        Err(err) => {
-            // TODO: review
-            Err(SolrError{status: 0, time: 0, message: err.description().to_string()})
-        }
-    }
-}
+//fn handle_http_result<R, F, E>(result: Result<HttpResponse, E>, f: F) -> Result<R, SolrError> 
+    //where F: FnMut(HttpResponse) -> Result<R, SolrError> {
+    //match result {
+        //Ok(http_response) => {
+            //match http_response.code {
+                //200 => {
+                    //match f(http_response) {
+                        //Ok(response) => Ok(response),
+                        //Err(e) => Err(e)
+                    //}
+                //},
+                //_ => {
+                    //let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
+                    //Err(error)
+                //}
+            //}
+        //},
+        //Err(err) => {
+            //// TODO: review
+            //Err(SolrError{status: 0, time: 0, message: err.description().to_string()})
+        //}
+    //}
+//}
