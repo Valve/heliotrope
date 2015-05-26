@@ -4,6 +4,8 @@ use hyper::header::{ContentType, ContentLength};
 use hyper::net::Fresh;
 use hyper::client::Request;
 use hyper::status::StatusCode;
+use hyper::error::Error;
+use std::io::Read;
 
 
 pub struct HttpResponse {
@@ -11,12 +13,21 @@ pub struct HttpResponse {
     pub body: String
 }
 
-pub fn get<E>(url: &Url) -> Result<HttpResponse, E> {
+pub fn get(url: &Url) -> Result<HttpResponse, Error> {
     let mut client = Client::new();
-    let req = client.get(&url.to_string())
-        .header(ContentType("application/json".parse().unwrap()))
-        .header(ContentLength(0));
-    let res = try!(req.send());
+    let mut res = client.get(&url.to_string())
+        .send()
+        .unwrap();
+    let mut body = String::new();
+    let result = res.read_to_string(&mut body);
+    match result {
+        Ok(_) => {
+            Ok(HttpResponse{status: res.status, body: body})
+        },
+        Err(err) => {
+            Err(Error::Io(err))
+        }
+    }
 }
 
 //pub fn post<E>(url: &Url) -> Result<HttpResponse, E> {
