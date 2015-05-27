@@ -137,8 +137,15 @@ impl SolrQuery {
         vec.push(("q".to_string(), self.query.to_string()));
         match self.fields {
             Some(ref f) => {
-                let formatted_fields = format!("{:#?}", f);
-                vec.push(("fl".to_string(), formatted_fields));
+                let mut fmt_fields = String::new();
+                // TODO optimize
+                f.iter().fold(true, |first, elem| {
+                    if !first { fmt_fields.push_str(", "); }
+                    fmt_fields.push_str(elem);
+                    false
+                });
+
+                vec.push(("fl".to_string(), fmt_fields));
             },
             _ => ()
         }
@@ -156,8 +163,14 @@ impl SolrQuery {
                                               .iter()
                                               .map(|x| x.to_url_param())
                                               .collect();
-                let formatted_sorts = format!("{:#?}", sort_url_params);
-                vec.push(("sort".to_string(), formatted_sorts));
+                 let mut fmt_sorts = String::new();
+                // TODO optimize
+                sort_url_params.iter().fold(true, |first, elem| {
+                    if !first { fmt_sorts.push_str(", "); }
+                    fmt_sorts.push_str(elem);
+                    false
+                });
+                vec.push(("sort".to_string(), fmt_sorts));
             },
             _ => ()
         }
