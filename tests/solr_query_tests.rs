@@ -99,7 +99,7 @@ fn query_and_many_sorts_with_set_sorts_to_pairs() {
     let mut query = SolrQuery::new("abba");
     let sorts = vec!(SortClause {field: "age".to_string(), order: SortOrder::Descending},
                      SortClause {field: "balance".to_string(), order: SortOrder::Ascending});
-    query = query.set_sorts(sorts.as_slice());
+    query = query.set_sorts(&sorts);
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
                     ("q".to_string(), "abba".to_string()),

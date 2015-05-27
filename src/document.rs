@@ -50,12 +50,12 @@ impl SolrDocument {
 
 impl Encodable for SolrDocument {
     fn encode<E: Encoder>(&self, s: &mut E) -> Result<(), E::Error> {
-        let mut i = 0u32;
+        let mut i = 0usize;
         s.emit_struct("SolrDocument", self.fields.len(), |e| {
-            //for field in self.fields.iter() {
-                //try!(e.emit_struct_field(field.name, i, |e| field.value.encode(e)));
-                //i = i + 1;
-            //}
+            for field in self.fields.iter() {
+                try!(e.emit_struct_field(&field.name, i, |e| field.value.encode(e)));
+                i = i + 1;
+            }
             Ok(())
         })
     }
