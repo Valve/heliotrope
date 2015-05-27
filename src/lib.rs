@@ -157,9 +157,9 @@ extern crate rustc_serialize;
 extern crate url;
 extern crate hyper;
 
-use std::error::{Error};
 use url::{Url, UrlParser};
 use rustc_serialize::{json};
+use hyper::error::Error;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
 pub use request::{SolrDeleteRequest};
@@ -175,40 +175,60 @@ mod response;
 
 ///// Represents your API connection to Solr.
 ///// You use this struct to perform operations on Solr.
-//pub struct Solr {
-    ///// Base URL to connect to Solr. Should include the core.
-    ///// For example http://localhost:8983/solr/production/
-    //pub base_url: Url,
-    //select_url: Url,
-    //update_url: Url,
-    //commit_url: Url
-//}
+pub struct Solr {
+    /// Base URL to connect to Solr. Should include the core.
+    /// For example http://localhost:8983/solr/production/
+    pub base_url: Url,
+    select_url: Url,
+    update_url: Url,
+    commit_url: Url,
+    pub ping_url: Url
+}
 
-//impl Solr {
+impl Solr {
 
-    //fn build_update_url(url: &Url) -> Url{
-        //let mut url_parser = UrlParser::new();
-        //url_parser.base_url(url).parse("./update").unwrap()
-    //}
+    fn build_update_url(url: &Url) -> Url{
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./update").unwrap()
+    }
 
-    //fn build_select_url(url: &Url) -> Url {
-        //let mut url_parser = UrlParser::new();
-        //url_parser.base_url(url).parse("./select").unwrap()
-    //}
+    fn build_select_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./select").unwrap()
+    }
 
-    //fn build_commit_url(url: &Url) -> Url {
-        //let mut url_parser = UrlParser::new();
-        //url_parser.base_url(url).parse("./update?commit=true").unwrap()
-    //}
+    fn build_commit_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./update?commit=true").unwrap()
+    }
+
+    fn build_ping_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./admin/ping?wt=json").unwrap()
+    }
 
     ///// Creates a new instance of Solr.
-    //pub fn new(url: &Url) -> Solr {
-        //Solr {base_url: url.clone(),
-            //select_url: Solr::build_select_url(url),
-            //update_url: Solr::build_update_url(url),
-            //commit_url: Solr::build_commit_url(url)}
-    //}
+    pub fn new(url: &Url) -> Solr {
+        Solr {base_url: url.clone(),
+            select_url: Solr::build_select_url(url),
+            update_url: Solr::build_update_url(url),
+            commit_url: Solr::build_commit_url(url),
+            ping_url: Solr::build_ping_url(url)}
+    }
 
+    pub fn ping(&self) -> SolrQueryResult {
+        let http_result = http_utils::get(&self.ping_url);
+        // TODO `
+        match http_result {
+            Ok(http_response) => match SolrQueryResponse::from_json_str(&http_response.body) {
+                Ok(sqr) => Ok(sqr),
+                // TODO: insert actual builder_error inside solr_error
+                Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Error parsing query response JSON: {}", err.message)})
+            },
+            Err(_) => Err(SolrError{status: 0, time: 0, message: "Network error".to_string()})
+        }
+    }
+}
     ///// Adds new document to Solr, without committing
     //pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
         //self.add_many(&[document])
