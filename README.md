@@ -2,7 +2,7 @@
 <h2>Heliotrope</h2>
 <h3>SOLR client for Rust programming language</h3>
 <br/>
-<a href="https://travis-ci.org/Valve/heliotrope"><img src="http://img.shields.io/travis/Valve/heliotrope/master.svg?style=flat" /></a>
+<a href="https://travis-ci.org/Valve/heliotrope"><img src="https://travis-ci.org/Valve/heliotrope.svg?branch=unstable" /></a>
 </p>
 
 ### [Documentation](http://valve.github.io/heliotrope/heliotrope/index.html)

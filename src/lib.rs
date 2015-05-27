@@ -160,12 +160,12 @@ extern crate hyper;
 use std::error::{Error};
 use url::{Url, UrlParser};
 use rustc_serialize::{json};
-use http_utils::HttpResponse;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
 pub use request::{SolrDeleteRequest};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
 pub use query::{SolrQuery, SortOrder, SortClause};
+pub use http_utils::{HttpResponse, get};
 
 mod http_utils;
 mod document;
