@@ -101,7 +101,11 @@ impl SolrQuery {
     /// Already existing sorts will be overwritten
     pub fn set_sorts(&self, sorts: &[SortClause]) -> SolrQuery {
         let mut new_sorts = Vec::with_capacity(sorts.len());
-        new_sorts.push_all(sorts);
+        // TODO: Vec#push_all is unstable, so using iteration
+        // new_sorts.push_all(sorts);
+        for s in sorts {
+            new_sorts.push(s.clone());
+        }
         let mut solr_query = self.clone();
         solr_query.sorts = Some(new_sorts);
         solr_query

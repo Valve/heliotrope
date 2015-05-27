@@ -16,6 +16,7 @@ pub struct HttpResponse {
 pub fn get(url: &Url) -> Result<HttpResponse, Error> {
     let mut client = Client::new();
     let mut result_response = client.get(&url.to_string()).send();
+    //TODO: use try! macro here
     match result_response {
         Ok(mut res) => {
             let mut body = String::new();
@@ -24,6 +25,7 @@ pub fn get(url: &Url) -> Result<HttpResponse, Error> {
                 Ok(_) => {
                     Ok(HttpResponse{status: res.status, body: body})
                 },
+                //TODO: review why we use Irror::Io here
                 Err(err) => {
                     Err(Error::Io(err))
                 }

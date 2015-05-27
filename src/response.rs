@@ -1,5 +1,5 @@
-use serialize::{json, Decodable, Decoder};
-use serialize::json::Json;
+use rustc_serialize::{json, Decodable, Decoder};
+use rustc_serialize::json::Json;
 use document::{SolrDocument, SolrField};
 use document::SolrValue;
 
@@ -101,7 +101,7 @@ impl SolrQueryResponse {
     pub fn from_json_str(json_str: &str) -> SolrQueryResult {
         let mut response = SolrQueryResponse{status: 0, time: 0, total: 0, start: 0, items: Vec::new()};
         let mut error: String = "".to_string();
-        match json::from_str(json_str) {
+        match Json::from_str(json_str) {
             Ok(json) => match json {
                Json::Object(tree_map) => {
                     match tree_map.get(&"responseHeader".to_string()) {

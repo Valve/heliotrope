@@ -1,4 +1,4 @@
-use serialize::{Encodable, Encoder};
+use rustc_serialize::{Encodable, Encoder};
 
 #[derive(Debug)]
 pub enum SolrValue {

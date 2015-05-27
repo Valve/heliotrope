@@ -12,4 +12,5 @@ authors = ["Valentin Vasilyev <valentin.vasilyev@outlook.com>"]
 [dependencies]
 url = "*"
 hyper = "*"
+rustc-serialize = "*"
 

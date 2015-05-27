@@ -153,13 +153,13 @@ Note that `delete_by_id` commits automatically after every delete request
 
 #![crate_name="heliotrope"]
 
-extern crate serialize;
+extern crate rustc_serialize;
 extern crate url;
 extern crate hyper;
 
 use std::error::{Error};
 use url::{Url, UrlParser};
-use serialize::{json};
+use rustc_serialize::{json};
 use http_utils::HttpResponse;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
