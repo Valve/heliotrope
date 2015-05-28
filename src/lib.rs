@@ -207,7 +207,7 @@ impl Solr {
         url_parser.base_url(url).parse("./admin/ping?wt=json").unwrap()
     }
 
-    ///// Creates a new instance of Solr.
+    /// Creates a new instance of Solr.
     pub fn new(url: &Url) -> Solr {
         Solr {base_url: url.clone(),
             select_url: Solr::build_select_url(url),

@@ -3,10 +3,10 @@ name = "heliotrope"
 description = "SOLR client for Rust programming language"
 documentation = "http://valve.github.io/heliotrope/heliotrope/index.html"
 repository = "https://github.com/valve/heliotrope"
-keywords = ["solr", "full-text", "search"]
+keywords = ["solr", "full-text", "search", "API"]
 license = "MIT"
 version = "0.0.3"
-authors = ["Valentin Vasilyev <valentin.vasilyev@outlook.com>"]
+authors = ["Valentin Vasilyev <valentin.vasilyev@outlook.com>", "Dzmitry Misiuk <minsler.by@gmail.com>"]
 
 
 [dependencies]

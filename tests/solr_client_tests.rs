@@ -10,8 +10,7 @@ use hyper::status::StatusCode;
 
 #[test]
 fn test_instantiate() {
-    
-    let base_url = "http://localhost:8983/solr/gettingstarted/";
+    let base_url = "http://localhost:8983/solr/test/";
     let url: Url = Url::parse(base_url).unwrap();
     let client = Solr::new(&url);
 
