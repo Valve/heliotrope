@@ -69,9 +69,7 @@ pub struct SolrQueryResponse {
     /// Rows offset (zero based)
     pub start: u64,
     /// Current page of found Solr documents
-    pub items: Vec<SolrDocument>,
-    /// Ping status
-    pub ping_status: String
+    pub items: Vec<SolrDocument>
 }
 
 /* 
@@ -101,14 +99,14 @@ Example JSON of query response:
 impl SolrQueryResponse {
     /// Deserializes SolrQueryResponse from JSON string
     pub fn from_json_str(json_str: &str) -> SolrQueryResult {
-        let mut response = SolrQueryResponse{status: 0, time: 0, total: 0, start: 0, items: Vec::new(), ping_status: "null".to_string()};
+        let mut response = SolrQueryResponse{status: 0, time: 0, total: 0, start: 0, items: Vec::new() };
         let mut error: String = "".to_string();
         match Json::from_str(json_str) {
             Ok(json) => match json {
                Json::Object(tree_map) => {
                     let mut is_ping = false;
                     match tree_map.get(&"status".to_string()){
-                        Some(st) => {is_ping=true; response.ping_status = st.as_string().unwrap().to_string()},
+                        Some(st) => {},
                         None => ()
                     }
                     match tree_map.get(&"responseHeader".to_string()) {

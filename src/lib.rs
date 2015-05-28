@@ -173,11 +173,11 @@ mod query;
 mod request;
 mod response;
 
-///// Represents your API connection to Solr.
-///// You use this struct to perform operations on Solr.
+/// Represents your API connection to Solr.
+/// You use this struct to perform operations on Solr.
 pub struct Solr {
-    /// Base URL to connect to Solr. Should include the core.
-    /// For example http://localhost:8983/solr/production/
+    // Base URL to connect to Solr. Should include the core.
+    // For example http://localhost:8983/solr/production/
     pub base_url: Url,
     select_url: Url,
     update_url: Url,
@@ -229,6 +229,44 @@ impl Solr {
         }
     }
 }
+
+    ///// Performs Solr query
+    //pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
+        //let mut query_url = self.select_url.clone();
+        //query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
+        //let http_result = http_utils::get(&query_url);
+        //handle_http_result(http_result, |http_response| {
+            //match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
+                //Ok(sqr) => Ok(sqr),
+                //// TODO: insert actual builder_error inside solr_error
+                //Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
+            //}
+        //})
+    //}
+
+    //fn handle_http_result<R, F, E>(result: Result<HttpResponse, E>, f: F) -> Result<R, SolrError>
+        //where F: FnMut(HttpResponse) -> Result<R, SolrError> {
+        //match result {
+            //Ok(http_response) => {
+                //match http_response.code {
+                    //200 => {
+                        //match f(http_response) {
+                            //Ok(response) => Ok(response),
+                            //Err(e) => Err(e)
+                        //}
+                    //},
+                    //_ => {
+                        //let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
+                        //Err(error)
+                    //}
+                //}
+            //},
+            //Err(err) => {
+                //// TODO: review
+                //Err(SolrError{status: 0, time: 0, message: err.description().to_string()})
+            //}
+        //}
+    //}
     ///// Adds new document to Solr, without committing
     //pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
         //self.add_many(&[document])
@@ -259,19 +297,6 @@ impl Solr {
         //handle_http_update_result(http_result)
     //}
 
-    ///// Performs Solr query
-    //pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
-        //let mut query_url = self.select_url.clone();
-        //query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
-        //let http_result = http_utils::get(&query_url);
-        //handle_http_result(http_result, |http_response| {
-            //match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
-                //Ok(sqr) => Ok(sqr),
-                //// TODO: insert actual builder_error inside solr_error
-                //Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-            //}
-        //})
-    //}
 
     //pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
         //let delete_request = SolrDeleteRequest::from_id(id);
@@ -293,26 +318,3 @@ impl Solr {
 
 //}
 
-//fn handle_http_result<R, F, E>(result: Result<HttpResponse, E>, f: F) -> Result<R, SolrError> 
-    //where F: FnMut(HttpResponse) -> Result<R, SolrError> {
-    //match result {
-        //Ok(http_response) => {
-            //match http_response.code {
-                //200 => {
-                    //match f(http_response) {
-                        //Ok(response) => Ok(response),
-                        //Err(e) => Err(e)
-                    //}
-                //},
-                //_ => {
-                    //let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
-                    //Err(error)
-                //}
-            //}
-        //},
-        //Err(err) => {
-            //// TODO: review
-            //Err(SolrError{status: 0, time: 0, message: err.description().to_string()})
-        //}
-    //}
-//}
