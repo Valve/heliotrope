@@ -14,9 +14,9 @@ fn test_instantiate() {
     let url: Url = Url::parse(base_url).unwrap();
     let client = Solr::new(&url);
 
-    let solr_query_result = client.ping();
-    match solr_query_result {
-    	Ok(resp) => {assert_eq!("OK", resp.ping_status)},
-    	Err(e) => {panic!(e.message)}
+    let solr_ping_response = client.ping();
+    match solr_ping_response {
+        Ok(resp) => {assert_eq!("OK", resp.ping_status)},
+        Err(e) => {panic!(e.message)}
     }
 }

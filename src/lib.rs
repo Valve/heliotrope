@@ -163,7 +163,7 @@ use hyper::error::Error;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
 pub use request::{SolrDeleteRequest};
-pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
+pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse, SolrPingResponse};
 pub use query::{SolrQuery, SortOrder, SortClause};
 pub use http_utils::{HttpResponse, get};
 
@@ -216,14 +216,14 @@ impl Solr {
             ping_url: Solr::build_ping_url(url)}
     }
 
-    pub fn ping(&self) -> SolrQueryResult {
+    pub fn ping(&self) -> Result<SolrPingResponse, SolrError>  {
         let http_result = http_utils::get(&self.ping_url);
         // TODO `
         match http_result {
-            Ok(http_response) => match SolrQueryResponse::from_json_str(&http_response.body) {
-                Ok(sqr) => Ok(sqr),
+            Ok(http_response) => match SolrPingResponse::from_json_str(&http_response.body) {
+                Ok(spr) => Ok(spr),
                 // TODO: insert actual builder_error inside solr_error
-                Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Error parsing query response JSON: {}", err.message)})
+                Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Error parsing ping response JSON: {}", err.message)})
             },
             Err(_) => Err(SolrError{status: 0, time: 0, message: "Network error".to_string()})
         }
