@@ -165,7 +165,7 @@ pub use document::{SolrValue, SolrField, SolrDocument};
 pub use request::{SolrDeleteRequest};
 pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse, SolrPingResponse};
 pub use query::{SolrQuery, SortOrder, SortClause};
-pub use http_utils::{HttpResponse, get};
+pub use http_utils::{HttpResponse, get, post_json};
 
 mod http_utils;
 mod document;
