@@ -2,9 +2,10 @@ extern crate rustc_serialize;
 extern crate heliotrope;
 extern crate url;
 extern crate hyper;
+extern crate time;
 
 use rustc_serialize::json::Json;
-use heliotrope::{HttpResponse, get, post_json};
+use heliotrope::{HttpResponse, get, post_json, Solr, SolrDocument};
 use url::Url;
 use hyper::status::StatusCode;
 
@@ -29,20 +30,19 @@ fn test_get_documents() {
 #[test]
 fn test_create_document() {
     delete_all();
+
     let docs = get_all_docs();  
     assert_eq!(0, docs.len());
 
     let update_url = "http://localhost:8983/solr/test/update?&wt=json&commit=true";
     let url: Url = Url::parse(update_url).unwrap();
-    let res = post_json(&url, "{add: {doc: {id: \"999\"}}}").unwrap();
+    let res = post_json(&url, &format!("{{add: {{doc: {{id: \"999\", time: \"{t}\"}}}}}}", t=time::now().rfc822())).unwrap();
     assert_eq!(StatusCode::Ok, res.status);
     
     let docs = get_all_docs();  
     assert_eq!(1, docs.len());
     let doc = &docs[0];
     assert_eq!("999", doc.as_object().unwrap().get("id").unwrap().as_string().unwrap());
-
-    delete_all();
 }
 
 fn delete_all() {
@@ -63,4 +63,29 @@ fn get_all_docs() -> Vec<Json> {
         .unwrap().as_object().unwrap();
     let docs = responce_field.get("docs").unwrap().as_array().unwrap();
     docs.clone()
+}
+
+#[test]
+fn add_and_commit() {
+    delete_all();
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    let mut doc = SolrDocument::new();
+    doc.add_field("id", "00");
+    doc.add_field("time", &format!("{t}", t=time::now().rfc822()));
+
+    let result = client.add_and_commit(&doc);
+
+    match result {
+        Ok(resp) => {
+            assert_eq!(0, resp.status);
+            let docs = get_all_docs();
+            assert_eq!(1, docs.len());
+            assert_eq!("00", docs[0].as_object().unwrap().get("id").unwrap().as_string().unwrap());
+        },
+        Err(e) => panic!(e.message)
+    }
+
 }

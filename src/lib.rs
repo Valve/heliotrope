@@ -228,7 +228,6 @@ impl Solr {
             Err(_) => Err(SolrError{status: 0, time: 0, message: "Network error".to_string()})
         }
     }
-}
 
     ///// Performs Solr query
     //pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
@@ -273,9 +272,9 @@ impl Solr {
     //}
 
     ///// Adds new document to Solr and commits it
-    //pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
-        //self.add_many_and_commit(&[document])
-    //}
+    pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
+        self.add_many_and_commit(&[document])
+    }
 
     ///// Adds multiple documents to Solr, without committing it
     //pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
@@ -285,11 +284,19 @@ impl Solr {
     //}
 
     ///// Ads multiple documents to Solr and commits them
-    //pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
-        //let raw_json = json::encode(&documents);
-        //let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        //handle_http_update_result(http_result)
-    //}
+    pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
+        let raw_json = json::encode(&documents);
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
+        
+        
+        
+    }
 
     ///// Performs Solr commit
     //pub fn commit(&self) -> SolrUpdateResult {
@@ -305,16 +312,16 @@ impl Solr {
         //let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
         //handle_http_update_result(http_result)
     //}
-//}
+}
 
-//fn handle_http_update_result<E>(http_result: Result<HttpResponse, E>) -> SolrUpdateResult {
-    //handle_http_result(http_result, |http_response| {
-        //match json::decode::<SolrUpdateResponse>(http_response.body.as_slice()) {
-            //Ok(sur) => Ok(sur),
-            //// TODO: insert actual parse_error inside solr_error
-            //Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-        //}
-    //})
-
-//}
-
+fn handle_http_update_result(http_result: Result<HttpResponse, Error>) -> SolrUpdateResult {
+    match http_result {
+        Ok(response) => {
+            match json::decode::<SolrUpdateResponse>(&response.body) {
+                Ok(sur) => Ok(sur),
+                Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Parse error: {}", err)})
+            }
+        },
+        Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Http error: {}", err)})
+    }
+}
