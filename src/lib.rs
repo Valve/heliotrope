@@ -266,10 +266,12 @@ impl Solr {
             //}
         //}
     //}
+
+    // TODO DRY
     ///// Adds new document to Solr, without committing
-    //pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
-        //self.add_many(&[document])
-    //}
+    pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
+        self.add_many(&[document])
+    }
 
     ///// Adds new document to Solr and commits it
     pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
@@ -277,11 +279,16 @@ impl Solr {
     }
 
     ///// Adds multiple documents to Solr, without committing it
-    //pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
-        //let raw_json = json::encode(&documents);
-        //let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
-        //handle_http_update_result(http_result)
-    //}
+    pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
+        let raw_json = json::encode(&documents);
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.update_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
+    }
 
     ///// Ads multiple documents to Solr and commits them
     pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
@@ -293,25 +300,26 @@ impl Solr {
             },
             Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
         }
-        
-        
-        
     }
 
     ///// Performs Solr commit
-    //pub fn commit(&self) -> SolrUpdateResult {
-        //let http_result = http_utils::post(&self.commit_url);
-        //handle_http_update_result(http_result)
-    //}
+    pub fn commit(&self) -> SolrUpdateResult {
+        let http_result = http_utils::post_json(&self.commit_url, "");
+        handle_http_update_result(http_result)
+    }
 
-
-    //pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
-        //let delete_request = SolrDeleteRequest::from_id(id);
-        //let raw_json = json::encode(&delete_request);
-        //println!("{}", raw_json);
-        //let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        //handle_http_update_result(http_result)
-    //}
+    ///// Deletes document with the given id
+    pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
+        let delete_request = SolrDeleteRequest::from_id(id);
+        let raw_json = json::encode(&delete_request);
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
+    }
 }
 
 fn handle_http_update_result(http_result: Result<HttpResponse, Error>) -> SolrUpdateResult {

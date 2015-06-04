@@ -89,3 +89,57 @@ fn add_and_commit() {
     }
 
 }
+
+
+#[test]
+fn commit(){
+     delete_all();
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "0");
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "1");
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    client.add_many(&[&doc1, &doc2]);
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    client.commit();
+    let docs = get_all_docs();
+    assert_eq!(2, docs.len());    
+
+}
+
+#[test]
+fn delete() {
+    delete_all();
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "0");
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "1");
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    client.add_many_and_commit(&[&doc1, &doc2]);
+
+    let docs = get_all_docs();
+    assert_eq!(2, docs.len());
+
+    client.delete_by_id("0");
+
+    let docs = get_all_docs();
+    
+    assert_eq!(1, docs.len());    
+    assert_eq!("1", docs[0].as_object().unwrap().get("id").unwrap().as_string().unwrap());
+}
