@@ -5,7 +5,7 @@ extern crate hyper;
 extern crate time;
 
 use rustc_serialize::json::Json;
-use heliotrope::{HttpResponse, get, post_json, Solr, SolrDocument};
+use heliotrope::{HttpResponse, get, post_json, Solr, SolrDocument, SolrQuery, SolrValue};
 use url::Url;
 use hyper::status::StatusCode;
 
@@ -142,4 +142,78 @@ fn delete() {
     
     assert_eq!(1, docs.len());    
     assert_eq!("1", docs[0].as_object().unwrap().get("id").unwrap().as_string().unwrap());
+}
+
+#[test]
+fn query() {
+    delete_all();
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    let query = SolrQuery::new("*:*");
+
+    let results = client.query(&query);
+
+    match results {
+        Ok(resp) => {
+            assert_eq!(0,resp.total);
+            assert_eq!(0, resp.items.len());
+        },
+        Err(err) => panic!("Error solr query")
+    }
+}
+
+#[test]
+fn query_after_create() {
+     delete_all();
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "1");
+
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "2");
+
+    let mut doc3 = SolrDocument::new();
+    doc3.add_field("id", "3");
+
+    client.add_many_and_commit(&[&doc1, &doc2, &doc3]);
+
+
+    let query_all = SolrQuery::new("*:*");
+    let results = client.query(&query_all);
+
+    match results {
+        Ok(resp) => {
+            assert_eq!(3,resp.total);
+            assert_eq!(3, resp.items.len());
+        },
+        Err(err) => panic!("Error solr query *:*")
+    }
+
+     let query_first = SolrQuery::new("id:1");
+
+    let results = client.query(&query_first);
+
+    match results {
+        Ok(resp) => {
+            assert_eq!(1,resp.total);
+            assert_eq!(1, resp.items.len());
+            let doc = &resp.items[0];
+            assert_eq!(2, doc.fields.len());
+            for f in &doc.fields {
+                match f.name.as_ref() {
+                    "id" => assert_eq!(SolrValue::String("1".to_string()), f.value),
+                    "_version_" => (),
+                    _ => panic!("unknown field name in the doc")
+                }
+            }
+        },
+        Err(err) => panic!("Error solr query for id:1")
+    }
 }

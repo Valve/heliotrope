@@ -10,8 +10,8 @@ fn simple_query_test() {
     let url = Url::parse("http://localhost:8983/solr/test/").unwrap();
     let client = Solr::new(&url);
     let query = SolrQuery::new("*:*");
-    //match client.query(&query) {
-        //Ok(query_response) => println!("{}", query_response),
-        //Err(e) => panic!(e.message)
-    //}
+    match client.query(&query) {
+        Ok(query_response) => println!("{:?}", query_response),
+        Err(e) => panic!(e.message)
+    }
 }

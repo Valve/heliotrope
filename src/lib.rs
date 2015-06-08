@@ -230,42 +230,12 @@ impl Solr {
     }
 
     ///// Performs Solr query
-    //pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
-        //let mut query_url = self.select_url.clone();
-        //query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
-        //let http_result = http_utils::get(&query_url);
-        //handle_http_result(http_result, |http_response| {
-            //match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
-                //Ok(sqr) => Ok(sqr),
-                //// TODO: insert actual builder_error inside solr_error
-                //Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-            //}
-        //})
-    //}
-
-    //fn handle_http_result<R, F, E>(result: Result<HttpResponse, E>, f: F) -> Result<R, SolrError>
-        //where F: FnMut(HttpResponse) -> Result<R, SolrError> {
-        //match result {
-            //Ok(http_response) => {
-                //match http_response.code {
-                    //200 => {
-                        //match f(http_response) {
-                            //Ok(response) => Ok(response),
-                            //Err(e) => Err(e)
-                        //}
-                    //},
-                    //_ => {
-                        //let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
-                        //Err(error)
-                    //}
-                //}
-            //},
-            //Err(err) => {
-                //// TODO: review
-                //Err(SolrError{status: 0, time: 0, message: err.description().to_string()})
-            //}
-        //}
-    //}
+    pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
+        let mut query_url = self.select_url.clone();
+        query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref x, ref y)| (&x[..], &y[..])));
+        let http_result = http_utils::get(&query_url);
+        handle_http_query_result(http_result)
+    }
 
     // TODO DRY
     ///// Adds new document to Solr, without committing
@@ -328,6 +298,19 @@ fn handle_http_update_result(http_result: Result<HttpResponse, Error>) -> SolrUp
             match json::decode::<SolrUpdateResponse>(&response.body) {
                 Ok(sur) => Ok(sur),
                 Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Parse error: {}", err)})
+            }
+        },
+        Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Http error: {}", err)})
+    }
+}
+
+// TODO add handling http error
+fn handle_http_query_result(http_result: Result<HttpResponse, Error>) -> SolrQueryResult {
+    match http_result {
+        Ok(response) => {
+            match SolrQueryResponse::from_json_str(&response.body) {
+                Ok(qp) => Ok(qp),
+                Err(err) => Err(err)
             }
         },
         Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Http error: {}", err)})

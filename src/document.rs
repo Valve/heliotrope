@@ -1,6 +1,6 @@
 use rustc_serialize::{Encodable, Encoder};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum SolrValue {
     I64(i64),
     U64(u64),
