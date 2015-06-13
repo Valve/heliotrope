@@ -172,6 +172,7 @@ mod document;
 mod query;
 mod request;
 mod response;
+mod client;
 
 /// Represents your API connection to Solr.
 /// You use this struct to perform operations on Solr.
