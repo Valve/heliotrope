@@ -93,7 +93,7 @@ fn add_and_commit() {
 
 #[test]
 fn commit(){
-     delete_all();
+    delete_all();
     let docs = get_all_docs();
     assert_eq!(0, docs.len());
 
@@ -112,7 +112,7 @@ fn commit(){
 
     client.commit();
     let docs = get_all_docs();
-    assert_eq!(2, docs.len());    
+    assert_eq!(2, docs.len());
 
 }
 
@@ -250,5 +250,44 @@ fn delete_by_ids() {
             let doc = &resp.items[0];
         },
         Err(err) => panic!("Error delete documents by many ids")
+    }
+}
+
+#[test]
+fn rollback() {
+    delete_all();
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "0");
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "1");
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    client.add_many(&[&doc1, &doc2]);
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    client.rollback();
+    client.commit();
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+}
+
+#[test]
+fn optimize() {
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    let res = client.optimize();
+    
+    match res {
+        Ok(r) => assert_eq!(0, r.status),
+        Err(e) => panic!("Error test optimize")
     }
 }

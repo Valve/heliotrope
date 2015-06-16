@@ -183,6 +183,8 @@ pub struct Solr {
     select_url: Url,
     update_url: Url,
     commit_url: Url,
+    rollback_url: Url,
+    optimize_url: Url,
     pub ping_url: Url
 }
 
@@ -208,16 +210,29 @@ impl Solr {
         url_parser.base_url(url).parse("./admin/ping?wt=json").unwrap()
     }
 
+    fn build_rollback_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./update?rollback=true").unwrap()
+    }
+
+    fn build_optimize_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./update?optimize=true").unwrap()
+    }
+
     /// Creates a new instance of Solr.
     pub fn new(url: &Url) -> Solr {
         Solr {base_url: url.clone(),
             select_url: Solr::build_select_url(url),
             update_url: Solr::build_update_url(url),
             commit_url: Solr::build_commit_url(url),
-            ping_url: Solr::build_ping_url(url)}
+            ping_url: Solr::build_ping_url(url),
+            rollback_url: Solr::build_rollback_url(url),
+            optimize_url: Solr::build_optimize_url(url)}
     }
 
-    pub fn ping(&self) -> Result<SolrPingResponse, SolrError>  {
+    /// Issues a ping request to check if the server is alive.
+    pub fn ping(&self) -> Result<SolrPingResponse, SolrError> {
         let http_result = http_utils::get(&self.ping_url);
         // TODO `
         match http_result {
@@ -273,13 +288,25 @@ impl Solr {
         }
     }
 
-    ///// Performs Solr commit
+    /// Performs an explicit commit, causing pending documents to be committed for indexing
     pub fn commit(&self) -> SolrUpdateResult {
         let http_result = http_utils::post_json(&self.commit_url, "");
         handle_http_update_result(http_result)
     }
 
-    ///// Deletes document with the given id
+    /// Performs a rollback of all non-committed documents pending.
+    pub fn rollback(&self) -> SolrUpdateResult {
+        let http_result = http_utils::post_json(&self.rollback_url, "");
+        handle_http_update_result(http_result)
+    }
+
+    /// Performs an explicit optimize, causing a merge of all segments to one.
+    pub fn optimize(&self) -> SolrUpdateResult {
+        let http_result = http_utils::post_json(&self.optimize_url, "");
+        handle_http_update_result(http_result)
+    }
+
+    /// Deletes a single document by unique ID
     pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
         let delete_request = SolrDeleteRequest::from_id(id);
         let raw_json = json::encode(&delete_request);
@@ -292,9 +319,9 @@ impl Solr {
         }
     }
 
-    /// Deletes documents with the given ids
+    /// Deletes a list of documents by unique ID
     pub fn delete_by_ids(&self, ids: &Vec<String>) -> SolrUpdateResult {
-         let delete_request = SolrDeleteRequest::from_ids(&ids);
+        let delete_request = SolrDeleteRequest::from_ids(&ids);
         let raw_json = json::encode(&delete_request);
         match raw_json {
             Ok(body) => {
