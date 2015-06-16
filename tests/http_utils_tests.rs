@@ -93,7 +93,7 @@ fn add_and_commit() {
 
 #[test]
 fn commit(){
-     delete_all();
+    delete_all();
     let docs = get_all_docs();
     assert_eq!(0, docs.len());
 
@@ -112,7 +112,7 @@ fn commit(){
 
     client.commit();
     let docs = get_all_docs();
-    assert_eq!(2, docs.len());    
+    assert_eq!(2, docs.len());
 
 }
 
@@ -215,5 +215,79 @@ fn query_after_create() {
             }
         },
         Err(err) => panic!("Error solr query for id:1")
+    }
+}
+
+#[test]
+fn delete_by_ids() {
+    delete_all();
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "1");
+
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "2");
+
+    let mut doc3 = SolrDocument::new();
+    doc3.add_field("id", "3");
+
+    client.add_many_and_commit(&[&doc1, &doc2, &doc3]);
+
+    client.delete_by_ids(&vec!["1".to_string(), "2".to_string()]);
+
+    let query_all = SolrQuery::new("*:*");
+    let results = client.query(&query_all);
+
+    match results {
+        Ok(resp) => {
+            assert_eq!(1,resp.total);
+            assert_eq!(1, resp.items.len());
+            let doc = &resp.items[0];
+        },
+        Err(err) => panic!("Error delete documents by many ids")
+    }
+}
+
+#[test]
+fn rollback() {
+    delete_all();
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "0");
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "1");
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    client.add_many(&[&doc1, &doc2]);
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+
+    client.rollback();
+    client.commit();
+    let docs = get_all_docs();
+    assert_eq!(0, docs.len());
+}
+
+#[test]
+fn optimize() {
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+    let res = client.optimize();
+    
+    match res {
+        Ok(r) => assert_eq!(0, r.status),
+        Err(e) => panic!("Error test optimize")
     }
 }
