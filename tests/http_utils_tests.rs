@@ -217,3 +217,38 @@ fn query_after_create() {
         Err(err) => panic!("Error solr query for id:1")
     }
 }
+
+#[test]
+fn delete_by_ids() {
+    delete_all();
+
+    let base_url = "http://localhost:8983/solr/test/";
+    let url: Url = Url::parse(base_url).unwrap();
+    let client = Solr::new(&url);
+
+
+    let mut doc1 = SolrDocument::new();
+    doc1.add_field("id", "1");
+
+    let mut doc2 = SolrDocument::new();
+    doc2.add_field("id", "2");
+
+    let mut doc3 = SolrDocument::new();
+    doc3.add_field("id", "3");
+
+    client.add_many_and_commit(&[&doc1, &doc2, &doc3]);
+
+    client.delete_by_ids(&vec!["1".to_string(), "2".to_string()]);
+
+    let query_all = SolrQuery::new("*:*");
+    let results = client.query(&query_all);
+
+    match results {
+        Ok(resp) => {
+            assert_eq!(1,resp.total);
+            assert_eq!(1, resp.items.len());
+            let doc = &resp.items[0];
+        },
+        Err(err) => panic!("Error delete documents by many ids")
+    }
+}

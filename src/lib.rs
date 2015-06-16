@@ -291,6 +291,19 @@ impl Solr {
             Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
         }
     }
+
+    /// Deletes documents with the given ids
+    pub fn delete_by_ids(&self, ids: &Vec<String>) -> SolrUpdateResult {
+         let delete_request = SolrDeleteRequest::from_ids(&ids);
+        let raw_json = json::encode(&delete_request);
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
+    }
 }
 
 fn handle_http_update_result(http_result: Result<HttpResponse, Error>) -> SolrUpdateResult {
