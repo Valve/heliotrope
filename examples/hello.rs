@@ -1,4 +1,4 @@
-// This example requires core test and started Solr server on localhost:8983
+// This example requires core test and running Solr server on localhost:8983
 extern crate heliotrope;
 extern crate url;
 
@@ -23,9 +23,9 @@ fn main(){
     client.add_and_commit(&doc);
 
     let query_all = SolrQuery::new("*:*");
-    println!("Retriving all documents by query *:*");
+    println!("Getting all documents by query *:*");
     let results = client.query(&query_all);
     if let Ok(resp) = results {
-        println!("Retreived results {:?}", resp);
+        println!("Retrieved results {:?}", resp);
     }
 }

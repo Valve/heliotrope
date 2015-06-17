@@ -245,7 +245,7 @@ impl Solr {
         }
     }
 
-    ///// Performs Solr query
+    /// Performs Solr query
     pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
         let mut query_url = self.select_url.clone();
         query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref x, ref y)| (&x[..], &y[..])));
@@ -254,17 +254,17 @@ impl Solr {
     }
 
     // TODO DRY
-    ///// Adds new document to Solr, without committing
+    /// Adds new document to Solr, without committing
     pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
         self.add_many(&[document])
     }
 
-    ///// Adds new document to Solr and commits it
+    /// Adds new document to Solr and commits it
     pub fn add_and_commit(&self, document: &SolrDocument) -> SolrUpdateResult {
         self.add_many_and_commit(&[document])
     }
 
-    ///// Adds multiple documents to Solr, without committing it
+    /// Adds multiple documents to Solr, without committing it
     pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
         let raw_json = json::encode(&documents);
         match raw_json {
@@ -276,7 +276,7 @@ impl Solr {
         }
     }
 
-    ///// Ads multiple documents to Solr and commits them
+    /// Ads multiple documents to Solr and commits them
     pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
         let raw_json = json::encode(&documents);
         match raw_json {
@@ -288,13 +288,13 @@ impl Solr {
         }
     }
 
-    /// Performs an explicit commit, causing pending documents to be committed for indexing
+    /// Performs an explicit commit, causing pending documents to be indexed
     pub fn commit(&self) -> SolrUpdateResult {
         let http_result = http_utils::post_json(&self.commit_url, "");
         handle_http_update_result(http_result)
     }
 
-    /// Performs a rollback of all non-committed documents pending.
+    /// Performs a rollback of all non-committed documents
     pub fn rollback(&self) -> SolrUpdateResult {
         let http_result = http_utils::post_json(&self.rollback_url, "");
         handle_http_update_result(http_result)
@@ -306,7 +306,7 @@ impl Solr {
         handle_http_update_result(http_result)
     }
 
-    /// Deletes a single document by unique ID
+    /// Deletes a single document by a unique ID
     pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
         let delete_request = SolrDeleteRequest::from_id(id);
         let raw_json = json::encode(&delete_request);
@@ -319,7 +319,7 @@ impl Solr {
         }
     }
 
-    /// Deletes a list of documents by unique ID
+    /// Deletes a list of documents by IDs
     pub fn delete_by_ids(&self, ids: &Vec<String>) -> SolrUpdateResult {
         let delete_request = SolrDeleteRequest::from_ids(&ids);
         let raw_json = json::encode(&delete_request);
@@ -332,7 +332,7 @@ impl Solr {
         }
     }
 
-    /// Deletes documents from the index based on a query
+    /// Deletes documents from the index by query
     pub fn delete_by_query(&self, query: &str) -> SolrUpdateResult {
         let delete_request = SolrDeleteRequest::from_query(query);
         let raw_json = json::encode(&delete_request);
