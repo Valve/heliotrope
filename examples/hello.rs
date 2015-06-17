@@ -13,7 +13,7 @@ fn main(){
 
     println!("Starting example hello...");
     println!("Removing all documents from core test on Solr {}", url);
-    client.delete_by_query("city:NY");
+    client.delete_by_query("*:*");
 
     let mut doc = SolrDocument::new();
     doc.add_field("id", "1");
