@@ -1,4 +1,4 @@
-// Copyright 2014 Valentin Vasilyev.
+// Copyright 2015 Valentin Vasilyev.
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -153,35 +153,39 @@ Note that `delete_by_id` commits automatically after every delete request
 
 #![crate_name="heliotrope"]
 
-extern crate serialize;
+extern crate rustc_serialize;
 extern crate url;
 extern crate hyper;
 
 use url::{Url, UrlParser};
-use serialize::{json};
-use hyper::HttpResult;
-use http_utils::HttpResponse;
+use rustc_serialize::{json};
+use hyper::error::Error;
 
 pub use document::{SolrValue, SolrField, SolrDocument};
 pub use request::{SolrDeleteRequest};
-pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse};
+pub use response::{SolrError, SolrUpdateResult, SolrQueryResult, SolrUpdateResponse, SolrQueryResponse, SolrPingResponse};
 pub use query::{SolrQuery, SortOrder, SortClause};
+pub use http_utils::{HttpResponse, get, post_json};
 
 mod http_utils;
 mod document;
 mod query;
 mod request;
 mod response;
+mod client;
 
 /// Represents your API connection to Solr.
-/// You will use this struct to perform operations on Solr.
+/// You use this struct to perform operations on Solr.
 pub struct Solr {
-    /// Base URL to connect to Solr. Should include the core.
-    /// For example http://localhost:8983/solr/production/
+    // Base URL to connect to Solr. Should include the core.
+    // For example http://localhost:8983/solr/production/
     pub base_url: Url,
     select_url: Url,
     update_url: Url,
-    commit_url: Url
+    commit_url: Url,
+    rollback_url: Url,
+    optimize_url: Url,
+    pub ping_url: Url
 }
 
 impl Solr {
@@ -201,14 +205,55 @@ impl Solr {
         url_parser.base_url(url).parse("./update?commit=true").unwrap()
     }
 
+    fn build_ping_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./admin/ping?wt=json").unwrap()
+    }
+
+    fn build_rollback_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./update?rollback=true").unwrap()
+    }
+
+    fn build_optimize_url(url: &Url) -> Url {
+        let mut url_parser = UrlParser::new();
+        url_parser.base_url(url).parse("./update?optimize=true").unwrap()
+    }
+
     /// Creates a new instance of Solr.
     pub fn new(url: &Url) -> Solr {
         Solr {base_url: url.clone(),
             select_url: Solr::build_select_url(url),
             update_url: Solr::build_update_url(url),
-            commit_url: Solr::build_commit_url(url)}
+            commit_url: Solr::build_commit_url(url),
+            ping_url: Solr::build_ping_url(url),
+            rollback_url: Solr::build_rollback_url(url),
+            optimize_url: Solr::build_optimize_url(url)}
     }
 
+    /// Issues a ping request to check if the server is alive.
+    pub fn ping(&self) -> Result<SolrPingResponse, SolrError> {
+        let http_result = http_utils::get(&self.ping_url);
+        // TODO `
+        match http_result {
+            Ok(http_response) => match SolrPingResponse::from_json_str(&http_response.body) {
+                Ok(spr) => Ok(spr),
+                // TODO: insert actual builder_error inside solr_error
+                Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Error parsing ping response JSON: {}", err.message)})
+            },
+            Err(_) => Err(SolrError{status: 0, time: 0, message: "Network error".to_string()})
+        }
+    }
+
+    /// Performs Solr query
+    pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
+        let mut query_url = self.select_url.clone();
+        query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref x, ref y)| (&x[..], &y[..])));
+        let http_result = http_utils::get(&query_url);
+        handle_http_query_result(http_result)
+    }
+
+    // TODO DRY
     /// Adds new document to Solr, without committing
     pub fn add(&self, document: &SolrDocument) -> SolrUpdateResult {
         self.add_many(&[document])
@@ -222,76 +267,106 @@ impl Solr {
     /// Adds multiple documents to Solr, without committing it
     pub fn add_many(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
         let raw_json = json::encode(&documents);
-        let http_result =  http_utils::post_json(&self.update_url, raw_json.as_slice());
-        handle_http_update_result(http_result)
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.update_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
     }
 
     /// Ads multiple documents to Solr and commits them
     pub fn add_many_and_commit(&self, documents: &[&SolrDocument]) -> SolrUpdateResult {
         let raw_json = json::encode(&documents);
-        let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        handle_http_update_result(http_result)
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
     }
 
-    /// Performs Solr commit
+    /// Performs an explicit commit, causing pending documents to be indexed
     pub fn commit(&self) -> SolrUpdateResult {
-        let http_result = http_utils::post(&self.commit_url);
+        let http_result = http_utils::post_json(&self.commit_url, "");
         handle_http_update_result(http_result)
     }
 
-    /// Performs Solr query
-    pub fn query(&self, query: &SolrQuery) -> SolrQueryResult {
-        let mut query_url = self.select_url.clone();
-        query_url.set_query_from_pairs(query.to_pairs().iter().map(|&(ref k, ref v)| (k.as_slice(),v.as_slice())));
-        let http_result = http_utils::get(&query_url);
-        handle_http_result(http_result, |http_response| {
-            match SolrQueryResponse::from_json_str(http_response.body.as_slice()) {
-                Ok(sqr) => Ok(sqr),
-                // TODO: insert actual builder_error inside solr_error
-                Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-            }
-        })
+    /// Performs a rollback of all non-committed documents
+    pub fn rollback(&self) -> SolrUpdateResult {
+        let http_result = http_utils::post_json(&self.rollback_url, "");
+        handle_http_update_result(http_result)
     }
 
+    /// Performs an explicit optimize, causing a merge of all segments to one.
+    pub fn optimize(&self) -> SolrUpdateResult {
+        let http_result = http_utils::post_json(&self.optimize_url, "");
+        handle_http_update_result(http_result)
+    }
+
+    /// Deletes a single document by a unique ID
     pub fn delete_by_id(&self, id: &str) -> SolrUpdateResult {
         let delete_request = SolrDeleteRequest::from_id(id);
         let raw_json = json::encode(&delete_request);
-        println!("{}", raw_json);
-        let http_result =  http_utils::post_json(&self.commit_url, raw_json.as_slice());
-        handle_http_update_result(http_result)
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
+    }
+
+    /// Deletes a list of documents by IDs
+    pub fn delete_by_ids(&self, ids: &Vec<String>) -> SolrUpdateResult {
+        let delete_request = SolrDeleteRequest::from_ids(&ids);
+        let raw_json = json::encode(&delete_request);
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
+    }
+
+    /// Deletes documents from the index by query
+    pub fn delete_by_query(&self, query: &str) -> SolrUpdateResult {
+        let delete_request = SolrDeleteRequest::from_query(query);
+        let raw_json = json::encode(&delete_request);
+        match raw_json {
+            Ok(body) => {
+                let http_result =  http_utils::post_json(&self.commit_url, &body);
+                handle_http_update_result(http_result)
+            },
+            Err(err) => Err(SolrError{status: 0, time: 0, message: "Error serialize solr document to json".to_string()})
+        }
     }
 }
 
-fn handle_http_update_result(http_result: HttpResult<HttpResponse>) -> SolrUpdateResult {
-    handle_http_result(http_result, |http_response| {
-        match json::decode::<SolrUpdateResponse>(http_response.body.as_slice()) {
-            Ok(sur) => Ok(sur),
-            // TODO: insert actual parse_error inside solr_error
-            Err(_) => Err(SolrError{status: 0, time: 0, message: "Error parsing query response JSON".to_string()})
-        }
-    })
-
-}
-
-fn handle_http_result<R>(result: HttpResult<HttpResponse>, f: |&HttpResponse| ->  Result<R, SolrError>) -> Result<R, SolrError> {
-    match result {
-        Ok(http_response) => {
-            match http_response.code {
-                200 => {
-                    match f(&http_response) {
-                        Ok(response) => Ok(response),
-                        Err(e) => Err(e)
-                    }
-                },
-                _ => {
-                    let error: SolrError = json::decode(http_response.body.as_slice()).unwrap();
-                    Err(error)
-                }
+fn handle_http_update_result(http_result: Result<HttpResponse, Error>) -> SolrUpdateResult {
+    match http_result {
+        Ok(response) => {
+            match json::decode::<SolrUpdateResponse>(&response.body) {
+                Ok(sur) => Ok(sur),
+                Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Parse error: {}", err)})
             }
         },
-        Err(err) => {
-            // TODO: review
-            Err(SolrError{status: 0, time: 0, message: err.to_string()})
-        }
+        Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Http error: {}", err)})
+    }
+}
+
+// TODO add handling http error
+fn handle_http_query_result(http_result: Result<HttpResponse, Error>) -> SolrQueryResult {
+    match http_result {
+        Ok(response) => {
+            match SolrQueryResponse::from_json_str(&response.body) {
+                Ok(qp) => Ok(qp),
+                Err(err) => Err(err)
+            }
+        },
+        Err(err) => Err(SolrError{status: 0, time: 0, message: format!("Http error: {}", err)})
     }
 }

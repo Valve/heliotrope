@@ -9,7 +9,7 @@ pub trait ToUrlParam {
 /// You'll need to build the query and pass it to Solr to execute.
 /// This struct is immutable, ie returns modified clone of itself when building.
 /// This is done to enable chaining.
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct SolrQuery {
     query: String,
     fields: Option<Vec<String>>,
@@ -101,7 +101,11 @@ impl SolrQuery {
     /// Already existing sorts will be overwritten
     pub fn set_sorts(&self, sorts: &[SortClause]) -> SolrQuery {
         let mut new_sorts = Vec::with_capacity(sorts.len());
-        new_sorts.push_all(sorts);
+        // TODO: Vec#push_all is unstable, so using iteration
+        // new_sorts.push_all(sorts);
+        for s in sorts {
+            new_sorts.push(s.clone());
+        }
         let mut solr_query = self.clone();
         solr_query.sorts = Some(new_sorts);
         solr_query
@@ -133,8 +137,15 @@ impl SolrQuery {
         vec.push(("q".to_string(), self.query.to_string()));
         match self.fields {
             Some(ref f) => {
-                let formatted_fields = format!("{:#}", f.clone());
-                vec.push(("fl".to_string(), formatted_fields));
+                let mut fmt_fields = String::new();
+                // TODO optimize
+                f.iter().fold(true, |first, elem| {
+                    if !first { fmt_fields.push_str(", "); }
+                    fmt_fields.push_str(elem);
+                    false
+                });
+
+                vec.push(("fl".to_string(), fmt_fields));
             },
             _ => ()
         }
@@ -152,8 +163,14 @@ impl SolrQuery {
                                               .iter()
                                               .map(|x| x.to_url_param())
                                               .collect();
-                let formatted_sorts = format!("{:#}", sort_url_params);
-                vec.push(("sort".to_string(), formatted_sorts));
+                 let mut fmt_sorts = String::new();
+                // TODO optimize
+                sort_url_params.iter().fold(true, |first, elem| {
+                    if !first { fmt_sorts.push_str(", "); }
+                    fmt_sorts.push_str(elem);
+                    false
+                });
+                vec.push(("sort".to_string(), fmt_sorts));
             },
             _ => ()
         }
@@ -170,7 +187,7 @@ impl SolrQuery {
 }
 
 /// Represents sort ordering for a field
-#[deriving(Clone, Copy)]
+#[derive(Clone, Copy)]
 pub enum SortOrder {
     Ascending,
     Descending
@@ -186,7 +203,7 @@ impl ToUrlParam for SortOrder {
 }
 
 /// A utility struct to hold sorting for a field
-#[deriving(Clone)]
+#[derive(Clone)]
 pub struct SortClause {
     pub field: String,
     pub order: SortOrder

@@ -1,4 +1,10 @@
 language: rust
+
+rust:
+  - stable
+  - beta
+  - nightly
+
 after_success: |
   [ $TRAVIS_BRANCH = master ] &&
   [ $TRAVIS_PULL_REQUEST = false ] &&
@@ -7,4 +13,14 @@ after_success: |
   ghp-import -n target/doc &&
   git push -qf https://${TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
 env:
-  - secure: Na6cu+CLZFiQ/+sd7fI3mTu9Zc5QxKxDLtvIrzQBphszAyqXN5cE98vvqYj5vtPwTBmpPE9GwyIaxco4fPGYWH/FzZBrZ4bQV4RgXmJA4k4LWdjT0pMypCySyDUsV2lU3ZFISncW9Tr7bLsxFzU0osR9q8V5KNfWYLJI0V99f8o=
+  global:
+    - RUST_TEST_THREADS=1
+    - secure: Na6cu+CLZFiQ/+sd7fI3mTu9Zc5QxKxDLtvIrzQBphszAyqXN5cE98vvqYj5vtPwTBmpPE9GwyIaxco4fPGYWH/FzZBrZ4bQV4RgXmJA4k4LWdjT0pMypCySyDUsV2lU3ZFISncW9Tr7bLsxFzU0osR9q8V5KNfWYLJI0V99f8o=
+
+before_install:
+  - wget http://archive.apache.org/dist/lucene/solr/5.1.0/solr-5.1.0.tgz 
+  - tar -zxf solr-5.1.0.tgz
+  - cd solr-5.1.0
+  - bin/solr start
+  - bin/solr create_core -c test -p 8983
+  - cd ../

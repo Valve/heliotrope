@@ -1,69 +1,58 @@
-use std::error::FromError;
 use url::Url;
-use hyper::{HttpResult, HttpError};
-use hyper::net::Fresh;
-use hyper::client::Request;
-use hyper::header::common::{ContentType, ContentLength};
+use hyper::Client;
+use hyper::header::{ContentType};
+use hyper::status::StatusCode;
+use hyper::error::Error;
+use std::io::Read;
 
 
 pub struct HttpResponse {
-    pub code: u16,
+    pub status: StatusCode,
     pub body: String
 }
 
-pub fn get(url: &Url) -> HttpResult<HttpResponse> {
-    let mut req = Request::get(url.clone()).unwrap();
-    req.headers_mut().set(ContentType(from_str("application/json").unwrap()));
-    req.headers_mut().set(ContentLength(0));
-    make_request(req)
-}
-
-pub fn post(url: &Url) -> HttpResult<HttpResponse> {
-    let mut req = Request::post(url.clone()).unwrap();
-    req.headers_mut().set(ContentType(from_str("application/json").unwrap()));
-    req.headers_mut().set(ContentLength(0));
-    make_request(req)
-}
-
-pub fn post_json(url: &Url, json: &str) -> HttpResult<HttpResponse> {
-    //let mut req: RequestWriter = RequestWriter::new(Post, url.clone()).unwrap();
-    //req.headers.insert_raw("Content-Type".to_string(), b"application/json").unwrap();
-    //req.headers.content_length = Some(json.len());
-    //try!(req.write(json.to_string().into_bytes().as_slice()));
-    //make_request(req)
-    let mut req = Request::post(url.clone()).unwrap();
-    req.headers_mut().set(ContentType(from_str("application/json").unwrap()));
-    req.headers_mut().set(ContentLength(json.len()));
-    match req.start() {
-        Ok(mut req) => {
-            try!(req.write(json.to_string().into_bytes().as_slice()));
-            match req.send() {
-                Ok(mut resp) => {
-                    match resp.read_to_string() {
-                        Ok(body) => Ok(HttpResponse{code: resp.status as u16, body: body}),
-                        Err(e) => Err(FromError::from_error(e))
-                    }
+pub fn get(url: &Url) -> Result<HttpResponse, Error> {
+    let mut client = Client::new();
+    let result_response = client.get(&url.to_string()).send();
+    //TODO: use try! macro here
+    match result_response {
+        Ok(mut res) => {
+            let mut body = String::new();
+            let result = res.read_to_string(&mut body);
+            match result {
+                Ok(_) => {
+                    Ok(HttpResponse{status: res.status, body: body})
                 },
-                Err(e) => Err(e)
+                //TODO: review why we use Irror::Io here
+                Err(err) => {
+                    Err(Error::Io(err))
+                }
             }
         },
-        Err(e) => Err(e)
+        Err(err) => Err(err)
     }
 }
 
-fn make_request(req: Request<Fresh>) -> Result<HttpResponse, HttpError> {
-    match req.start() {
-        Ok(req) => {
-            match req.send() {
-                Ok(mut resp) => {
-                    match resp.read_to_string() {
-                        Ok(body) => Ok(HttpResponse{code: resp.status as u16, body: body}),
-                        Err(e) => Err(FromError::from_error(e))
-                    }
+
+pub fn post_json(url: &Url, body: &str) -> Result<HttpResponse, Error> {
+    let mut client = Client::new();
+    let result_response = client.post(&url.to_string())
+        .header(ContentType::json())
+        .body(body)
+        .send();
+    match result_response {
+        Ok(mut res) => {
+            let mut body = String::new();
+            let result = res.read_to_string(&mut body);
+            match result {
+                Ok(_) => {
+                    Ok(HttpResponse{status: res.status, body: body})
                 },
-                Err(e) => Err(e)
+                Err(err) => {
+                    Err(Error::Io(err))
+                }
             }
         },
-        Err(e) => Err(e)
+        Err(err) => Err(err)
     }
-}
+} 

@@ -1,6 +1,6 @@
-use serialize::{Encodable, Encoder};
+use rustc_serialize::{Encodable, Encoder};
 
-#[deriving(Show)]
+#[derive(Debug, PartialEq)]
 pub enum SolrValue {
     I64(i64),
     U64(u64),
@@ -9,8 +9,8 @@ pub enum SolrValue {
     Boolean(bool),
     Null
 }
-impl<S: Encoder<E>, E> Encodable<S, E> for SolrValue {
-    fn encode(&self, e: &mut S) -> Result<(), E> {
+impl Encodable for SolrValue {
+    fn encode<E: Encoder>(&self, e: &mut E) -> Result<(), E::Error> {
         match *self {
             SolrValue::I64(v) => v.encode(e),
             SolrValue::U64(v) => v.encode(e),
@@ -22,14 +22,14 @@ impl<S: Encoder<E>, E> Encodable<S, E> for SolrValue {
     }
 }
 /// SolrDocument field
-#[deriving(Show)]
+#[derive(Debug)]
 pub struct SolrField {
     pub name: String,
     pub value: SolrValue
 }
 
 /// SolrDocument to be used to either index or query.
-#[deriving(Show)]
+#[derive(Debug)]
 pub struct SolrDocument {
     /// Collection of document fields
     pub fields: Vec<SolrField>
@@ -48,12 +48,12 @@ impl SolrDocument {
     }
 }
 
-impl<E, S: Encoder<E>> Encodable<S, E> for SolrDocument {
-    fn encode(&self, s: &mut S) -> Result<(), E> {
-        let mut i = 0u;
+impl Encodable for SolrDocument {
+    fn encode<E: Encoder>(&self, s: &mut E) -> Result<(), E::Error> {
+        let mut i = 0usize;
         s.emit_struct("SolrDocument", self.fields.len(), |e| {
             for field in self.fields.iter() {
-                try!(e.emit_struct_field(field.name.as_slice(), i, |e| field.value.encode(e)));
+                try!(e.emit_struct_field(&field.name, i, |e| field.value.encode(e)));
                 i = i + 1;
             }
             Ok(())
