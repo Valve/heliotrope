@@ -43,7 +43,7 @@ fn query_and_many_fields_with_set_fields_to_pairs() {
 #[test]
 fn query_and_filter_with_add_filter_to_pairs() {
     let mut query = SolrQuery::new("abba");
-    query = query.add_filter("type:Person");
+    query = query.add_filter_query("type:Person");
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
                     ("q".to_string(), "abba".to_string()),
@@ -53,8 +53,8 @@ fn query_and_filter_with_add_filter_to_pairs() {
 #[test]
 fn query_and_many_filters_with_add_filter_to_pairs() {
     let mut query = SolrQuery::new("abba");
-    query = query.add_filter("type:Person");
-    query = query.add_filter("class:ActiveRecord");
+    query = query.add_filter_query("type:Person");
+    query = query.add_filter_query("class:ActiveRecord");
     assert_eq!(query.to_pairs(),
                vec!(("wt".to_string(), "json".to_string()),
                     ("q".to_string(), "abba".to_string()),

@@ -18,7 +18,7 @@ fn main(){
     let mut doc = SolrDocument::new();
     doc.add_field("id", "1");
     doc.add_field("city", "London");
-    println!("Prepared SolrDocument to input {:?}", doc);
+    println!("Prepared SolrDocument to insert {:?}", doc);
 
     client.add_and_commit(&doc);
 

@@ -31,7 +31,7 @@ impl SolrQuery {
 
     }
 
-    /// Adds field (l) to the list of returned fields
+    /// Adds field (fl) to the list of returned fields
     pub fn add_field(&self, field: &str) -> SolrQuery {
         let mut fields = self.fields.clone();
         fields = match fields {
@@ -47,7 +47,7 @@ impl SolrQuery {
     }
 
     /// Sets fields (fl) as the list of returned fields.
-    /// The already set fields are overwritten.
+    /// The fields that have already been set, are overwritten.
     pub fn set_fields(&self, fields: &[&str]) -> SolrQuery {
         let mut new_fields = Vec::with_capacity(fields.len());
         new_fields.extend(fields.iter().map(|x| x.to_string()));
@@ -56,15 +56,15 @@ impl SolrQuery {
         solr_query
     }
 
-    /// Adds query filter (fq)
-    pub fn add_filter(&self, filter: &str) -> SolrQuery {
+    /// Adds filter query (fq)
+    pub fn add_filter_query(&self, fq: &str) -> SolrQuery {
         let mut filters = self.filters.clone();
         filters = match filters {
             Some(mut f) => {
-                f.push(filter.to_string());
+                f.push(fq.to_string());
                 Some(f)
             },
-            None => Some(vec!(filter.to_string()))
+            None => Some(vec!(fq.to_string()))
         };
         let mut solr_query = self.clone();
         solr_query.filters = filters;
@@ -73,9 +73,9 @@ impl SolrQuery {
 
     /// Sets query filters (fq)
     /// Already existing filters are overwritten.
-    pub fn set_filters(&self, filters: &[&str]) -> SolrQuery {
-        let mut new_filters = Vec::with_capacity(filters.len());
-        new_filters.extend(filters.iter().map(|x| x.to_string()));
+    pub fn set_filters(&self, fq: &[&str]) -> SolrQuery {
+        let mut new_filters = Vec::with_capacity(fq.len());
+        new_filters.extend(fq.iter().map(|x| x.to_string()));
         let mut solr_query = self.clone();
         solr_query.filters = Some(new_filters);
         solr_query
@@ -144,6 +144,7 @@ impl SolrQuery {
                     fmt_fields.push_str(elem);
                     false
                 });
+                //println!("{}", fmt_fields);
 
                 vec.push(("fl".to_string(), fmt_fields));
             },
@@ -202,7 +203,6 @@ impl ToUrlParam for SortOrder {
     }
 }
 
-/// A utility struct to hold sorting for a field
 #[derive(Clone)]
 pub struct SortClause {
     pub field: String,
