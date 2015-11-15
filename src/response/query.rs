@@ -1,60 +1,10 @@
 use rustc_serialize::{json, Decodable, Decoder};
 use rustc_serialize::json::Json;
-use document::{SolrDocument, SolrField};
-use document::SolrValue;
+use document::{SolrDocument, SolrField, SolrValue};
+use response::SolrError;
 
-pub type SolrUpdateResult = Result<SolrUpdateResponse, SolrError>;
 pub type SolrQueryResult = Result<SolrQueryResponse, SolrError>;
 
-/// SolrError
-pub struct SolrError {
-    /// HTTP status.
-    /// When failed to connect, it will be 0 (zero).
-    pub status: i32,
-    /// Time it took to execute the request in milliseconds
-    pub time: i32,
-    /// Detailed error message
-    pub message: String
-}
-
-impl Decodable for SolrError {
-    fn decode<D: Decoder>(d: &mut D) -> Result<SolrError, D::Error> {
-        d.read_struct("root", 0, |d| {
-            d.read_struct_field("error", 0, |d| {
-                Ok(SolrError{
-                    message: try!(d.read_struct_field("msg", 0, Decodable::decode)),
-                    status: try!(d.read_struct_field("code", 1, Decodable::decode)),
-                    // TODO: implement time parsing from request header
-                    time: 0})
-            })
-        })
-    }
-}
-
-/// Solr response used for update/indexing/commit operations
-#[derive(Debug, Copy, Clone)]
-pub struct SolrUpdateResponse {
-    /// HTTP status.
-    /// When failed to connect, it will be 0 (zero).
-    pub status: i32,
-    /// Time it took to execute the request in milliseconds
-    pub time: i32
-}
-
-impl Decodable for SolrUpdateResponse {
-    fn decode<D: Decoder>(d: &mut D) -> Result<SolrUpdateResponse, D::Error> {
-        d.read_struct("root", 0, |d| {
-            d.read_struct_field("responseHeader", 0, |d| {
-                Ok(SolrUpdateResponse{
-                    status: try!(d.read_struct_field("status", 0, Decodable::decode)),
-                    time: try!(d.read_struct_field("QTime", 1, Decodable::decode))
-                })
-            })
-        })
-    }
-}
-
-/// Solr query response
 #[derive(Debug)]
 pub struct SolrQueryResponse {
     /// HTTP status.
@@ -72,21 +22,7 @@ pub struct SolrQueryResponse {
     pub items: Vec<SolrDocument>
 }
 
-/// Solr ping response
-#[derive(Debug)]
-pub struct SolrPingResponse {
-    /// HTTP status.
-    /// When failed to connect, it will be 0 (zero).
-    pub status: u32,
-    /// Time it took to execute the request in milliseconds
-    pub time: u32,
-    /// Ping status
-    pub ping_status: String
-}
-
-
-/* 
-Example JSON of query response: 
+/* Example JSON of query response: 
 ```ignore
 {
   "responseHeader": {
@@ -196,47 +132,6 @@ impl SolrQueryResponse {
                 Ok(doc)
             },
             _ => Err("SolrQueryResponse JSON parsing error (response => docs): doc is not an object".to_string())
-        }
-    }
-}
-
-impl SolrPingResponse {
-    /// Deserializes SolrPingResponse from JSON string
-    pub fn from_json_str(json_str: &str) -> Result<SolrPingResponse, SolrError> {
-        let mut response = SolrPingResponse{status: 0, time: 0, ping_status: "null".to_string()};
-        let mut error: String = "".to_string();
-        match Json::from_str(json_str) {
-            Ok(json) => match json {
-               Json::Object(tree_map) => {
-                    match tree_map.get(&"status".to_string()){
-                        Some(st) => response.ping_status = st.as_string().unwrap().to_string(),
-                        None => error = "SolrPingResponse JSON parsing error: ping status not found".to_string()
-                    }
-                    match tree_map.get(&"responseHeader".to_string()) {
-                        Some(rh) => {
-                            match rh.find("QTime"){
-                                Some(time_json) => response.time = time_json.as_i64().unwrap() as u32,
-                                None => error = "SolrPingResponse JSON parsing error (responseHeader): QTime not found".to_string()
-                            }
-                            match rh.find("status") {
-                                Some(status_json) => response.status = status_json.as_u64().unwrap() as u32,
-                                None => error = "SolrPingResponse JSON parsing error (responseHeader): status not found".to_string()
-                            }
-                            // TODO add params field
-                        },
-                        None => error = "SolrPingResponse JSON parsing error: responseHeader not found".to_string()
-
-                    }
-               },
-               _ => error = "SolrPingResponse JSON parsing error: query response is not a JSON object.".to_string()
-            },
-            // TODO: verify e type and additional error info
-            Err(e) => error = "SolrPingResponse JSON parsing error".to_string()
-        }
-        if error.len() == 0 {
-            Ok(response)
-        } else {
-            Err(SolrError{time: 0, status: 0, message: error})
         }
     }
 }

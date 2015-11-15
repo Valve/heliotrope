@@ -51,7 +51,7 @@ use url::Url;
 fn main(){
     let base_url = "http://localhost:8983/solr/test/";
     let url: Url = Url::parse(base_url).unwrap();
-    let client = Solr::new(&url);
+    let client = SolrClient::new(&url);
 
     let doc = SolrDocument::new();
     doc.add_field("id", "1");
