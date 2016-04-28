@@ -10,7 +10,7 @@ authors = ["Valentin Vasilyev <valentin.vasilyev@outlook.com>", "Dzmitry Misiuk 
 
 
 [dependencies]
-url = "*"
+url = "0.5.9"
 hyper = "*"
 rustc-serialize = "*"
 time="*"
